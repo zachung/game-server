@@ -8,6 +8,9 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+// 靜態檔案
+app.use('/', express.static(__dirname + '/public'));
+
 // single
 app.use('/single/brick_breaker', express.static(__dirname + '/single/brick_breaker'));
 app.use('/single/rect_dancer', express.static(__dirname + '/single/rect_dancer'));
@@ -21,6 +24,11 @@ app.use('/zombie-shooter', require('./lan/zombie_shooter/zombie_shooter')(
 // bomb man
 app.use('/bomb-man', require('./lan/bomb_man/bomb_man')(
   app, io.of('/bomb-man')
+));
+
+// maze escape
+app.use('/wizard-battle', require('./lan/wizard_battle/index')(
+  io.of('/wizard-battle')
 ));
 
 http.listen(3000, function() {
