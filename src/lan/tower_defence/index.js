@@ -1,11 +1,9 @@
 const express = require('express')
+const Lobby = require('../../library/Lobby')
+const TowerDefence = require('./TowerDefence')
 
 module.exports = function(io) {
   var router = express.Router()
-
-  router.use(function(req, res, next) {
-    next();
-  })
 
   router.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -14,8 +12,7 @@ module.exports = function(io) {
   // 靜態檔案
   router.use('/', express.static(__dirname + '/public'));
 
-  var Lobby = require('./lobby');
-  var lobby = new Lobby();
+  var lobby = new Lobby(TowerDefence);
   lobby.on(io);
 
   return router;
