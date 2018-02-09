@@ -51,7 +51,7 @@ ENGINE.Game = {
 
     app.scrollingBackground = new ScrollingBackground(app.images.background);
 
-    ENGINE.Resource = app.music.play("music", true);
+    // ENGINE.Resource = app.music.play("music", true);
     ENGINE.enemies = [];
     ENGINE.bombs = [];
     ENGINE.items = [];
@@ -249,7 +249,7 @@ ENGINE.Game = {
           this.wallet.balance += build.sellIncome;
           this.gameMap.removeTower(build);
         }).on('upgrade', (option, upgradeFunc) => {
-          if (this.wallet.balanceReal <= option.cost) {
+          if (this.wallet.balanceReal < option.cost) {
             this.messageTip = "money not enough";
             return;
           }

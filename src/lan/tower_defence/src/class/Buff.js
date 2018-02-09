@@ -12,7 +12,6 @@ class Buff extends Ball {
     };
     const populated = Object.assign(defaults, options);
     super(populated);
-    this.class = this.constructor.name;
   }
   effect(other) {
     other.mass *= 2;

@@ -71,6 +71,16 @@ class Enemy extends Ball {
     } else {
       this.renderRun(app, x, y, isFaceToLeft);
     }
+    let
+      hpX = this.x + deltaPoint.x,
+      hpY = this.y - 20 + deltaPoint.y,
+      hpW = 50,
+      hpH = 10;
+    app.layer
+      .fillStyle("#000")
+      .fillRect(hpX, hpY, hpW, hpH)
+      .fillStyle("#F00")
+      .fillRect(hpX, hpY, hpW * (this.hp / this.hpMax), hpH);
   }
   renderStand(app, x, y, isFaceToLeft) {
     let atlas = app.atlases[this.atlases];

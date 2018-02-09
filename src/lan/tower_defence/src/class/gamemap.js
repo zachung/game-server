@@ -4,44 +4,31 @@ const TowerFire = require('./tower/TowerFire')
 const TowerIce = require('./tower/TowerIce')
 const Enemy = require('./enemy')
 const TowerUI = require('../gui/TowerUI')
+const Group = require('./Group')
 
 const Guid = require('../../../../library/Guid')
 const Vector = require('../../../../library/Vector')
 const CollisionDetection = require('../../../../library/CollisionDetection')
-const Clazzes = {
-  "TowerFire": TowerFire,
-  "TowerIce": TowerIce,
-  "Enemy": Enemy,
-  "Floor": Floor,
-}
-
-var towerUI = new TowerUI();
 
 class GameMap extends Ball {
   constructor(options) {
     const defaults = {
       x: 0,
       y: 0,
-      map: [],
-      tower: {},
-      projectile: {},
-      objects: {
-        "Enemy": {},
-      }
+      map: new Group(),
+      tower: new Group(),
+      projectile: new Group(),
+      objects: new Group(),
+      towerUI: new TowerUI()
     };
     const populated = Object.assign(defaults, options);
     super(populated);
-    for (let i in this.map) {
-      for (let j in this.map[i]) {
-        this.setMap(this.map[i][j], i, j);
-      }
-    }
-    for (let [clazz, objects] of Object.entries(this.objects)) {
-      for (let [id, object] of Object.entries(objects)) {
-        this.objects[clazz][id] = new Clazzes[object.class](object);
-        this.addObject(this.objects[clazz][id]);
-      }
-    }
+    this.group = new Group();
+    this.group.add(this.map);
+    this.group.add(this.tower);
+    this.group.add(this.projectile);
+    this.group.add(this.objects);
+    this.group.add(this.towerUI);
   }
   get pointOfStart() {
     return this.levelData.enemy_path[0];
@@ -53,36 +40,23 @@ class GameMap extends Ball {
     this.levelData = data;
     data.map.forEach((e, i) => {
       e.forEach((mapCode, j) => {
-        this.setMap(mapCode, i, j);
+        this.map.add(new Floor({
+          mapCode: mapCode,
+          width: 64,
+          height: 64,
+          x: i*64,
+          y: j*64,
+        }));
       })
     })
   }
-  setMap(mapCode, i, j) {
-    if (!this.map[i]) {
-      this.map[i] = [];
-    }
-    this.map[i][j] = new Floor({
-      mapCode: mapCode,
-      width: 64,
-      height: 64,
-      x: i*64,
-      y: j*64,
-    });
-  }
   step(dt) {
     if (!this.isRunning) {
+      this.projectile.step(dt);
       return;
     }
     super.step(dt);
-    Object.values(this.tower).forEach(tower => {
-      tower.step(dt);
-    });
-    Object.values(this.projectile).forEach(projectile => {
-      projectile.step(dt);
-    });
-    Object.values(this.objects).forEach(clazzes => {
-      Object.values(clazzes).forEach(object => object.step(dt));
-    });
+    this.group.step(dt);
   }
   render(app, deltaPoint = { x: 0, y: 0 }) {
     var hpX = app.width - 250;
@@ -91,68 +65,37 @@ class GameMap extends Ball {
     var hpHInit = 20;
     var hpHCurrent = hpHInit + hpH + hpDy;
 
-    for (let i in this.map) {
-      for (let j in this.map[i]) {
-        this.map[i][j].render(app, deltaPoint);
-      }
-    }
-
-    for (const tower of Object.values(this.tower)) {
-      tower.render(app, deltaPoint);
-    }
-
-    for (const projectile of Object.values(this.projectile)) {
-      projectile.render(app, deltaPoint);
-    }
-
-    for (const clazzes of Object.values(this.objects)) {
-      for (const object of Object.values(clazzes)) {
-        object.render(app, deltaPoint);
-      }
-    }
-
-    for (const clazzes of Object.values(this.objects)) {
-      for (const object of Object.values(clazzes)) {
-        // render user hp bar
-        if (object instanceof Enemy) {
-          let
-            hpX = object.x + deltaPoint.x,
-            hpY = object.y - 20 + deltaPoint.y,
-            hpW = 50,
-            hpH = 10;
-          app.layer
-            .fillStyle("#000")
-            .fillRect(hpX, hpY, hpW, hpH)
-            .fillStyle("#F00")
-            .fillRect(hpX, hpY, hpW * (object.hp / object.hpMax), hpH);
-        }
-      }
-    }
-
-    towerUI.render(app, deltaPoint);
+    this.group.x = deltaPoint.x;
+    this.group.y = deltaPoint.y;
+    this.group.render(app);
   }
   /** collision with other tower & road */
   tryBuildTower(tower) {
     // clear towerUI
-    towerUI.inactive();
+    this.towerUI.inactive();
     // collision with other tower
-    for (const other of Object.values(this.tower)) {
+    for (const other of Object.values(this.tower.set)) {
       let distance = CollisionDetection.RectRectDistance(tower, other);
       if (distance <= 0) {
         return false;
       }
     }
-    let canBuildOn = true;
-    for (let i in this.map) {
-      for (let j in this.map[i]) {
-        let other = this.map[i][j];
-        let distance = CollisionDetection.RectRectDistance(tower, other);
-        if (distance <= 0) {
-          canBuildOn &= other.canBuildOn(this.tower);
-        }
-      }
+    let collisionWithOtherTower = this.tower.some(other => {
+      return CollisionDetection.RectRectDistance(tower, other) <= 0;
+    });
+    if (collisionWithOtherTower) {
+      return false;
     }
-    return canBuildOn;
+    let canBuildOn = true;
+    let inMap = false;
+    this.map.forEach(map => {
+      let distance = CollisionDetection.RectRectDistance(tower, map);
+      if (distance <= 0) {
+        inMap = true;
+        canBuildOn &= map.canBuildOn();
+      }
+    });
+    return inMap && canBuildOn;
   }
   addTower(tower) {
     if (!this.tryBuildTower(tower)) {
@@ -165,36 +108,31 @@ class GameMap extends Ball {
       projectile.goto(other);
       projectile.on('atEndPoint', () => {
         this.attackOnTouch(tower, projectile);
-        delete this.projectile[projectile.id];
+        this.projectile.delete(projectile);
       });
       this.addProjectile(projectile);
     });
-    this.tower[tower.id] = tower;
+    this.tower.add(tower);
     return true;
   }
   removeTower(tower) {
-    delete this.tower[tower.id];
+    this.tower.delete(tower);
   }
   addProjectile(projectile) {
-    this.projectile[projectile.id] = projectile;
+    this.projectile.add(projectile);
   }
   addObject(object) {
-    let instance = this.getObject(object);
-    if (instance) {
-      // in map
-      this.remove(object);
+    if (this.objects.has(object)) {
+      this.objects.delete(object);
     }
-    this.objects[object.class][object.id] = object;
+    this.objects.add(object);
     object.on('die', () => {
-      this.remove(object);
+      this.objects.delete(object);
     });
-  }
-  getObject(object) {
-    return this.objects[object.class][object.id];
   }
   // remove object
   remove(object) {
-    delete this.objects[object.class][object.id];
+    this.objects.delete(object);
   }
   magicAttack(object) {
     var center = object.center;
@@ -211,33 +149,26 @@ class GameMap extends Ball {
     return fire;
   }
   attackInRange(tower, dt) {
-    for (const clazzes of Object.values(this.objects)) {
-      for (const object of Object.values(clazzes)) {
-        if (object instanceof Enemy) {
-          tower.attack(object, dt);
-        }
+    this.objects.forEach(object => {
+      if (object instanceof Enemy) {
+        tower.attack(object, dt);
       }
-    }
+    });
   }
   attackOnTouch(attacker, weapon) {
-    for (const clazzes of Object.values(this.objects)) {
-      for (const object of Object.values(clazzes)) {
-        if (object === attacker) {
-          continue;
-        }
-        weapon.attack(object);
-        if (!weapon.isAlive()) {
-          return;
-        }
+    this.objects.some(object => {
+      if (object === attacker) {
+        return false;
       }
-    }
+      weapon.attack(object);
+      if (!weapon.isAlive()) {
+        return true;
+      }
+      return false;
+    });
   }
   attackRange(attacker) {
-    for (const clazzes of Object.values(this.objects)) {
-      for (const object of Object.values(clazzes)) {
-        attacker.attack(object);
-      }
-    }
+    this.objects.forEach(object => attacker.attack(object));
   }
   setDifficulty(difficulty) {
     this.difficulty = difficulty;
@@ -270,12 +201,12 @@ class GameMap extends Ball {
 
         enemy_count--;
       } else {
-        if (Object.keys(this.objects["Enemy"]).length === 0) {
+        if (this.objects.size === 0) {
           clearInterval(this.timer);
           this.isRunning = false;
           gamemap.trigger('roundEnd');
         } else {
-          console.log("monster running count: ", Object.keys(this.objects["Enemy"]).length);
+          console.log("monster running count: ", this.objects.size);
         }
       }
     }, 1000);
@@ -287,7 +218,7 @@ class GameMap extends Ball {
   }
 
   showTowerArea(isShow) {
-    Object.values(this.tower).forEach(tower => {
+    this.tower.forEach(tower => {
       tower.isShowArea = isShow;
     });
   }
@@ -295,17 +226,16 @@ class GameMap extends Ball {
   onMousedown(...args) {
     args.unshift('mousedown');
     let propagation;
-    propagation = towerUI.trigger.apply(towerUI, args);
+    propagation = this.towerUI.trigger.apply(this.towerUI, args);
     if (false === propagation) {
       return false;
     }
 
-    towerUI.inactive();
-    let towers = Object.values(this.tower);
-    propagation = towers.forEach(object => {
+    this.towerUI.inactive();
+    propagation = this.tower.forEach(object => {
       let propagation = object.trigger.apply(object, args);
       if (object.isShowArea) {
-        towerUI.active(object);
+        this.towerUI.active(object);
       }
       return !propagation;
     });

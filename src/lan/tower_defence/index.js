@@ -6,7 +6,7 @@ module.exports = function(io) {
   var router = express.Router()
 
   router.get('/', function(req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/public/index.html');
   });
 
   // 靜態檔案

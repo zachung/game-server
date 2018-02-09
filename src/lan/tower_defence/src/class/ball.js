@@ -19,7 +19,7 @@ class Ball extends Graphic {
     };
     const populated = Object.assign(defaults, options);
     super(populated);
-    this.class = this.constructor.name;
+    this.clazz = this.constructor.name;
 
     if (this.accelerate) {
       this.accelerate = new Vector(this.accelerate.x, this.accelerate.y);

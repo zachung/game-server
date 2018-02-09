@@ -11,7 +11,6 @@ class IceBolt extends FireBolt {
     };
     const populated = Object.assign(defaults, options);
     super(populated);
-    this.class = this.constructor.name;
   }
   goto(other) {
     super.goto.apply(this, arguments);

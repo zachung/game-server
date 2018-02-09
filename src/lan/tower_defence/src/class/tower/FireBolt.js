@@ -12,7 +12,6 @@ class FireBolt extends Ball {
     };
     const populated = Object.assign(defaults, options);
     super(populated);
-    this.class = this.constructor.name;
   }
   render(app, deltaPoint = { x: 0, y: 0 }) {
     this.renderImage(app, deltaPoint);

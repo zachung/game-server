@@ -37,6 +37,11 @@ app.use('/single', express.static(__dirname + '/single'));
 	app.use(name, require(index)(io.of(name)));
 });
 
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 http.listen(3000, function() {
 	console.log('listening on *:3000');
 });
