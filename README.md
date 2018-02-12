@@ -8,7 +8,7 @@ Just a practice project, dirty code everywhere A_A.
 
 ## Games
 ### Lan
-* 
+* hero siege
 * wizard battle
 * bomber man
 * zombie shooter
