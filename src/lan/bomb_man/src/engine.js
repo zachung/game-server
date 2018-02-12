@@ -62,8 +62,8 @@ ENGINE.Game = {
 
     var command = new SocketCommand();
     command.add('set map', function(map) {
-      if (!game.isInit) {
-        game.isInit = true;
+      if (!ENGINE.isInit) {
+        ENGINE.isInit = true;
         game.gameMap = new GameMap(map);
         game.thomas = game.gameMap.getUser(this.id);
       }

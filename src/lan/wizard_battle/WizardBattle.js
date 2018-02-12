@@ -1,3 +1,4 @@
+const Game = require('../../library/Game')
 const Thomas = require('./src/class/thomas')
 const GameMap = require('./src/class/gamemap')
 
@@ -20,15 +21,16 @@ const SocketEvent = {
   },
 }
 
-class Game {
-  constructor() {
-    this.isStart = false;
-    this.users = {};
+const users = new Map();
+
+class WizardBattle extends Game {
+  static get nsp() {
+    return "/wizard-battle";
   }
   addUser(socket) {
+    super.addUser(socket);
     var game = this;
     var id = socket.id;
-    console.log('user connected', 'user ' + id + ' connected');
     var user = new Thomas({
       id: id,
       color: "#" + (Math.random().toString(16) + "000000").slice(2, 8)
@@ -63,54 +65,26 @@ class Game {
         });
       }
     }
-    this.users[id] = user;
-  }
-  removeUser(user) {
-    let id = user.id;
-    console.log('user ' + id + ' been removed');
-    this.gameMap.remove(user);
-    delete this.users[id];
+    users.set(id, user);
   }
   step(dt) {
-    this.gameTime += dt;
-    var game = this;
-    // map
-    game.gameMap.step(dt);
-    // all user leave
-    if (Object.keys(this.users).length === 0) {
-      console.log('all user leave');
-      this.stop();
+    super.step(dt);
+    this.gameMap.step(dt);
+  }
+  removeUser(socket) {
+    super.removeUser(socket);
+    let id = socket.id;
+    if (!users.has(id)) {
       return;
     }
+    this.gameMap.remove(users.get(id));
+    users.delete(id);
   }
   onStart(io) {
-    console.log('game starting...');
+    super.onStart(io);
     this.gameMap = new GameMap();
     this.gameMap.init();
   }
-  start(io) {
-    if (this.isStart) {
-      return;
-    }
-    this.isStart = true;
-    var time_pre = new Date();
-    var game = this;
-    game.onStart(io);
-    this.interval = setInterval(function() {
-      var now = new Date();
-      var dt = now.getTime() - time_pre.getTime();
-      game.step(dt / 1000);
-      time_pre = now;
-    }, 10);
-  }
-  stop() {
-    console.log('game stop');
-    clearInterval(this.interval);
-    this.isStart = false;
-  }
-  isRunning() {
-    return this.isStart;
-  }
 }
 
-module.exports = Game;
+module.exports = WizardBattle;

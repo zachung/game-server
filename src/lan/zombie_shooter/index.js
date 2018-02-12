@@ -1,5 +1,5 @@
 const express = require('express')
-const TowerDefence = require('./TowerDefence')
+const ZombieShooter = require('./ZombieShooter')
 
 module.exports = function(lobby) {
   var router = express.Router()
@@ -11,7 +11,7 @@ module.exports = function(lobby) {
   // 靜態檔案
   router.use('/', express.static(__dirname + '/public'));
 
-  lobby.on(TowerDefence);
+  lobby.on(ZombieShooter);
 
   return router;
 }

@@ -1,3 +1,4 @@
+const Game = require('../../library/Game')
 const Zombie = require('./public/js/ball.js').Zombie
 const Thomas = require('./public/js/ball.js').Thomas
 const Item = require('./public/js/ball.js').Item
@@ -6,65 +7,6 @@ const Bomb = require('./public/js/ball.js').Bomb
 const CollisionDetection = require('./public/js/collision.js')
 
 var collisionDetection = new CollisionDetection();
-
-class Lobby {
-  constructor() {
-    this.isOn = false;
-    this.games = {};
-    this.users = [];
-  }
-  addUser(socket) {
-    this.users.push(socket.id);
-  }
-  /**
-   * find first game or create
-   *
-   * @param      {socket}  socket  The socket
-   * @return     {Game}  instance of Game
-   */
-  findGame(socket) {
-    var game_ids = Object.keys(this.games);
-    if (game_ids.length === 0) {
-      var game = new Game(socket);
-      this.games[socket.id] = game;
-      return game;
-    }
-    return this.games[game_ids[0]];
-  }
-  on(io) {
-    if (this.isOn) {
-      return;
-    }
-    var lobby = this;
-    io.on("connection", function(socket) {
-      console.log('new socket in');
-      lobby.addUser(socket);
-      var game = lobby.findGame(socket);
-      game.addUser(socket);
-      if (!game.isRunning()) {
-        game.start();
-      }
-    });
-    this.isOn = true;
-
-    var time_pre = new Date();
-    this.interval = setInterval(function() {
-      var now = new Date();
-      var dt = now.getTime() - time_pre.getTime();
-      time_pre = now;
-      Object.keys(lobby.games).map(function(key) {
-        if (!lobby.games[key].isRunning()) {
-          delete lobby.games[key];
-          console.log('game ' + key + ' been killed.');
-        }
-      });
-    }, 10);
-    console.log('lobby on');
-  }
-  off() {
-    clearInterval(this.interval);
-  }
-}
 
 const SocketEvent = {
   disconnect(user) {
@@ -100,12 +42,16 @@ const SocketEvent = {
   }
 }
 
-class Game {
+const users = new Map();
+
+class ZombieShooter extends Game {
+  static get nsp() {
+    return "/zombie-shooter";
+  }
   constructor() {
-    this.isStart = false;
+    super();
     this.enemies = {};
     this.observer = [];
-    this.users = {};
     this.items = {};
     this.bombs = {};
     this.width = 3000;
@@ -197,8 +143,8 @@ class Game {
     this.observer.push(callback);
   }
   addUser(socket) {
+    super.addUser(socket);
     var id = socket.id;
-    console.log('user connected', 'user ' + id + ' connected');
     var user = new Thomas({
       x: 500,
       y: 500,
@@ -276,37 +222,34 @@ class Game {
         }
       }
     });
-    this.users[id] = user;
+    users.set(id, user);
   }
-  removeUser(id) {
-    console.log('user ' + id + ' been removed');
-    delete this.users[id];
+  removeUser(socket) {
+    super.removeUser(socket);
+    users.delete(socket.id);
   }
   nearsetUser(x, y) {
     var nearest;
     var nearest_d;
-    for (var key in this.users) {
-      if (this.users.hasOwnProperty(key)) {
-        var user = this.users[key];
-        var a = user.x - x,
-          b = user.y - y;
-        var user_d = Math.sqrt(a * a + b * b);
-        if (!nearest) {
+    users.forEach(user => {
+      var a = user.x - x,
+        b = user.y - y;
+      var user_d = Math.sqrt(a * a + b * b);
+      if (!nearest) {
+        nearest = user;
+        nearest_d = user_d;
+      } else {
+        if (user_d < nearest_d) {
           nearest = user;
           nearest_d = user_d;
-        } else {
-          if (user_d < nearest_d) {
-            nearest = user;
-            nearest_d = user_d;
-          }
         }
       }
-    }
+    })
     return nearest;
   }
   step(dt) {
+    super.step(dt);
     var game = this;
-    var users = game.users;
     // enemies running
     var enemies = game.enemies;
     Object.keys(game.enemies).map(function(key) {
@@ -345,59 +288,25 @@ class Game {
             }
           }
           // bomb users
-          for (const key in users) {
-            if (users.hasOwnProperty(key)) {
-              var user = users[key];
-              if (collisionDetection.CircleRectColliding(bomb, user)) {
-                if (!user.getDamage(bomb.damage)) {
-                  game.removeUser(user.id);
-                }
+          users.forEach(user => {
+            if (collisionDetection.CircleRectColliding(bomb, user)) {
+              if (!user.getDamage(bomb.damage)) {
+                game.removeUser(user.id);
               }
             }
-          }
+          });
         }
       }
     }
     // bomb users
-    for (const key in users) {
-      if (users.hasOwnProperty(key)) {
-        var user = users[key];
-        game.spawnEnemy(user.x, user.y);
-        game.spawnItem(user.x, user.y);
-      }
-    }
-    // all user leave
-    if (Object.keys(this.users).length === 0) {
-      console.log('all user leave');
-      this.stop();
-      return;
-    }
+    users.forEach(user => {
+      game.spawnEnemy(user.x, user.y);
+      game.spawnItem(user.x, user.y);
+    });
     // other step
     this.observer.forEach(function(f) {
       f(dt);
     });
-  }
-  start() {
-    if (this.isStart) {
-      return;
-    }
-    this.isStart = true;
-    var time_pre = new Date();
-    var game = this;
-    this.interval = setInterval(function() {
-      var now = new Date();
-      var dt = now.getTime() - time_pre.getTime();
-      game.step(dt / 1000);
-      time_pre = now;
-    }, 10);
-  }
-  stop() {
-    console.log('game stop');
-    clearInterval(this.interval);
-    this.isStart = false;
-  }
-  isRunning() {
-    return this.isStart;
   }
 }
 
@@ -411,4 +320,4 @@ function makeid() {
   return text;
 }
 
-module.exports = Lobby;
+module.exports = ZombieShooter;

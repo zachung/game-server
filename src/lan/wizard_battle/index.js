@@ -1,19 +1,17 @@
 const express = require('express')
-const Lobby = require('../../library/Lobby')
 const WizardBattle = require('./WizardBattle')
 
-module.exports = function(io) {
+module.exports = function(lobby) {
   var router = express.Router()
 
   router.get('/', function(req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/public/index.html');
   });
 
   // 靜態檔案
   router.use('/', express.static(__dirname + '/public'));
 
-  var lobby = new Lobby(WizardBattle);
-  lobby.on(io);
+  lobby.on(WizardBattle);
 
   return router;
 }
