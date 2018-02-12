@@ -60,9 +60,7 @@ class Lobby {
       var now = new Date();
       var dt = now.getTime() - time_pre.getTime();
       time_pre = now;
-      Object.entries(this.games).forEach(entry => {
-        let gameName = entry[0];
-        let games = entry[1];
+      this.games.forEach((games, gameName) => {
         for (var i = games.length - 1; i >= 0; i--) {
           if (!games[i].isRunning()) {
             games.splice(i, 1);
