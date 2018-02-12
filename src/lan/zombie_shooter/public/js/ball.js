@@ -1,3 +1,5 @@
+"use strict";
+
 class Ball {
   constructor(options) {
     const defaults = {

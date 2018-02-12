@@ -1,3 +1,5 @@
+"use strict";
+
 const Ball = require('./ball')
 const Floor = require('./floor')
 const Wall = require('./wall')

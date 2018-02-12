@@ -1,3 +1,5 @@
+"use strict";
+
 const Ball = require('./ball')
 const EasingFunctions = require('../../../../library/EasingFunctions')
 const Vector = require('../../../../library/Vector')

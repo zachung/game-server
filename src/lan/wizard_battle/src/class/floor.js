@@ -1,3 +1,5 @@
+"use strict";
+
 const Ball = require('./ball')
 
 class Floor extends Ball {

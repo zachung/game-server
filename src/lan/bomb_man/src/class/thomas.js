@@ -1,3 +1,5 @@
+"use strict";
+
 const Floor = require('./floor')
 
 class Thomas extends Floor {

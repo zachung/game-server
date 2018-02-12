@@ -1,3 +1,5 @@
+"use strict";
+
 const Floor = require('./floor')
 const Fire = require('./fire')
 

@@ -1,3 +1,5 @@
+"use strict";
+
 const CollisionDetection = require('../collision')
 const easeOutQuad = function (t, b, c, d) {
   t /= d;

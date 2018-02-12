@@ -1,3 +1,5 @@
+"use strict";
+
 const CollisionDetection = require('../../../../library/CollisionDetection')
 const EasingFunctions = require('../../../../library/EasingFunctions')
 const Vector = require('../../../../library/Vector')
