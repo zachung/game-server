@@ -1,3 +1,5 @@
+"use strict";
+
 const Game = require('../../library/Game')
 const Zombie = require('./public/js/ball.js').Zombie
 const Thomas = require('./public/js/ball.js').Thomas

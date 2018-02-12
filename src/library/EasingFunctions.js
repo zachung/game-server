@@ -1,3 +1,5 @@
+"use strict";
+
 class EasingFunctions {
   static easeOutQuad(t, b, c, d) {
     t /= d;

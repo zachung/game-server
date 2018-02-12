@@ -1,3 +1,5 @@
+"use strict";
+
 class CollisionDetection {
   static CircleRectColliding(circle, rect) {
     var distX = Math.abs(circle.x - rect.x - rect.width / 2);

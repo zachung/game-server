@@ -1,3 +1,5 @@
+"use strict";
+
 const Game = require('../../library/Game')
 const Thomas = require('./src/class/thomas')
 const GameMap = require('./src/class/gamemap')

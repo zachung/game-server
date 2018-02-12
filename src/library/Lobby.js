@@ -1,3 +1,5 @@
+"use strict";
+
 class Lobby {
   constructor(io) {
     this.isOn = false;
@@ -11,7 +13,9 @@ class Lobby {
   get playerCount() {
     let count = {};
     this.games.forEach((games, gameName) => {
-      count[gameName] = games[0].userCount;
+      if (games[0]) {
+        count[gameName] = games[0].userCount;
+      }
     });
     return count;
   }

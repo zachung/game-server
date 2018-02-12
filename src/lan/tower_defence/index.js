@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require('express')
 const TowerDefence = require('./TowerDefence')
 

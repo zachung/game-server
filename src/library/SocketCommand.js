@@ -1,3 +1,5 @@
+"use strict";
+
 class SocketCommand {
   constructor(namespace) {
     this.socket = io(namespace);
