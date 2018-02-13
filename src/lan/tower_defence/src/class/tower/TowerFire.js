@@ -31,6 +31,26 @@ const upgradeOptions = [{
     type: Tower.COLDDOWN,
     value: -0.2
   }]
+}, {
+  name: "level 4",
+  cost: 200,
+  attrs: [{
+    type: Tower.DAMAGE,
+    value: 100
+  },{
+    type: Tower.COLDDOWN,
+    value: -0.2
+  }]
+}, {
+  name: "level 5",
+  cost: 200,
+  attrs: [{
+    type: Tower.DAMAGE,
+    value: 100
+  },{
+    type: Tower.COLDDOWN,
+    value: -0.2
+  }]
 }];
 
 class TowerFire extends Tower {

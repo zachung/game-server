@@ -53,6 +53,6 @@ app.use(function(err, req, res, next) {
 	res.status(500).send('Something broke!');
 });
 
-http.listen(3000, function() {
-	console.log('listening on *:3000');
+http.listen(8080, function() {
+	console.log('listening on *:8080');
 });

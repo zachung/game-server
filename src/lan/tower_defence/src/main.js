@@ -31,7 +31,7 @@ var app = new PLAYGROUND.Application({
       "fire_bolt",
       "cursor",
       ]);
-    this.loadAtlases("sorlosheet");
+    this.loadAtlases(["sorlosheet", "sorlosheet_super"]);
 
   },
 

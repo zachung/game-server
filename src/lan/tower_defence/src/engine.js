@@ -5,6 +5,7 @@ const Cursor = require('./class/cursor')
 const Icon = require('./class/icon')
 const SocketCommand = require('../../../library/SocketCommand')
 const Guid = require('../../../library/Guid')
+const LevelData = require('./class/LevelData')
 
 const TechTree = require('./gui/TechTree')
 
@@ -25,7 +26,6 @@ ENGINE.Game = {
   },
 
   score: 0,
-  round: 1,
   messageTip: "press 1 or 2 select tower, then upgrade by click on it.",
 
   create: function() {
@@ -57,16 +57,18 @@ ENGINE.Game = {
     ENGINE.items = [];
     ENGINE.users = [];
 
-    const level1 = require('./levels/level1')
+    this.levelData = new LevelData();
+    this.levelData.setLevel(1);
+
     this.gameMap = new GameMap();
-    this.gameMap.init(level1);
+    this.gameMap.init(this.levelData);
     this.gameMap.on('enemyDie', enemy => {
       this.wallet.balanceReal += enemy.reward;
       this.wallet.balance += enemy.reward;
-      this.score += this.round * enemy.score;
+      this.score += enemy.score;
     });
     this.gameMap.on('enemyEscape', enemy => {
-      this.score -= this.round * enemy.escapeFine;
+      this.score -= enemy.escapeFine;
       this.gameMap.remove(enemy);
       this.gameMap.gameOver();
     });
@@ -76,8 +78,6 @@ ENGINE.Game = {
         second--;
         this.messageTip = "Next Round will begin at " + second + " second later";
         if (second <= 0) {
-          this.round++;
-          this.gameMap.setDifficulty(this.round);
           clearInterval(timer);
           this.messageTip = "";
           this.gameMap.roundStart();
@@ -127,10 +127,27 @@ ENGINE.Game = {
       .fillStyle("#00D700")
       .fillText("score: " + this.score, 50, 100)
       .fillStyle("#FFD700")
-      .fillText("Round " + this.round, 350, 50)
+      .fillText("Round " + this.levelData.round, 350, 50)
       .fillStyle("#FFD700")
       .fillText(this.messageTip, 350, 100)
       ;
+
+    // next round info
+    let nextRoundData = this.levelData.hasNextRound() ? this.levelData.nextRoundData : this.levelData.roundData;
+    let nextRoundEnemy = this.gameMap.nextRoundEnemy();
+    nextRoundEnemy.hideHpBar = true;
+    nextRoundEnemy.x = 430;
+    nextRoundEnemy.y = 120;
+    app.layer.fillText("Next: ", 350, 150);
+    nextRoundEnemy.render(app);
+    app.layer
+      .fillStyle("#F00")
+      .fillText([
+        "hp: " + nextRoundEnemy.hp,
+        "speed: " + (1/nextRoundEnemy.mass).toFixed(2),
+        "defence: " + nextRoundEnemy.defence
+        ].join(", "), 500, 150)
+      .fillText(" x " + nextRoundData.count, 490, 200);
     // tower sample
     let tower_sample = {
       attackDistance: 0,

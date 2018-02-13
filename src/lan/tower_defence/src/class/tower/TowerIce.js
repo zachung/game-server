@@ -22,11 +22,24 @@ const upgradeOptions = [{
     value: 5
   }]
 }, {
-  name: "level 2",
+  name: "level 3",
   cost: 30,
   attrs: [{
     type: Tower.COLDDOWN,
     value: -0.2
+  }]
+}, {
+  name: "level 4",
+  cost: 100,
+  attrs: [{
+    type: Tower.RADIUS,
+    value: 200
+  }, {
+    type: Tower.COLDDOWN,
+    value: -0.1
+  }, {
+    type: Tower.DAMAGE,
+    value: -10
   }]
 }];
 

@@ -2,7 +2,7 @@ const Ball = require('./ball')
 const Floor = require('./Floor')
 const TowerFire = require('./tower/TowerFire')
 const TowerIce = require('./tower/TowerIce')
-const Enemy = require('./enemy')
+const EnemyFactory = require('./enemy/EnemyFactory')
 const TowerUI = require('../gui/TowerUI')
 const Group = require('./Group')
 
@@ -36,9 +36,9 @@ class GameMap extends Ball {
   get pointOfEnd() {
     return this.levelData.enemy_path[this.levelData.enemy_path.length - 1];
   }
-  init(data) {
-    this.levelData = data;
-    data.map.forEach((e, i) => {
+  init(levelData) {
+    this.levelData = levelData;
+    this.levelData.map.forEach((e, i) => {
       e.forEach((mapCode, j) => {
         this.map.add(new Floor({
           mapCode: mapCode,
@@ -150,9 +150,7 @@ class GameMap extends Ball {
   }
   attackInRange(tower, dt) {
     this.objects.forEach(object => {
-      if (object instanceof Enemy) {
-        tower.attack(object, dt);
-      }
+      tower.attack(object, dt);
     });
   }
   attackOnTouch(attacker, weapon) {
@@ -170,27 +168,22 @@ class GameMap extends Ball {
   attackRange(attacker) {
     this.objects.forEach(object => attacker.attack(object));
   }
-  setDifficulty(difficulty) {
-    this.difficulty = difficulty;
-  }
   roundStart() {
     if (this.isRunning) {
       return;
     }
+    this.levelData.nextRound();
     this.isRunning = true;
     let gamemap = this;
-    let enemy_count = 10;
+    let roundData = this.levelData.roundData;
+    let enemy_data = Object.assign(roundData.enemy, {
+      x: this.pointOfStart.x,
+      y: this.pointOfStart.y
+    });
+    let enemy_count = roundData.count;
     this.timer = setInterval(() => {
       if (enemy_count > 0) {
-        let
-          hp = 11 - enemy_count + (this.difficulty - 1)*100, // from 10s to 5s
-          enemy = new Enemy({
-            id: Guid.gen('enemy'),
-            x: this.pointOfStart.x,
-            y: this.pointOfStart.y,
-            hp: hp,
-            hpMax: hp
-          });
+        let enemy = EnemyFactory.newEnemy(enemy_data);
         enemy.on('die', () => {
           gamemap.trigger('enemyDie', enemy);
         }).on('atEndPoint', () => {
@@ -210,6 +203,10 @@ class GameMap extends Ball {
         }
       }
     }, 1000);
+  }
+  nextRoundEnemy() {
+    let roundData = this.levelData.hasNextRound() ? this.levelData.nextRoundData : this.levelData.roundData;
+    return EnemyFactory.newEnemy(roundData.enemy);
   }
   gameOver() {
     clearInterval(this.timer);

@@ -1,26 +1,16 @@
-const Ball = require('./ball')
-const EasingFunctions = require('../../../../library/EasingFunctions')
-const Vector = require('../../../../library/Vector')
+const Ball = require('../ball')
+const EasingFunctions = require('../../../../../library/EasingFunctions')
+const Vector = require('../../../../../library/Vector')
 
 class Enemy extends Ball {
   constructor(options) {
     const defaults = {
-      hp: 10,
-      hpMax: 10,
-      width: 72,
-      height: 72,
-      atlases: "sorlosheet",
-      defence: 0,
-      fireRadius: 100,
-      bombCount: 0,
-      bombCountMax: 10,
-      defence: 1,
-      mass: 0.5,
-      friction: 0,
       nextPathIndex: 1,
-      reward: 10,
-      score: 1,
-      escapeFine: 1
+      reward: 0,
+      score: 0,
+      escapeFine: 0,
+      scale: 1,
+      hideHpBar: false
     };
     const populated = Object.assign(defaults, options);
     super(populated);
@@ -43,34 +33,22 @@ class Enemy extends Ball {
 
     super.onStep.apply(this, arguments);
   }
-  spawnBomb(map) {
-    if (this.bombCount >= this.bombCountMax) {
-      return;
-    }
-    var user = this;
-    var bomb = map.spawnBomb(this);
-    bomb.on("die", function() {
-      user.bombCount--;
-    })
-    this.bombCount++;
-    return bomb;
-  }
   render() {
     this.renderAtlas.apply(this, arguments);
   }
   renderAtlas(app, deltaPoint = { x: 0, y: 0 }) {
     let isFaceToLeft = Math.abs(this.directRadians) < Math.PI / 2;
-    let x = this.x + deltaPoint.x + (isFaceToLeft ? 0 : this.width);
-    let y = this.y + deltaPoint.y;
+    let x = this.x + deltaPoint.x + (isFaceToLeft ? 0 : this.width) + this.width * (1 - this.scale);
+    let y = this.y + deltaPoint.y + this.height * (1 - this.scale);
 
     super.renderBuff.apply(this, arguments);
 
-    let length = this.accelerate.length();
-    if (length < 1) {
-      this.renderStand(app, x, y, isFaceToLeft);
-    } else {
-      this.renderRun(app, x, y, isFaceToLeft);
+    this.renderRun(app, x, y, isFaceToLeft);
+    if (!this.hideHpBar) {
+      this.renderHp(app, deltaPoint);
     }
+  }
+  renderHp(app, deltaPoint) {
     let
       hpX = this.x + deltaPoint.x,
       hpY = this.y - 20 + deltaPoint.y,
@@ -82,27 +60,16 @@ class Enemy extends Ball {
       .fillStyle("#F00")
       .fillRect(hpX, hpY, hpW * (this.hp / this.hpMax), hpH);
   }
-  renderStand(app, x, y, isFaceToLeft) {
-    let atlas = app.atlases[this.atlases];
-    // 0, 1, 2
-    let current = ((app.lifetime * 4) % 2 / 2) * 3 | 0;
-
-    app.layer
-      .save()
-      .setTransform(1, 0, 0, 1, x, y)
-      .scale(isFaceToLeft ? 1 : -1, 1)
-      .drawAtlasFrame(atlas, current, 0, 0)
-      .restore();
-  }
   renderRun(app, x, y, isFaceToLeft) {
     let atlas = app.atlases[this.atlases];
     // 3, 4, 5, 6
-    let current = ((app.lifetime * 4) % 2 / 2) * 4 | 0;
+    let length = this.accelerate.length();
+    let current = ((app.lifetime * length * 2) % 2 / 2) * 4 | 0;
     current += 3;
 
     app.layer
       .save()
-      .setTransform(1, 0, 0, 1, x, y)
+      .setTransform(this.scale, 0, 0, this.scale, x, y)
       .scale(isFaceToLeft ? 1 : -1, 1)
       .drawAtlasFrame(atlas, current, 0, 0)
       .restore();

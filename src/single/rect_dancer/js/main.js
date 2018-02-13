@@ -1,11 +1,16 @@
 var app = new PLAYGROUND.Application({
 
-  // preferedAudioFormat: "mp3",
+  paths: {
+    sounds: "/sounds/",
+    rewriteURL: {
+      background: "/images/background.png"
+    }
+  },
 
   create: function() {
 
     this.loadSounds("music")
-    this.loadImage("background");
+    this.loadImage("<background>");
 
   },
 
