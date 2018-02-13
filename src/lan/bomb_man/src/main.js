@@ -4,9 +4,11 @@ var app = new PLAYGROUND.Application({
 
   paths: {
     images: "bomb-man/images/",
-    sounds: "bomb-man/sounds/",
     atlases: "bomb-man/atlases/",
     data: "bomb-man/data/",
+    rewriteURL: {
+      background: "/images/background.png"
+    }
   },
 
   // preferedAudioFormat: "mp3",
@@ -15,7 +17,7 @@ var app = new PLAYGROUND.Application({
 
     this.loadSounds("music", "explosion")
     this.loadImage([
-      "background",
+      "<background>",
       "items/Icon_blastup",
       "items/Icon_countup",
       "items/Icon_healthup",

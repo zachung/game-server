@@ -1,5 +1,3 @@
-"use strict";
-
 class Lobby {
   constructor(io) {
     this.isOn = false;

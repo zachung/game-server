@@ -2,9 +2,11 @@ var app = new PLAYGROUND.Application({
 
   paths: {
     images: "zombie-shooter/images/",
-    sounds: "zombie-shooter/sounds/",
     atlases: "zombie-shooter/atlases/",
     data: "zombie-shooter/data/",
+    rewriteURL: {
+      background: "/images/background.png"
+    }
   },
 
   // preferedAudioFormat: "mp3",
@@ -13,7 +15,7 @@ var app = new PLAYGROUND.Application({
 
     this.loadSounds("music")
     this.loadImage([
-      "background",
+      "<background>",
       "items/health",
       "items/run_speed_up",
       "items/weapon_speed_up",

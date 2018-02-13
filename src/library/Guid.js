@@ -1,5 +1,3 @@
-"use strict";
-
 class Guid {
   static gen(namespace = "") {
     function s4() {

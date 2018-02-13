@@ -1,5 +1,3 @@
-"use strict";
-
 const Game = require('../../library/Game')
 const Zombie = require('./public/js/ball.js').Zombie
 const Thomas = require('./public/js/ball.js').Thomas
@@ -10,11 +8,13 @@ const CollisionDetection = require('./public/js/collision.js')
 
 var collisionDetection = new CollisionDetection();
 
+const users = new Map();
+
 const SocketEvent = {
   disconnect(user) {
     var id = user.id;
     console.log('user ' + id + ' disconnect');
-    this.removeUser(id);
+    users.delete(id);
   },
   user_move(user, direct) {
     user.faceDirectBits |= direct;
@@ -43,8 +43,6 @@ const SocketEvent = {
     this.spawnBomb(user.x, user.y);
   }
 }
-
-const users = new Map();
 
 class ZombieShooter extends Game {
   static get nsp() {
@@ -166,7 +164,6 @@ class ZombieShooter extends Game {
             var bullets = this.bullets;
             var enemy = enemies[key];
             if (collisionDetection.RectRectColliding(bullet, enemy)) {
-              console.log('hit monster');
               var enemy_id = enemy.id;
               var damage = bullet.damage;
               if (!enemy) {
@@ -203,7 +200,7 @@ class ZombieShooter extends Game {
     game.registerObserver(function(dt) {
       user.step(dt);
       user.attack(dt);
-      socket.emit('set user', game.users);
+      socket.emit('set user', Array.from(users.values()));
       socket.emit('set enemies', game.enemies);
       socket.emit('set items', game.items);
       socket.emit('set bombs', game.bombs);
@@ -217,7 +214,6 @@ class ZombieShooter extends Game {
             continue;
           }
           if (collisionDetection.RectRectColliding(item, user)) {
-            console.log('get item');
             user.getItem(item);
             delete items[key];
           }
@@ -266,7 +262,7 @@ class ZombieShooter extends Game {
       if (collisionDetection.RectRectColliding(enemy, user)) {
         if (!user.getDamage(enemy.damage * dt)) {
           console.log('user die');
-          game.removeUser(user.id);
+          users.delete(user.id);
         }
       }
     });
@@ -293,7 +289,7 @@ class ZombieShooter extends Game {
           users.forEach(user => {
             if (collisionDetection.CircleRectColliding(bomb, user)) {
               if (!user.getDamage(bomb.damage)) {
-                game.removeUser(user.id);
+                users.delete(user.id);
               }
             }
           });

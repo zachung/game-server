@@ -1,5 +1,3 @@
-"use strict";
-
 const Victor = require('victor')
 
 if (!Victor.fromRadians) {

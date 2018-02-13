@@ -1,5 +1,3 @@
-"use strict";
-
 const Ball = require('./ball')
 
 class Fire extends Ball {

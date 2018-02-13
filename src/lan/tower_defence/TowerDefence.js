@@ -1,5 +1,3 @@
-"use strict";
-
 const Game = require('../../library/Game')
 
 class TowerDefence extends Game {

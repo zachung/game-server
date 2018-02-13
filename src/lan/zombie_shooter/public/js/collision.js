@@ -1,5 +1,3 @@
-"use strict";
-
 var CollisionDetection = function() {
   this.collidingRecord = [];
   this.collidingDelay = 0; //ms

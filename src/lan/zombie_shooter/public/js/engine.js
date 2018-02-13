@@ -139,13 +139,12 @@ ENGINE.Game = {
     socket.on('set user', function(users) {
       ENGINE.users = [];
       delete app.thomas;
-      Object.keys(users).map(function(key) {
-        var user = users[key];
+      users.forEach(function(user) {
         var thomas = new Thomas(user);
         var gun = new Gun(user.weapon);
         thomas.takeWeapon(gun);
         ENGINE.users.push(thomas);
-        if (socket.id === key) {
+        if (socket.id === user.id) {
           app.thomas = thomas;
         }
       });
