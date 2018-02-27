@@ -41,6 +41,10 @@ app.use("/", function() {
 	{
 		name: "tower-defence",
 		index: "tower_defence/index"
+	},
+	{
+		name: "paint",
+		index: "paint/index"
 	}
 ].forEach(game => {
 	let name = "/" + game.name;
