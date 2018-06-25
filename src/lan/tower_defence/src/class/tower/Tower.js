@@ -3,7 +3,7 @@ const Guid = require('../../../../../library/Guid')
 const Window = require('../../gui/Window')
 
 class Tower extends Ball {
-  constructor(options) {
+  constructor (options) {
     const defaults = {
       width: 60,
       height: 60,
@@ -14,108 +14,108 @@ class Tower extends Ball {
       preAttackTime: 0,
       isShowArea: true,
       level: 0
-    };
-    const populated = Object.assign(defaults, options);
-    super(populated);
+    }
+    const populated = Object.assign(defaults, options)
+    super(populated)
   }
-  static get DAMAGE() {
-    return "damage";
+  static get DAMAGE () {
+    return 'damage'
   }
-  static get RADIUS() {
-    return "radius";
+  static get RADIUS () {
+    return 'radius'
   }
-  static get COLDDOWN() {
-    return "cd";
+  static get COLDDOWN () {
+    return 'cd'
   }
-  get cost() {
-    return 10;
+  get cost () {
+    return 10
   }
-  get sellIncome() {
-    return 10;
+  get sellIncome () {
+    return 10
   }
-  onStep(dt) {
-    this.lifetime += dt;
-    super.onStep.apply(this, arguments);
+  onStep (dt) {
+    this.lifetime += dt
+    super.onStep.apply(this, arguments)
   }
-  onAttack(other, dt = 1) {
-    this.preAttackTime = this.lifetime;
+  onAttack (other, dt = 1) {
+    this.preAttackTime = this.lifetime
   }
-  attack(other, dt = 1) {
+  attack (other, dt = 1) {
     if (!this.isColddown(dt)) {
-      return;
+      return
     }
-    var isHitted = this.canAttack(other);
+    var isHitted = this.canAttack(other)
     if (isHitted) {
-      this.trigger('attack', other, dt);
-      this.nextshot = 0;
+      this.trigger('attack', other, dt)
+      this.nextshot = 0
     }
-    return isHitted;
+    return isHitted
   }
-  isColddown(dt) {
-    return this.nextshot < this.colddown;
+  isColddown (dt) {
+    return this.nextshot < this.colddown
   }
-  get throwObject() {
-    let center = this.center;
+  get throwObject () {
+    let center = this.center
     return new this.projectileClass({
       x: center.x,
       y: center.y,
       damage: this.damage,
       id: Guid.gen(this.projectileClass)
-    });
+    })
   }
-  onMousedown(point) {
-    if (point.button === "left") {
+  onMousedown (point) {
+    if (point.button === 'left') {
       if (Tower.isInRect(point, this)) {
-        this.isShowArea = true;
-        return false;
+        this.isShowArea = true
+        return false
       }
     }
-    this.isShowArea = false;
+    this.isShowArea = false
   }
-  render(app, deltaPoint = { x: 0, y: 0 }) {
-    super.renderImage.apply(this, arguments);
+  render (app, deltaPoint = { x: 0, y: 0 }) {
+    super.renderImage.apply(this, arguments)
     if (this.isShowArea) {
-      this.renderAttackDistance(app, deltaPoint);
+      this.renderAttackDistance(app, deltaPoint)
     }
   }
-  renderAttackDistance(app, deltaPoint) {
-    let center = this.center;
-    var x = center.x + deltaPoint.x;
-    var y = center.y + deltaPoint.y;
+  renderAttackDistance (app, deltaPoint) {
+    let center = this.center
+    var x = center.x + deltaPoint.x
+    var y = center.y + deltaPoint.y
     app.layer
-      .fillStyle("rgba(255, 255, 255, 0.3)")
-      .fillCircle(x, y, this.attackDistance);
+      .fillStyle('rgba(255, 255, 255, 0.3)')
+      .fillCircle(x, y, this.attackDistance)
   }
-  hasUpgradeOption() {
+  hasUpgradeOption () {
     // subclass implements
-    return this.upgradeOptions.length > 0;
+    return this.upgradeOptions.length > 0
   }
-  get upgradeOptions() {
-    return [];
+  get upgradeOptions () {
+    return []
   }
-  upgrade() {
+  upgrade () {
     if (!this.hasUpgradeOption()) {
-      return;
+      return
     }
-    let option = this.upgradeOptions[0];
+    let option = this.upgradeOptions[0]
     this.trigger('upgrade', option, () => {
-      option.attrs.forEach(attr => this.upgradeWithSpecificOption(attr.type, attr.value));
-      this.level++;
-    });
+      option.attrs.forEach(attr => this.upgradeWithSpecificOption(attr.type, attr.value))
+      this.level++
+    })
   }
-  upgradeWithSpecificOption(type, value) {
+  upgradeWithSpecificOption (type, value) {
     switch (type) {
       case Tower.DAMAGE:
-        this.damage += value;
-        break;
+        this.damage += value
+        break
       case Tower.RADIUS:
-        this.attackDistance += value;
-        break;
+        this.attackDistance += value
+        break
       case Tower.COLDDOWN:
-        this.colddown += value;
-        break;
+        this.colddown += value
+        break
     }
   }
 }
 
-module.exports = Tower;
+module.exports = Tower

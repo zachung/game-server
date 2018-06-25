@@ -2,21 +2,21 @@ const Ball = require('../ball')
 const Vector = require('../../../../../library/Vector')
 
 class FireBolt extends Ball {
-  constructor(options) {
+  constructor (options) {
     const defaults = {
-      image: "fire_bolt",
+      image: 'fire_bolt',
       width: 50 * 1,
       height: 13 * 1,
       attackDistance: 0,
       mass: 0.1
-    };
-    const populated = Object.assign(defaults, options);
-    super(populated);
+    }
+    const populated = Object.assign(defaults, options)
+    super(populated)
   }
-  render(app, deltaPoint = { x: 0, y: 0 }) {
-    this.renderImage(app, deltaPoint);
+  render (app, deltaPoint = { x: 0, y: 0 }) {
+    this.renderImage(app, deltaPoint)
   }
-  renderImage(app, deltaPoint = { x: 0, y: 0 }) {
+  renderImage (app, deltaPoint = { x: 0, y: 0 }) {
     app.layer
       .save()
       .setTransform(1, 0, 0, 1, this.x + deltaPoint.x, this.y + deltaPoint.y)
@@ -26,24 +26,24 @@ class FireBolt extends Ball {
         this.width,
         this.height
       )
-      .restore();
+      .restore()
   }
-  goto(other) {
-    this.from = Vector.fromObject(this);
-    this.to = Vector.fromObject(other.center);
+  goto (other) {
+    this.from = Vector.fromObject(this)
+    this.to = Vector.fromObject(other.center)
     // acceleration
-    this.accelerate = this.to.clone().subtract(this.from);
-    let length = this.accelerate.length();
-    this.accelerate.multiply(new Vector(1/this.mass/length, 1/this.mass/length));
+    this.accelerate = this.to.clone().subtract(this.from)
+    let length = this.accelerate.length()
+    this.accelerate.multiply(new Vector(1 / this.mass / length, 1 / this.mass / length))
   }
-  onStep() {
+  onStep () {
     if (Vector.fromObject(this).subtract(this.from).length() > this.to.clone().subtract(this.from).length()) {
-      this.x = this.to.x;
-      this.y = this.to.y;
-      this.trigger('atEndPoint');
+      this.x = this.to.x
+      this.y = this.to.y
+      this.trigger('atEndPoint')
     }
-    super.onStep.apply(this, arguments);
+    super.onStep.apply(this, arguments)
   }
 }
 
-module.exports = FireBolt;
+module.exports = FireBolt

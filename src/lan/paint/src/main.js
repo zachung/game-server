@@ -2,19 +2,17 @@ const ENGINE = require('./engine')
 
 var app = new PLAYGROUND.Application({
 
-  create: function() {
+  create: function () {
   },
 
-  ready: function() {
-
-    this.setState(ENGINE.Game);
-
+  ready: function () {
+    this.setState(ENGINE.Game)
   },
 
-  mousedown: function(data) {
+  mousedown: function (data) {
   },
 
-  scale: 0.5,
+  scale: 0.5
   // container: exampleContainer
 
-});
+})

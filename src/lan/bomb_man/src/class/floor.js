@@ -1,27 +1,27 @@
 const Ball = require('./ball')
 
 class Floor extends Ball {
-  constructor(options) {
+  constructor (options) {
     const defaults = {
       width: 64,
       height: 64,
-      color: "#e2a4ae",
+      color: '#e2a4ae',
       speed: 0,
       hp: 10000,
       defence: 10000
-    };
-    const populated = Object.assign(defaults, options);
-    super(populated);
-    this.class = this.constructor.name;
+    }
+    const populated = Object.assign(defaults, options)
+    super(populated)
+    this.class = this.constructor.name
   }
-  getLocation() {
-    return this.inMapLocation;
+  getLocation () {
+    return this.inMapLocation
   }
-  dieOnMapPre(map) {
-    let loc = this.getLocation();
+  dieOnMapPre (map) {
+    let loc = this.getLocation()
   }
-  dieOnMapAfter(map) {
+  dieOnMapAfter (map) {
   }
 }
 
-module.exports = Floor;
+module.exports = Floor

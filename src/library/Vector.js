@@ -5,8 +5,8 @@ if (!Victor.fromRadians) {
     return new Victor(
       radius * Math.cos(radians),
       radius * Math.sin(radians)
-    );
+    )
   }
 }
 
-module.exports = Victor;
+module.exports = Victor

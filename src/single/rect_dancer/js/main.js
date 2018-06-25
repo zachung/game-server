@@ -1,29 +1,25 @@
 var app = new PLAYGROUND.Application({
 
   paths: {
-    sounds: "/sounds/",
+    sounds: '/sounds/',
     rewriteURL: {
-      background: "/images/background.png"
+      background: '/images/background.png'
     }
   },
 
-  create: function() {
-
-    this.loadSounds("music")
-    this.loadImage("<background>");
-
+  create: function () {
+    this.loadSounds('music')
+    this.loadImage('<background>')
   },
 
-  ready: function() {
-
-    this.setState(ENGINE.Intro);
-
+  ready: function () {
+    this.setState(ENGINE.Intro)
   },
 
-  mousedown: function(data) {
+  mousedown: function (data) {
   },
 
-  scale: 0.5,
+  scale: 0.5
   // container: exampleContainer
 
-});
+})

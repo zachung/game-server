@@ -1,31 +1,31 @@
 class LevelData {
-  constructor() {
+  constructor () {
   }
-  setLevel(level) {
-    this.level = level;
-    this.round = 0;
-    this.data = require('../levels/level1');
+  setLevel (level) {
+    this.level = level
+    this.round = 0
+    this.data = require('../levels/level1')
   }
-  get enemy_path() {
-    return this.data.enemy_path;
+  get enemy_path () {
+    return this.data.enemy_path
   }
-  get map() {
-    return this.data.map;
+  get map () {
+    return this.data.map
   }
-  get roundData() {
-    return this.data.round[this.round - 1];
+  get roundData () {
+    return this.data.round[this.round - 1]
   }
-  get nextRoundData() {
-    return this.data.round[this.round];
+  get nextRoundData () {
+    return this.data.round[this.round]
   }
-  nextRound() {
+  nextRound () {
     if (this.hasNextRound()) {
-      this.round++;
+      this.round++
     }
   }
-  hasNextRound() {
-    return this.round < this.data.round.length;
+  hasNextRound () {
+    return this.round < this.data.round.length
   }
 }
 
-module.exports = LevelData;
+module.exports = LevelData
