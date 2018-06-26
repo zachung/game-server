@@ -1,23 +1,21 @@
-Date.prototype.format = function () {
-  var myDate = this,
-    month = '' + (myDate.getMonth() + 1),
-    day = '' + myDate.getDate(),
-    year = myDate.getFullYear()
-
-  if (month.length < 2) month = '0' + month
-  if (day.length < 2) day = '0' + day
-
-  return [year, month, day].join('-') + ' ' + [myDate.getHours(), myDate.getMinutes(), myDate.getSeconds()].join(':')
+class GameObject {
+  constructor ({ x, y } = {}) {
+    this.x = x || 0
+    this.y = y || 0
+    this.color = 'blue'
+  }
 }
 
-var ball = {
-  x: 100,
-  y: 100,
-  vx: 5,
-  vy: -2,
-  r: 10,
-  color: 'blue',
-  draw: function (canvas) {
+export class Ball extends GameObject {
+  constructor (options = {}) {
+    super(options)
+    this.vx = 5
+    this.vy = -2
+    this.r = options.r
+    this.color = 'blue'
+  }
+
+  draw (canvas) {
     var ctx = canvas.getContext('2d')
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, true)
@@ -25,31 +23,33 @@ var ball = {
     ctx.fillStyle = this.color
     ctx.fill()
     // 如果下一個frame超出y
-    if (ball.y + ball.vy > canvas.height - this.r || ball.y + ball.vy < this.r) {
-      ball.vy = -ball.vy
+    if (this.y + this.vy > canvas.height - this.r || this.y + this.vy < this.r) {
+      this.vy = -this.vy
     }
-    if (ball.x + ball.vx > canvas.width - this.r || ball.x + ball.vx < this.r) {
-      ball.vx = -ball.vx
+    if (this.x + this.vx > canvas.width - this.r || this.x + this.vx < this.r) {
+      this.vx = -this.vx
     }
-    ball.x += ball.vx
-    ball.y += ball.vy
+    this.x += this.vx
+    this.y += this.vy
   }
 }
 
-var Rect = function () {
-  this.x = 20
-  this.y = 20
-  this.w = 40
-  this.h = 15
-  this.color = 'rgb(200,0,0)'
-  this.draw = function (canvas) {
+export class Rect extends GameObject {
+  constructor (options) {
+    super(options)
+    this.w = 40
+    this.h = 15
+    this.color = 'rgb(200,0,0)'
+  }
+
+  draw (canvas) {
     var ctx = canvas.getContext('2d')
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.w, this.h)
   }
 }
 
-var CollisionDetection = function () {
+export const CollisionDetection = function () {
   this.collidingRecord = []
   this.collidingDelay = 1000 // ms
   this.CircleRectColliding = function (circle, rect) {
