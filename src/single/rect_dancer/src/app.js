@@ -1,4 +1,6 @@
-var app = new PLAYGROUND.Application({
+import Engine from './Engine'
+
+new PLAYGROUND.Application({
 
   paths: {
     sounds: '/sounds/',
@@ -13,7 +15,7 @@ var app = new PLAYGROUND.Application({
   },
 
   ready: function () {
-    this.setState(ENGINE.Intro)
+    this.setState(Engine.Intro)
   },
 
   mousedown: function (data) {

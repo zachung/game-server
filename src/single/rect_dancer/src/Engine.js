@@ -1,10 +1,15 @@
-var ENGINE = {
+import Ball from './Ball'
+import CollisionDetection from './Collision'
+import ScrollingBackground from './ScrollingBackground'
+import Score from './Score'
+
+let Engine = {
   Resource: {},
   difficulty: 0
 }
-var collisionDetection = new CollisionDetection()
+let collisionDetection = new CollisionDetection()
 
-ENGINE.Intro = {
+Engine.Intro = {
 
   level: 1,
 
@@ -50,9 +55,9 @@ ENGINE.Intro = {
   },
 
   render: function (dt) {
-    var addButton = this.addButton
-    var minusButton = this.minusButton
-    var startButton = this.startButton
+    let addButton = this.addButton
+    let minusButton = this.minusButton
+    let startButton = this.startButton
 
     this.app.layer.clear('#000')
     // background
@@ -81,19 +86,19 @@ ENGINE.Intro = {
 
     // larger harder
     if (collisionDetection.RectPointColliding(this.startButton, data)) {
-      ENGINE.difficulty = this.level / 10
-      this.app.setState(ENGINE.Game)
+      Engine.difficulty = this.level / 10
+      this.app.setState(Engine.Game)
     }
   }
 
 }
 
-ENGINE.Game = {
+Engine.Game = {
 
   enter: function () {
-    ENGINE.Resource = this.app.music.play('music', true)
-    ENGINE.enemies = []
-    ENGINE.score = new Score()
+    Engine.Resource = this.app.music.play('music', true)
+    Engine.enemies = []
+    Engine.score = new Score()
   },
 
   create: function () {
@@ -107,19 +112,19 @@ ENGINE.Game = {
 
   step: function (dt) {
     // thomas
-    var thomas = this.app.thomas
+    let thomas = this.app.thomas
     // background
-    var delta = this.app.scrollingBackground.move(thomas.speed * dt)
+    let delta = this.app.scrollingBackground.move(thomas.speed * dt)
 
     // calc distance
-    ENGINE.score.add(-delta[1] * ENGINE.difficulty)
-    ENGINE.score.save()
+    Engine.score.add(-delta[1] * Engine.difficulty)
+    Engine.score.save()
 
     // enemies
-    var enemies = ENGINE.enemies
-    if (ENGINE.score.newScore() && Math.random() < ENGINE.difficulty) {
+    let enemies = Engine.enemies
+    if (Engine.score.newScore() && Math.random() < Engine.difficulty) {
       // new place
-      var enemy = new Ball()
+      let enemy = new Ball()
       enemy.speed = 256
       enemy.x = Math.random() * this.app.width
       enemy.y = 0
@@ -128,27 +133,27 @@ ENGINE.Game = {
       enemies.push(enemy)
     }
     // enemies running
-    enemies.forEach(function (enemy) {
+    enemies.forEach(enemy => {
       enemy.run(dt)
       enemy.x -= delta[0]
       enemy.y -= delta[1]
       if (collisionDetection.RectRectColliding(enemy, thomas)) {
         console.log('collission')
-        this.app.music.stop(ENGINE.Resource)
-        this.app.setState(ENGINE.Game)
+        this.app.music.stop(Engine.Resource)
+        this.app.setState(Engine.Game)
       }
     })
-    var enemies_index = enemies.length - 1
-    while (enemies_index >= 0) {
-      if (enemies[enemies_index].y > this.app.height) {
-        enemies.splice(enemies_index, 1)
+    let enemiesIndex = enemies.length - 1
+    while (enemiesIndex >= 0) {
+      if (enemies[enemiesIndex].y > this.app.height) {
+        enemies.splice(enemiesIndex, 1)
       }
-      enemies_index -= 1
+      enemiesIndex -= 1
     }
   },
 
   render: function (dt) {
-    var thomas = this.app.thomas
+    let thomas = this.app.thomas
 
     this.app.layer.clear('#000')
     // background
@@ -158,11 +163,11 @@ ENGINE.Game = {
       .fillStyle(thomas.color)
       .fillRect(thomas.x, thomas.y, thomas.width, thomas.height)
       .font('40px Georgia')
-      .fillText('Current: ' + ENGINE.score.getScore(), this.app.width - 300, 160)
+      .fillText('Current: ' + Engine.score.getScore(), this.app.width - 300, 160)
       .font('40px Green')
-      .fillText('High: ' + ENGINE.score.getHighScore(), this.app.width - 300, 80)
+      .fillText('High: ' + Engine.score.getHighScore(), this.app.width - 300, 80)
 
-    ENGINE.enemies.forEach(function (enemy) {
+    Engine.enemies.forEach(enemy => {
       this.app.layer
         .fillStyle(enemy.color)
         .fillRect(enemy.x, enemy.y, enemy.width, enemy.height)
@@ -180,84 +185,5 @@ ENGINE.Game = {
   }
 
 }
-var ScrollingBackground = function (image) {
-  var backgrounds = []
-  var bw = image.width
-  var bh = image.height
-  var layer = {}
-  this.directRadians = Math.asin(-1)
 
-  this.move = function (speed) {
-    var dx = Math.cos(this.directRadians) * speed,
-      dy = Math.sin(this.directRadians) * speed,
-      lw = this.layer.w,
-      lh = this.layer.h,
-      nx = Math.ceil(lw / bw) + 1,
-      ny = Math.ceil(lh / bh) + 1
-    backgrounds.forEach(function (e) {
-      e[0] -= dx
-      e[1] -= dy
-      if (e[0] < -bw) {
-        e[0] += (nx + 1) * bw
-      }
-      if (e[0] > lw) {
-        e[0] -= (nx + 1) * bw
-      }
-      if (e[1] < -bh) {
-        e[1] += (ny + 1) * bh
-      }
-      if (e[1] > lh) {
-        e[1] -= (ny + 1) * bh
-      }
-    })
-    return [dx, dy]
-  }
-  this.init = function (w, h) {
-    this.layer = {
-      w: w,
-      h: h
-    }
-    var nx = Math.ceil(w / bw) + 1
-    var ny = Math.ceil(h / bh) + 1
-    for (var i = -1; i <= nx; i++) {
-      for (var j = -1; j <= ny; j++) {
-        backgrounds.push([i * bw, j * bh])
-      }
-    }
-  }
-  this.render = function (app) {
-    backgrounds.forEach(function (e) {
-      app.layer.drawImage(app.images.background, e[0], e[1])
-    })
-  }
-}
-
-var Score = function () {
-  this.scoreCurrent = 0
-  this.scoreMax = 0
-  this.highscore = localStorage.getItem('highscore') || 0
-
-  this.save = function () {
-    if (this.scoreCurrent > this.highscore) {
-      this.highscore = this.scoreCurrent
-      localStorage.setItem('highscore', this.highscore)
-    }
-  }
-  this.clear = function () {
-    this.scoreCurrent = 0
-    this.scoreMax = 0
-  }
-  this.add = function (score) {
-    this.scoreCurrent += score
-    this.scoreMax = Math.max(this.scoreMax, this.scoreCurrent)
-  }
-  this.newScore = function () {
-    return ENGINE.score.scoreCurrent === ENGINE.score.scoreMax
-  }
-  this.getHighScore = function () {
-    return (new Number(this.highscore)).toFixed(2)
-  }
-  this.getScore = function () {
-    return (new Number(this.scoreCurrent)).toFixed(2)
-  }
-}
+export default Engine
