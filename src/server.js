@@ -1,3 +1,4 @@
+var path = require('path')
 var express = require('express')
 var app = express()
 var http = require('http').Server(app)
@@ -10,15 +11,8 @@ var lobby = new Lobby(io)
 app.use('/', (function () {
   var router = express.Router()
 
-  router.get('/', function (req, res) {
-    res.sendFile(__dirname + '/public/index.html')
-  })
-
   // 靜態檔案
-  router.use('/', express.static(__dirname + '/public'))
-
-  // single
-  router.use('/single', express.static(__dirname + '/single'))
+  router.use('/', express.static(path.join(__dirname, '/../public')))
 
   lobby.on(Game)
 
@@ -41,10 +35,6 @@ app.use('/', (function () {
 {
   name: 'tower-defence',
   index: 'tower_defence/index'
-},
-{
-  name: 'paint',
-  index: 'paint/index'
 }
 ].forEach(game => {
   let name = '/' + game.name
