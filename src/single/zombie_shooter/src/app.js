@@ -1,20 +1,23 @@
-var app = new PLAYGROUND.Application({
+import Engine from './Engine'
+
+new PLAYGROUND.Application({
 
   paths: {
     sounds: '/sounds/',
     rewriteURL: {
-      background: '/images/background.png'
+      background: '/images/background.png',
+      zombie: '/images/zombie.png'
     }
   },
 
   create: function () {
     this.loadSounds('music')
-    this.loadImage(['<background>', 'zombie'])
+    this.loadImage(['<background>', '<zombie>'])
     this.loadData('levels')
   },
 
   ready: function () {
-    this.setState(ENGINE.Intro)
+    this.setState(Engine.Intro)
   },
 
   mousedown: function (data) {

@@ -1,3 +1,12 @@
+import Item from './GameObject/Item'
+import Thomas from './GameObject/Thomas'
+import Zombie from './GameObject/Zombie'
+import Gun from './GameObject/Gun'
+
+import CollisionDetection from './Collision'
+import ScrollingBackground from './ScrollingBackground'
+import Score from './Score'
+
 var ENGINE = {
   Resource: {},
   difficulty: 10
@@ -90,7 +99,7 @@ ENGINE.Game = {
   },
 
   enter: function () {
-    var max_radius = Math.max(this.app.width, this.app.height)
+    var maxRadius = Math.max(this.app.width, this.app.height)
 
     this.app.scrollingBackground = new ScrollingBackground(this.app.images.background)
     this.app.scrollingBackground.init(this.app.width, this.app.height)
@@ -103,7 +112,7 @@ ENGINE.Game = {
       defence: 1
     })
     var gun = new Gun({
-      max_radius: max_radius,
+      maxRadius: maxRadius,
       colddown: ENGINE.levelData.gunColddown
     })
     this.app.thomas.takeWeapon(gun)
@@ -116,8 +125,7 @@ ENGINE.Game = {
   },
 
   step: function (dt) {
-    var center = this.app.center
-    var max_radius = Math.max(this.app.width, this.app.height)
+    var maxRadius = Math.max(this.app.width, this.app.height)
     // thomas
     var thomas = this.app.thomas
     // background
@@ -127,19 +135,19 @@ ENGINE.Game = {
     var enemies = ENGINE.enemies
     if (Math.random() < ENGINE.levelData.monsterSpawnRate) {
       // new place
-      var min_radius = ENGINE.levelData.monsterSpawnRadiusMin
-      var spawn_radius = Math.random() * (max_radius - min_radius) + min_radius
+      var minRadius = ENGINE.levelData.monsterSpawnRadiusMin
+      var spawnRadius = Math.random() * (maxRadius - minRadius) + minRadius
       var radians = Math.floor(Math.random() * 360)
       var enemy = new Zombie({
         speed: ENGINE.levelData.monsterSpeed,
-        x: Math.cos(radians) * spawn_radius,
-        y: Math.sin(radians) * spawn_radius,
+        x: Math.cos(radians) * spawnRadius,
+        y: Math.sin(radians) * spawnRadius,
         directRadians: -radians
       })
       enemies.push(enemy)
     }
     // enemies running
-    enemies.forEach(function (enemy) {
+    enemies.forEach(enemy => {
       enemy.faceTo(thomas.x, thomas.y)
       enemy.run(dt)
       enemy.x -= delta[0]
@@ -166,7 +174,7 @@ ENGINE.Game = {
       })
       items.push(item)
     }
-    items.forEach(function (item) {
+    items.forEach(item => {
       item.x -= delta[0]
       item.y -= delta[1]
       if (collisionDetection.RectRectColliding(item, thomas)) {
@@ -197,10 +205,10 @@ ENGINE.Game = {
       .fillRect(20, 20, 300 * (thomas.hp / thomas.hpMax), 30)
 
     app.thomas.render(app.layer)
-    ENGINE.enemies.forEach(function (enemy) {
+    ENGINE.enemies.forEach(enemy => {
       enemy.render(app)
     })
-    ENGINE.items.forEach(function (item) {
+    ENGINE.items.forEach(item => {
       item.render(app.layer)
     })
   },
@@ -248,212 +256,6 @@ ENGINE.Game = {
   }
 
 }
-var ScrollingBackground = function (image) {
-  var backgrounds = []
-  var bw = image.width
-  var bh = image.height
-  var layer = {}
-  this.directRadians = Math.asin(-1)
-  this.faceDirectBits = 0b0000 // LRUD
-  this.dontMove = true
-
-  this.move = function (speed) {
-    if (this.dontMove) {
-      return [0, 0]
-    }
-    var dx = Math.cos(this.directRadians) * speed,
-      dy = Math.sin(this.directRadians) * speed,
-      lw = this.layer.w,
-      lh = this.layer.h,
-      nx = Math.ceil(lw / bw) + 1,
-      ny = Math.ceil(lh / bh) + 1
-    backgrounds.forEach(function (e) {
-      e[0] -= dx
-      e[1] -= dy
-      if (e[0] < -bw) {
-        e[0] += (nx + 1) * bw
-      }
-      if (e[0] > lw) {
-        e[0] -= (nx + 1) * bw
-      }
-      if (e[1] < -bh) {
-        e[1] += (ny + 1) * bh
-      }
-      if (e[1] > lh) {
-        e[1] -= (ny + 1) * bh
-      }
-    })
-    return [dx, dy]
-  }
-  this.init = function (w, h) {
-    this.layer = {
-      w: w,
-      h: h
-    }
-    var nx = Math.ceil(w / bw) + 1
-    var ny = Math.ceil(h / bh) + 1
-    for (var i = -1; i <= nx; i++) {
-      for (var j = -1; j <= ny; j++) {
-        backgrounds.push([i * bw, j * bh])
-      }
-    }
-  }
-  var turn = function () {
-    var x = 0, y = 0
-    x -= (this.faceDirectBits >> 3) & 1 // L
-    x += (this.faceDirectBits >> 2) & 1 // R
-    y -= (this.faceDirectBits >> 1) & 1 // U
-    y += (this.faceDirectBits >> 0) & 1 // D
-    this.directRadians = Math.atan2(y, x)
-    this.dontMove = x === 0 && y === 0
-  }
-  this.faceTo = function (direct) {
-    this.faceDirectBits |= direct
-    turn.call(this)
-  }
-  this.faceCancel = function (direct) {
-    this.faceDirectBits &= direct
-    turn.call(this)
-  }
-  this.render = function (app) {
-    backgrounds.forEach(function (e) {
-      app.layer.drawImage(image, e[0], e[1])
-    })
-  }
-}
-
-var Score = function () {
-  this.scoreCurrent = 0
-  this.scoreMax = 0
-  this.highscore = localStorage.getItem('highscore') || 0
-
-  this.save = function () {
-    if (this.scoreCurrent > this.highscore) {
-      this.highscore = this.scoreCurrent
-      localStorage.setItem('highscore', this.highscore)
-    }
-  }
-  this.clear = function () {
-    this.scoreCurrent = 0
-    this.scoreMax = 0
-  }
-  this.add = function (score) {
-    this.scoreCurrent += score
-    this.scoreMax = Math.max(this.scoreMax, this.scoreCurrent)
-  }
-  this.newScore = function () {
-    return this.scoreCurrent === this.scoreMax
-  }
-  this.getHighScore = function () {
-    return (new Number(this.highscore)).toFixed(2)
-  }
-  this.getScore = function () {
-    return (new Number(this.scoreCurrent)).toFixed(2)
-  }
-}
-
-class Bullet extends Ball {
-  constructor (options) {
-    const defaults = {
-      x: 0,
-      y: 0,
-      width: 10,
-      height: 10,
-      color: '#ff0000',
-      speed: 1024,
-      directRadians: 0,
-      damage: 1,
-      hp: 1 // can go throw somebody
-    }
-    const populated = Object.assign(defaults, options)
-    super(populated)
-  }
-  render (layer) {
-    layer
-      .fillStyle(this.color)
-      .fillRect(this.x, this.y, this.width, this.height)
-  }
-}
-
-class Gun {
-  constructor (options) {
-    const defaults = {
-      max_radius: 0,
-      colddown: 0,
-      toRadians: Math.asin(-1)
-    }
-    const populated = Object.assign(defaults, options)
-    for (const key in populated) {
-      if (populated.hasOwnProperty(key)) {
-        this[key] = populated[key]
-      }
-    }
-    this.bullets = []
-    this.nextshoot = 0
-  }
-  faceTo (toRadians) {
-    this.toRadians = toRadians
-  }
-  attack (fromX, fromY, dt) {
-    if (this.nextshoot > 0) {
-      this.nextshoot -= dt
-      return
-    }
-    var bullets = this.bullets
-    var bullet = new Bullet({
-      x: fromX,
-      y: fromY,
-      directRadians: this.toRadians
-    })
-    bullets.push(bullet)
-    // bullet out of screen
-    var bullets_index = bullets.length - 1
-    while (bullets_index >= 0) {
-      var bullet = bullets[bullets_index]
-      if (bullet.x > this.max_radius || bullet.y > this.max_radius) {
-        bullets.splice(bullets_index, 1)
-      }
-      bullets_index -= 1
-    }
-    this.nextshoot = this.colddown
-    return bullet
-  }
-  step (enemies, dt) {
-    var bullets = this.bullets
-    bullets.forEach(function (bullet) {
-      bullet.run(dt)
-      enemies.forEach(function (enemy) {
-        if (collisionDetection.RectRectColliding(bullet, enemy)) {
-          console.log('hit monster')
-          // add score
-          ENGINE.score.add(ENGINE.levelData.scorePreHit)
-          ENGINE.score.save()
-          // bullet die
-          if (!bullet.getDamage(enemy.defence)) {
-            bullets.splice(bullets.indexOf(bullet), 1)
-          }
-          // enemy get damage
-          if (!enemy.getDamage(bullet.damage)) {
-            // enemy die
-            enemies.splice(enemies.indexOf(enemy), 1)
-          }
-        }
-      })
-    })
-  }
-  render (layer) {
-    this.bullets.forEach(function (bullet) {
-      bullet.render(layer)
-    })
-  }
-  upgrade (type, value, isMultiply) {
-    if (!isMultiply) {
-      this[type] += value
-    } else {
-      this[type] *= value
-    }
-  }
-}
 
 var LevelData = function (data) {
   return new Proxy(data, {
@@ -464,13 +266,4 @@ var LevelData = function (data) {
   })
 }
 
-class Item extends Ball {
-  static get gunColddown () {
-    return 'gunColddown'
-  }
-  constructor (options = {}) {
-    options.speed = 0
-    options.color = '#000'
-    super(options)
-  }
-}
+export default ENGINE

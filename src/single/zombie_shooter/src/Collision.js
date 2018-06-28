@@ -1,7 +1,9 @@
-var CollisionDetection = function () {
-  this.collidingRecord = []
-  this.collidingDelay = 1000 // ms
-  this.CircleRectColliding = function (circle, rect) {
+class CollisionDetection {
+  constructor () {
+    this.collidingRecord = []
+    this.collidingDelay = 1000 // ms
+  }
+  CircleRectColliding (circle, rect) {
     // delay
     if (this.collidingRecord[circle] &&
       this.collidingRecord[circle].with === rect &&
@@ -28,7 +30,7 @@ var CollisionDetection = function () {
     }
     return isCollision
   }
-  this.RectRectColliding = function (rect1, rect2) {
+  RectRectColliding (rect1, rect2) {
     if (rect1.x < rect2.x + rect2.width &&
       rect1.x + rect1.width > rect2.x &&
       rect1.y < rect2.y + rect2.height &&
@@ -38,7 +40,7 @@ var CollisionDetection = function () {
     }
     return false
   }
-  this.RectPointColliding = function (rect, point) {
+  RectPointColliding (rect, point) {
     if (rect.x <= point.x &&
       rect.x + rect.width >= point.x &&
       rect.y <= point.y &&
@@ -49,3 +51,5 @@ var CollisionDetection = function () {
     return false
   }
 }
+
+export default CollisionDetection

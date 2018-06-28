@@ -1,3 +1,5 @@
+import Ball from './Ball'
+
 class Zombie extends Ball {
   constructor (options) {
     const defaults = {
@@ -27,3 +29,5 @@ class Zombie extends Ball {
     app.layer.drawImage(app.images[this.image], this.x, this.y, this.width, this.height)
   }
 }
+
+export default Zombie
