@@ -1,81 +1,117 @@
-import { resources, Sprite } from '../pixi'
+import { resources, Sprite } from '../lib/PIXI'
 import keyboard from '../keyboard'
+import { MOVE } from '../config/constants'
+
+function _getSlotParts (slots, type) {
+  return slots.filter(slot => slot.type === type)
+}
+function _getSlotPart (slots, type) {
+  return slots.find(slot => slot.type === type)
+}
 
 class Cat extends Sprite {
   constructor () {
     // Create the cat sprite
-    super(resources['images/cat.png'].texture)
+    super(resources['images/town_tiles.json'].textures['wall.png'])
 
     // Change the sprite's position
-    this.x = 96
-    this.y = 96
-    this.vx = 0
-    this.vy = 0
+    this.dx = 0
+    this.dy = 0
 
     this.init()
+    this.slots = []
+  }
+
+  addSlotPart (slot) {
+    switch (slot.type) {
+      case MOVE:
+        let moveSlot = _getSlotPart(this.slots, MOVE)
+        if (moveSlot) {
+          if (moveSlot.value > slot.value) {
+            return
+          }
+          let inx = this.slots.indexOf(moveSlot)
+          this.slots[inx] = slot
+        } else {
+          this.slots.push(slot)
+        }
+        return
+    }
+    this.slots.push(slot)
+  }
+
+  move (delta) {
+    let moveSlot = _getSlotPart(this.slots, MOVE)
+    if (!moveSlot) {
+      return
+    }
+
+    this.x += this.dx * moveSlot.value * delta
+    this.y += this.dy * moveSlot.value * delta
+  }
+
+  take (inventories) {
+    inventories.forEach(slot => this.addSlotPart(slot))
+  }
+
+  operate (other) {
+    other.operate(this)
   }
 
   init () {
     // Capture the keyboard arrow keys
-    let left = keyboard(37)
-    let up = keyboard(38)
-    let right = keyboard(39)
-    let down = keyboard(40)
+    let left = keyboard(65)
+    let up = keyboard(87)
+    let right = keyboard(68)
+    let down = keyboard(83)
 
-    // Left arrow key `press` method
+    // Left
     left.press = () => {
-      // Change the cat's velocity when the key is pressed
-      this.vx = -5
-      this.vy = 0
+      this.dx = -1
+      this.dy = 0
     }
-
-    // Left arrow key `release` method
     left.release = () => {
-      // If the left arrow has been released, and the right arrow isn't down,
-      // and the cat isn't moving vertically:
-      // Stop the cat
-      if (!right.isDown && this.vy === 0) {
-        this.vx = 0
+      if (!right.isDown && this.dy === 0) {
+        this.dx = 0
       }
     }
 
     // Up
     up.press = () => {
-      this.vy = -5
-      this.vx = 0
+      this.dy = -1
+      this.dx = 0
     }
     up.release = () => {
-      if (!down.isDown && this.vx === 0) {
-        this.vy = 0
+      if (!down.isDown && this.dx === 0) {
+        this.dy = 0
       }
     }
 
     // Right
     right.press = () => {
-      this.vx = 5
-      this.vy = 0
+      this.dx = 1
+      this.dy = 0
     }
     right.release = () => {
-      if (!left.isDown && this.vy === 0) {
-        this.vx = 0
+      if (!left.isDown && this.dy === 0) {
+        this.dx = 0
       }
     }
 
     // Down
     down.press = () => {
-      this.vy = 5
-      this.vx = 0
+      this.dy = 1
+      this.dx = 0
     }
     down.release = () => {
-      if (!up.isDown && this.vx === 0) {
-        this.vy = 0
+      if (!up.isDown && this.dx === 0) {
+        this.dy = 0
       }
     }
   }
 
   tick (delta) {
-    this.x += this.vx
-    this.y += this.vy
+    this.move(delta)
   }
 }
 

@@ -1,12 +1,17 @@
-import { Text, TextStyle } from '../pixi'
-import Scene from '../Scene'
+import { Text, TextStyle, loader } from '../lib/PIXI'
+import Scene from '../lib/Scene'
+import PlayScene from './PlayScene'
 
 let text = 'loading'
 
-class PlayScene extends Scene {
-  constructor (...args) {
-    super(...args)
+class LoadingScene extends Scene {
+  constructor () {
+    super()
 
+    this.life = 0
+  }
+
+  create () {
     let style = new TextStyle({
       fontFamily: 'Arial',
       fontSize: 36,
@@ -24,7 +29,16 @@ class PlayScene extends Scene {
     // Add the cat to the stage
     this.addChild(this.textLoading)
 
-    this.life = 0
+    // load an image and run the `setup` function when it's done
+    loader
+      .add('images/cat.png')
+      .add('images/town_tiles.json')
+      .add('images/下載.jpeg')
+      .add('images/142441.jpeg')
+      .add('images/2ea4c902-23fd-4e89-b072-c50ad931ab8b.jpg')
+      .load(() => this.emit('changeScene', PlayScene, {
+        map: 'E0S0'
+      }))
   }
 
   tick (delta) {
@@ -33,4 +47,4 @@ class PlayScene extends Scene {
   }
 }
 
-export default PlayScene
+export default LoadingScene
