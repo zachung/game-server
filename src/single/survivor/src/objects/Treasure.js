@@ -2,6 +2,7 @@ import { resources } from '../lib/PIXI'
 import GameObject from './GameObject'
 
 import { REPLY } from '../config/constants'
+import { instanceBySlotId } from '../lib/utils'
 
 class Treasure extends GameObject {
   constructor (inventories = []) {
@@ -9,7 +10,7 @@ class Treasure extends GameObject {
     super(resources['images/town_tiles.json'].textures['treasure.png'])
 
     this.inventories = inventories.map(conf => {
-      return new conf[0](conf[1])
+      return instanceBySlotId(conf[0], conf[1])
     })
 
     this.on('collide', this.actionWith.bind(this))
