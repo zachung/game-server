@@ -33,7 +33,8 @@ class LoadingScene extends Scene {
     loader
       .add('images/town_tiles.json')
       .load(() => this.emit('changeScene', PlayScene, {
-        map: 'E0N0'
+        map: 'E0N0',
+        position: [1, 1]
       }))
   }
 

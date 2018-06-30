@@ -9,6 +9,7 @@ class Door extends GameObject {
     super(resources['images/town_tiles.json'].textures['door.png'])
 
     this.map = map[0]
+    this.toPosition = map[1]
 
     this.on('collide', this.actionWith.bind(this))
   }
