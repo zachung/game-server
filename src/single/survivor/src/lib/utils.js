@@ -4,13 +4,15 @@ import T from '../objects/Treasure'
 import D from '../objects/Door'
 
 import Move from '../objects/slots/Move'
+import Camera from '../objects/slots/Camera'
+import Operate from '../objects/slots/Operate'
 
 const Items = [
   G, W, T, D
 ]
 
 const Slots = [
-  Move
+  Move, Camera, Operate
 ]
 
 export function instanceByItemId (itemId, params) {

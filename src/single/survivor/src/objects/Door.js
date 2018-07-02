@@ -1,7 +1,7 @@
 import { resources } from '../lib/PIXI'
 import GameObject from './GameObject'
 
-import { REPLY } from '../config/constants'
+import { STAY, OPERATE } from '../config/constants'
 
 class Door extends GameObject {
   constructor (map) {
@@ -14,16 +14,25 @@ class Door extends GameObject {
     this.on('collide', this.actionWith.bind(this))
   }
 
-  get type () { return REPLY }
+  get type () { return STAY }
 
-  actionWith (other, action = 'operate') {
-    if (typeof other[action] === 'function') {
-      other[action](this)
+  actionWith (operator) {
+    let ability = operator.abilities[OPERATE]
+    if (!ability) {
+      this.say([
+        operator.toString(),
+        ' dosen\'t has ability to use this door ',
+        this.map,
+        '.'
+      ].join(''))
+    } else {
+      ability.use(operator, this)
     }
   }
 
-  operate (other) {
-    this.emit('use', this)
+  [OPERATE] () {
+    this.say(['Get in ', this.map, ' now.'].join(''))
+    this.emit('use')
   }
 }
 

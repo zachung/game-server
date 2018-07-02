@@ -1,15 +1,8 @@
-import { resources, Sprite } from '../lib/PIXI'
+import { resources } from '../lib/PIXI'
+import GameObject from './GameObject'
 import keyboard from '../keyboard'
-import { MOVE } from '../config/constants'
 
-function _getSlotParts (slots, type) {
-  return slots.filter(slot => slot.type === type)
-}
-function _getSlotPart (slots, type) {
-  return slots.find(slot => slot.type === type)
-}
-
-class Cat extends Sprite {
+class Cat extends GameObject {
   constructor () {
     // Create the cat sprite
     super(resources['images/town_tiles.json'].textures['wall.png'])
@@ -19,43 +12,18 @@ class Cat extends Sprite {
     this.dy = 0
 
     this.init()
-    this.slots = []
+    this.tickAbilities = {}
+    this.abilities = {}
   }
 
-  addSlotPart (slot) {
-    switch (slot.type) {
-      case MOVE:
-        let moveSlot = _getSlotPart(this.slots, MOVE)
-        if (moveSlot) {
-          if (moveSlot.value > slot.value) {
-            return
-          }
-          let inx = this.slots.indexOf(moveSlot)
-          this.slots[inx] = slot
-        } else {
-          this.slots.push(slot)
-        }
-        return
+  takeAbility (ability) {
+    if (ability.hasToReplace(this)) {
+      ability.carryBy(this)
     }
-    this.slots.push(slot)
   }
 
-  move (delta) {
-    let moveSlot = _getSlotPart(this.slots, MOVE)
-    if (!moveSlot) {
-      return
-    }
-
-    this.x += this.dx * moveSlot.value * delta
-    this.y += this.dy * moveSlot.value * delta
-  }
-
-  take (inventories) {
-    inventories.forEach(slot => this.addSlotPart(slot))
-  }
-
-  operate (other) {
-    other.operate(this)
+  toString () {
+    return 'cat'
   }
 
   init () {
@@ -111,7 +79,7 @@ class Cat extends Sprite {
   }
 
   tick (delta) {
-    this.move(delta)
+    Object.values(this.tickAbilities).forEach(ability => ability.tick(delta, this))
   }
 }
 

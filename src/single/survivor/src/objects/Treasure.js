@@ -19,19 +19,24 @@ class Treasure extends GameObject {
   toString () {
     return [
       'treasure: [',
-      this.inventories.map(inventory => {
-        return [inventory.type, ': ', inventory.value].join('')
-      }).join(', '),
+      this.inventories.join(', '),
       ']'
     ].join('')
   }
 
   get type () { return REPLY }
 
-  actionWith (other, action = 'take') {
-    if (typeof other[action] === 'function') {
-      other[action](this.inventories)
-      this.emit(action)
+  actionWith (operator, action = 'takeAbility') {
+    // FIXME: 暫時用預設參數 takeAbility
+    if (typeof operator[action] === 'function') {
+      this.inventories.forEach(treasure => operator[action](treasure))
+      this.say([
+        operator.toString(),
+        ' taked ',
+        this.toString()
+      ].join(''))
+
+      this.emit('take')
     }
   }
 }
