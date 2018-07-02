@@ -20,4 +20,5 @@ app.renderer.resize(window.innerWidth, window.innerHeight)
 document.body.appendChild(app.view)
 
 app.start()
+app.changeStage()
 app.changeScene(LoadingScene)

@@ -7,8 +7,6 @@ import Cat from '../objects/Cat'
 import Move from '../objects/slots/Move'
 import Operate from '../objects/slots/Operate'
 
-const CEIL_SIZE = 16
-
 class PlayScene extends Scene {
   constructor ({ map, player, position }) {
     super()
@@ -45,17 +43,14 @@ class PlayScene extends Scene {
       this.cat = new Cat()
       this.cat.takeAbility(new Move(1))
       this.cat.takeAbility(new Operate('E0N0'))
+      // this.cat.takeAbility(new Camera(16))
       this.cat.width = 10
       this.cat.height = 10
     }
-    this.cat.position.set(
-      this.toPosition[0] * CEIL_SIZE,
-      this.toPosition[1] * CEIL_SIZE
-    )
 
     this.spawnMap(resources[this.mapFile].data)
-    this.map.addPlayer(this.cat)
     this.addChild(this.map)
+    this.map.addPlayer(this.cat, this.toPosition)
 
     this.tipText()
 

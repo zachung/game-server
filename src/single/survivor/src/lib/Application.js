@@ -1,6 +1,10 @@
-import { Application as PixiApplication, Graphics } from './PIXI'
+import { Application as PixiApplication, Graphics, display } from './PIXI'
 
 class Application extends PixiApplication {
+  changeStage () {
+    this.stage = new display.Stage()
+  }
+
   changeScene (SceneName, params) {
     if (this.currentScene) {
       // maybe use promise for animation

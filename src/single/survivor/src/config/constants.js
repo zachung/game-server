@@ -1,3 +1,5 @@
+export const CEIL_SIZE = 16
+
 export const MOVE = 'move'
 export const CAMERA = 'camera'
 export const OPERATE = Symbol('operate')

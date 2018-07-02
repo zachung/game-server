@@ -9,3 +9,5 @@ export const Text = PIXI.Text
 export const TextStyle = PIXI.TextStyle
 
 export const Graphics = PIXI.Graphics
+export const BLEND_MODES = PIXI.BLEND_MODES
+export const display = PIXI.display

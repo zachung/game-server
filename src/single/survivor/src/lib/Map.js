@@ -1,10 +1,8 @@
-import { Container } from './PIXI'
+import { Container, display, BLEND_MODES, Sprite } from './PIXI'
 
-import { STAY } from '../config/constants'
+import { STAY, CEIL_SIZE } from '../config/constants'
 import { instanceByItemId } from './utils'
 import bump from '../lib/Bump'
-
-const CEIL_SIZE = 16
 
 /**
  * events:
@@ -15,6 +13,31 @@ class Map extends Container {
     super()
     this.collideObjects = []
     this.replyObjects = []
+
+    this.once('added', this.enableFog.bind(this))
+  }
+
+  enableFog () {
+    let lighting = new display.Layer()
+    lighting.on('display', function (element) {
+      element.blendMode = BLEND_MODES.ADD
+    })
+    lighting.useRenderTexture = true
+    lighting.clearColor = [0, 0, 0, 1] // ambient gray
+
+    this.addChild(lighting)
+
+    var lightingSprite = new Sprite(lighting.getRenderTexture())
+    lightingSprite.blendMode = BLEND_MODES.MULTIPLY
+
+    this.addChild(lightingSprite)
+
+    this.lighting = lighting
+  }
+
+  // 消除迷霧
+  disableFog () {
+    this.lighting.clearColor = [1, 1, 1, 1]
   }
 
   load (mapData) {
@@ -64,8 +87,13 @@ class Map extends Container {
     })
   }
 
-  addPlayer (player) {
+  addPlayer (player, toPosition) {
+    player.position.set(
+      toPosition[0] * CEIL_SIZE,
+      toPosition[1] * CEIL_SIZE
+    )
     this.addChild(player)
+
     this.player = player
   }
 
