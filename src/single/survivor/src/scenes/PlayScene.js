@@ -1,3 +1,4 @@
+/* global EZGUI */
 import { Text, TextStyle, loader, resources } from '../lib/PIXI'
 import Scene from '../lib/Scene'
 import Map from '../lib/Map'
@@ -64,6 +65,22 @@ class PlayScene extends Scene {
     this.tipText()
 
     this.isLoaded = true
+
+    let guiObj = {
+      id: 'myWindow',
+      component: 'Window',
+      padding: 4,
+      position: {
+        x: sceneWidth / 4,
+        y: sceneHeight / 4
+      },
+      width: sceneWidth / 2,
+      height: sceneHeight / 2
+    }
+    EZGUI.Theme.load(['assets/kenney-theme/kenney-theme.json'], () => {
+      let guiContainer = EZGUI.create(guiObj, 'kenney')
+      this.addChild(guiContainer)
+    })
   }
 
   spawnMap (mapData) {
