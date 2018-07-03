@@ -4,8 +4,8 @@ import Map from '../lib/Map'
 import Messages from '../lib/Messages'
 
 import Cat from '../objects/Cat'
-import Move from '../objects/slots/Move'
-import Operate from '../objects/slots/Operate'
+import Move from '../objects/abilities/Move'
+import Operate from '../objects/abilities/Operate'
 
 class PlayScene extends Scene {
   constructor ({ map, player, position }) {
