@@ -19,6 +19,6 @@ app.renderer.resize(window.innerWidth, window.innerHeight)
 // Add the canvas that Pixi automatically created for you to the HTML document
 document.body.appendChild(app.view)
 
-app.start()
 app.changeStage()
+app.start()
 app.changeScene(LoadingScene)

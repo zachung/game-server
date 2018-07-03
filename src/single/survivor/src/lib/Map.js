@@ -13,6 +13,8 @@ class Map extends Container {
     super()
     this.collideObjects = []
     this.replyObjects = []
+    this.map = new Container()
+    this.addChild(this.map)
 
     this.once('added', this.enableFog.bind(this))
   }
@@ -32,7 +34,7 @@ class Map extends Container {
 
     this.addChild(lightingSprite)
 
-    this.lighting = lighting
+    this.map.lighting = lighting
   }
 
   // 消除迷霧
@@ -57,7 +59,7 @@ class Map extends Container {
             this.collideObjects.push(o)
             break
         }
-        this.addChild(o)
+        this.map.addChild(o)
       }
     }
 
@@ -83,7 +85,7 @@ class Map extends Container {
         delete items[i]
       })
       o.on('use', () => this.emit('use', o))
-      this.addChild(o)
+      this.map.addChild(o)
     })
   }
 
@@ -92,7 +94,7 @@ class Map extends Container {
       toPosition[0] * CEIL_SIZE,
       toPosition[1] * CEIL_SIZE
     )
-    this.addChild(player)
+    this.map.addChild(player)
 
     this.player = player
   }
@@ -112,6 +114,27 @@ class Map extends Container {
         o.emit('collide', this.player)
       }
     })
+  }
+
+  // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置
+  get position () {
+    return this.map.position
+  }
+
+  get x () {
+    return this.map.x
+  }
+
+  get y () {
+    return this.map.y
+  }
+
+  set x (x) {
+    this.map.x = x
+  }
+
+  set y (y) {
+    this.map.y = y
   }
 }
 

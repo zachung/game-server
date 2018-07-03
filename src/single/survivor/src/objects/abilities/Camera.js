@@ -6,10 +6,10 @@ const LIGHT = Symbol('light')
 
 class Camera {
   constructor (value) {
-    this.type = ABILITY_CAMERA
-
     this.radius = value
   }
+
+  get type () { return ABILITY_CAMERA }
 
   // 是否需置換
   hasToReplace (owner) {

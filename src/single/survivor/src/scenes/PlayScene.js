@@ -7,7 +7,12 @@ import Cat from '../objects/Cat'
 import Move from '../objects/abilities/Move'
 import KeyMove from '../objects/abilities/KeyMove'
 import Operate from '../objects/abilities/Operate'
+import Camera from '../objects/abilities/Camera'
 
+let sceneWidth
+let sceneHeight
+
+// TODO: make UI
 class PlayScene extends Scene {
   constructor ({ map, player, position }) {
     super()
@@ -19,6 +24,8 @@ class PlayScene extends Scene {
   }
 
   create () {
+    sceneWidth = this.parent.width
+    sceneHeight = this.parent.height
     let fileName = this.mapFile
 
     // if map not loaded yet
@@ -45,7 +52,7 @@ class PlayScene extends Scene {
       this.cat.takeAbility(new Move(1))
       this.cat.takeAbility(new Operate('E0N0'))
       this.cat.takeAbility(new KeyMove())
-      // this.cat.takeAbility(new Camera(16))
+      this.cat.takeAbility(new Camera(1))
       this.cat.width = 10
       this.cat.height = 10
     }
@@ -91,6 +98,11 @@ class PlayScene extends Scene {
       return
     }
     this.map.tick(delta)
+    this.map.position.set(
+      sceneWidth / 2 - this.cat.x,
+      sceneHeight / 2 - this.cat.y
+    )
+
     this.text.text = Messages.getList().join('')
   }
 }

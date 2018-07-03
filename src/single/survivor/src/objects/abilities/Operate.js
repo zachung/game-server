@@ -2,9 +2,10 @@ import { ABILITY_OPERATE } from '../../config/constants'
 
 class Operate {
   constructor (value) {
-    this.type = ABILITY_OPERATE
     this.set = new Set([value])
   }
+
+  get type () { return ABILITY_OPERATE }
 
   // 是否需置換
   hasToReplace (owner) {

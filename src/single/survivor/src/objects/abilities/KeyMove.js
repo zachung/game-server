@@ -4,9 +4,7 @@ import { LEFT, UP, RIGHT, DOWN } from '../../config/control'
 import { ABILITY_KEY_MOVE } from '../../config/constants'
 
 class Move {
-  constructor () {
-    this.type = ABILITY_KEY_MOVE
-  }
+  get type () { return ABILITY_KEY_MOVE }
 
   // 是否需置換
   hasToReplace (owner) {

@@ -2,9 +2,10 @@ import { ABILITY_MOVE } from '../../config/constants'
 
 class Move {
   constructor (value) {
-    this.type = ABILITY_MOVE
     this.value = value
   }
+
+  get type () { return ABILITY_MOVE }
 
   // 是否需置換
   hasToReplace (owner) {
