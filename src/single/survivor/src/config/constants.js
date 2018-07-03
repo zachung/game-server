@@ -1,10 +1,14 @@
 export const CEIL_SIZE = 16
 
-export const MOVE = 'move'
-export const CAMERA = 'camera'
-export const OPERATE = Symbol('operate')
-export const SLOTPARTS_ALL = [
-  MOVE, CAMERA, OPERATE
+export const ABILITY_MOVE = Symbol('move')
+export const ABILITY_CAMERA = Symbol('camera')
+export const ABILITY_OPERATE = Symbol('operate')
+export const ABILITY_KEY_MOVE = Symbol('key-move')
+export const ABILITIES_ALL = [
+  ABILITY_MOVE,
+  ABILITY_CAMERA,
+  ABILITY_OPERATE,
+  ABILITY_KEY_MOVE
 ]
 
 // object type, static object, not collide with

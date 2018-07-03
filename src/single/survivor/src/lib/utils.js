@@ -19,6 +19,6 @@ export function instanceByItemId (itemId, params) {
   return new Items[itemId](params)
 }
 
-export function instanceBySlotId (slotId, params) {
-  return new Abilities[slotId](params)
+export function instanceByAbilityId (abilityId, params) {
+  return new Abilities[abilityId](params)
 }

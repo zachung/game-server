@@ -1,7 +1,7 @@
 import { resources } from '../lib/PIXI'
 import GameObject from './GameObject'
 
-import { STAY, OPERATE } from '../config/constants'
+import { STAY, ABILITY_OPERATE } from '../config/constants'
 
 class Door extends GameObject {
   constructor (map) {
@@ -17,7 +17,7 @@ class Door extends GameObject {
   get type () { return STAY }
 
   actionWith (operator) {
-    let ability = operator.abilities[OPERATE]
+    let ability = operator.abilities[ABILITY_OPERATE]
     if (!ability) {
       this.say([
         operator.toString(),
@@ -30,7 +30,7 @@ class Door extends GameObject {
     }
   }
 
-  [OPERATE] () {
+  [ABILITY_OPERATE] () {
     this.say(['Get in ', this.map, ' now.'].join(''))
     this.emit('use')
   }

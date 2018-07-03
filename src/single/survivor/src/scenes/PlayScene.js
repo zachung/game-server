@@ -5,6 +5,7 @@ import Messages from '../lib/Messages'
 
 import Cat from '../objects/Cat'
 import Move from '../objects/abilities/Move'
+import KeyMove from '../objects/abilities/KeyMove'
 import Operate from '../objects/abilities/Operate'
 
 class PlayScene extends Scene {
@@ -43,6 +44,7 @@ class PlayScene extends Scene {
       this.cat = new Cat()
       this.cat.takeAbility(new Move(1))
       this.cat.takeAbility(new Operate('E0N0'))
+      this.cat.takeAbility(new KeyMove())
       // this.cat.takeAbility(new Camera(16))
       this.cat.width = 10
       this.cat.height = 10

@@ -1,8 +1,8 @@
-import { OPERATE } from '../../config/constants'
+import { ABILITY_OPERATE } from '../../config/constants'
 
 class Operate {
   constructor (value) {
-    this.type = OPERATE
+    this.type = ABILITY_OPERATE
     this.set = new Set([value])
   }
 
@@ -22,6 +22,10 @@ class Operate {
     }
     let set = ability.set
     this.set.forEach(set.add.bind(set))
+  }
+
+  dropBy (owner) {
+    delete owner.abilities[this.type]
   }
 
   use (operator, target) {

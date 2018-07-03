@@ -1,12 +1,12 @@
 import { Graphics } from '../../lib/PIXI'
 
-import { CAMERA, CEIL_SIZE } from '../../config/constants'
+import { ABILITY_CAMERA, CEIL_SIZE } from '../../config/constants'
 
-const FOG = Symbol('fog')
+const LIGHT = Symbol('light')
 
 class Camera {
   constructor (value) {
-    this.type = CAMERA
+    this.type = ABILITY_CAMERA
 
     this.radius = value
   }
@@ -25,8 +25,8 @@ class Camera {
   carryBy (owner) {
     let ability = owner.abilities[this.type]
     if (ability) {
-      // remove pre fog
-      this.removeCamera(owner)
+      // remove pre light
+      this.dropBy(owner)
     }
     owner.abilities[this.type] = this
 
@@ -51,18 +51,33 @@ class Camera {
     lightbulb.endFill()
     lightbulb.parentLayer = container.lighting // must has property: lighting
 
-    owner[FOG] = lightbulb
+    owner[LIGHT] = lightbulb
     owner.addChild(lightbulb)
 
-    owner.once('removed', () => {
-      this.removeCamera(owner)
-      owner.once('added', container => this.setup(owner, container))
-    })
+    owner.removed = this.onRemoved.bind(this, owner)
+    owner.once('removed', owner.removed)
+  }
+
+  dropBy (owner) {
+    this.removeCamera(owner)
+  }
+
+  onRemoved (owner) {
+    this.removeCamera(owner)
+    owner.once('added', container => this.setup(owner, container))
   }
 
   removeCamera (owner) {
-    owner.removeChild(owner[FOG])
-    delete owner[FOG]
+    // remove light
+    owner.removeChild(owner[LIGHT])
+    delete owner[LIGHT]
+    // remove listener
+    owner.off('removed', this.removed)
+    delete owner.removed
+  }
+
+  toString () {
+    return 'light area: ' + this.radius
   }
 }
 
