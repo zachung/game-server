@@ -1,8 +1,7 @@
-/* global EZGUI */
-import { Text, TextStyle, loader, resources } from '../lib/PIXI'
+import { loader, resources } from '../lib/PIXI'
 import Scene from '../lib/Scene'
 import Map from '../lib/Map'
-import Messages from '../lib/Messages'
+import messages from '../lib/Messages'
 
 import Cat from '../objects/Cat'
 import Move from '../objects/abilities/Move'
@@ -10,44 +9,54 @@ import KeyMove from '../objects/abilities/KeyMove'
 import Operate from '../objects/abilities/Operate'
 import Camera from '../objects/abilities/Camera'
 
+import MessageWindow from '../ui/MessageWindow'
+
 let sceneWidth
 let sceneHeight
 
 // TODO: make UI
 class PlayScene extends Scene {
-  constructor ({ map, player, position }) {
+  constructor ({ mapFile, position }) {
     super()
-    this.isLoaded = false
-    this.cat = player
 
-    this.mapFile = 'world/' + map
+    this.mapFile = mapFile
     this.toPosition = position
   }
 
   create () {
     sceneWidth = this.parent.width
     sceneHeight = this.parent.height
-    let fileName = this.mapFile
-
-    // if map not loaded yet
-    if (!resources[fileName]) {
-      loader
-        .add(fileName, fileName + '.json')
-        .load(this.onLoaded.bind(this))
-    } else {
-      this.onLoaded()
-    }
+    this.isMapLoaded = false
+    this.initUi()
+    this.initPlayer()
+    this.loadMap()
   }
 
-  onLoaded () {
-    // init view size
-    // let sideLength = Math.min(this.parent.width, this.parent.height)
-    // let scale = sideLength / CEIL_SIZE / 10
-    // this.scale.set(scale, scale)
+  initUi () {
+    let messageWindow = new MessageWindow({
+      width: 200,
+      height: 100,
+      x: 0,
+      y: 0,
+      boundary: {
+        x: this.x,
+        y: this.y,
+        width: sceneWidth,
+        height: sceneHeight
+      },
+      enableDraggable: true
+    })
+    messages.on('modified', messageWindow.modified.bind(messageWindow))
+    // 讓UI顯示在頂層
+    messageWindow.parentLayer = this
+    this.addChild(messageWindow)
+    this.messageWindow = messageWindow
+    setInterval(() => {
+      messages.add('讓UI顯示在頂層讓UI顯示在頂層讓UI顯示在頂層')
+    }, 1000)
+  }
 
-    this.collideObjects = []
-    this.replyObjects = []
-
+  initPlayer () {
     if (!this.cat) {
       this.cat = new Cat()
       this.cat.takeAbility(new Move(1))
@@ -57,61 +66,43 @@ class PlayScene extends Scene {
       this.cat.width = 10
       this.cat.height = 10
     }
-
-    this.spawnMap(resources[this.mapFile].data)
-    this.addChild(this.map)
-    this.map.addPlayer(this.cat, this.toPosition)
-
-    this.tipText()
-
-    this.isLoaded = true
-
-    let guiObj = {
-      id: 'myWindow',
-      component: 'Window',
-      padding: 4,
-      position: {
-        x: sceneWidth / 4,
-        y: sceneHeight / 4
-      },
-      width: sceneWidth / 2,
-      height: sceneHeight / 2
-    }
-    EZGUI.Theme.load(['assets/kenney-theme/kenney-theme.json'], () => {
-      let guiContainer = EZGUI.create(guiObj, 'kenney')
-      this.addChild(guiContainer)
-    })
   }
 
-  spawnMap (mapData) {
+  loadMap () {
+    let fileName = 'world/' + this.mapFile
+
+    // if map not loaded yet
+    if (!resources[fileName]) {
+      loader
+        .add(fileName, fileName + '.json')
+        .load(this.spawnMap.bind(this, fileName))
+    } else {
+      this.spawnMap(fileName)
+    }
+  }
+
+  spawnMap (fileName) {
+    let mapData = resources[fileName].data
+
     let map = new Map()
     map.load(mapData)
 
     map.on('use', o => {
-      // tip text
-      this.emit('changeScene', PlayScene, {
-        map: o.map,
-        player: this.cat,
-        position: o.toPosition
-      })
+      this.isMapLoaded = false
+      this.mapFile = o.map
+      this.toPosition = o.toPosition
+      this.loadMap()
     })
 
+    this.addChild(map)
+    map.addPlayer(this.cat, this.toPosition)
     this.map = map
-  }
 
-  tipText () {
-    let style = new TextStyle({
-      fontSize: 12,
-      fill: 'white'
-    })
-    this.text = new Text('', style)
-    this.text.x = 100
-
-    this.addChild(this.text)
+    this.isMapLoaded = true
   }
 
   tick (delta) {
-    if (!this.isLoaded) {
+    if (!this.isMapLoaded) {
       return
     }
     this.map.tick(delta)
@@ -119,8 +110,6 @@ class PlayScene extends Scene {
       sceneWidth / 2 - this.cat.x,
       sceneHeight / 2 - this.cat.y
     )
-
-    this.text.text = Messages.getList().join('')
   }
 }
 

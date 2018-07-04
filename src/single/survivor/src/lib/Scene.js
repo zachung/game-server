@@ -1,6 +1,6 @@
-import { Container } from './PIXI'
+import { display } from './PIXI'
 
-class Scene extends Container {
+class Scene extends display.Layer {
   create () {}
 
   destroy () {}

@@ -1,11 +1,11 @@
 import { Sprite } from '../lib/PIXI'
 import { STATIC } from '../config/constants'
-import Messages from '../lib/Messages'
+import messages from '../lib/Messages'
 
 class GameObject extends Sprite {
   get type () { return STATIC }
   say (msg) {
-    Messages.add(msg)
+    messages.add(msg)
     console.log(msg)
   }
 }

@@ -1,4 +1,4 @@
-import { Text, TextStyle, loader, resources } from '../lib/PIXI'
+import { Text, TextStyle, loader } from '../lib/PIXI'
 import Scene from '../lib/Scene'
 import PlayScene from './PlayScene'
 
@@ -33,7 +33,7 @@ class LoadingScene extends Scene {
     loader
       .add('images/town_tiles.json')
       .load(() => this.emit('changeScene', PlayScene, {
-        map: 'E0N0',
+        mapFile: 'E0N0',
         position: [1, 1]
       }))
   }
