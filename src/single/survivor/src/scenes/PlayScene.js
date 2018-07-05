@@ -72,6 +72,10 @@ class PlayScene extends Scene {
 
     uiLayer.addChild(messageWindow)
     uiLayer.addChild(playerWindow)
+
+    if (IS_MOBILE) {
+      require('../lib/demo')
+    }
   }
 
   initPlayer () {
