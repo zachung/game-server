@@ -22,6 +22,7 @@ class MessageWindow extends ScrollableWindow {
 
   modified () {
     this.text.text = messages.list.join('\n')
+    this.updateScrollBarLength()
   }
 
   toString () {

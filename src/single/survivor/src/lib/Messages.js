@@ -5,7 +5,7 @@ const MSG_KEEP_MS = 5000
 class Messages extends EventEmitter {
   constructor () {
     super()
-    this._messages = ['123', '123', '123', '123', '123', '123', '123', '123']
+    this._messages = []
   }
 
   get list () {

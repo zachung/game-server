@@ -1,4 +1,4 @@
-import { loader, resources } from '../lib/PIXI'
+import { loader, resources, display } from '../lib/PIXI'
 import Scene from '../lib/Scene'
 import Map from '../lib/Map'
 import messages from '../lib/Messages'
@@ -33,6 +33,12 @@ class PlayScene extends Scene {
   }
 
   initUi () {
+    let uiGroup = new display.Group(0, true)
+    let uiLayer = new display.Layer(uiGroup)
+    uiLayer.parentLayer = this
+    uiLayer.group.enableSort = true
+    this.addChild(uiLayer)
+
     let messageWindow = new MessageWindow({
       width: 200,
       height: 100,
@@ -46,14 +52,18 @@ class PlayScene extends Scene {
       },
       enableDraggable: true
     })
-    messages.on('modified', messageWindow.modified.bind(messageWindow))
     // 讓UI顯示在頂層
-    messageWindow.parentLayer = this
-    this.addChild(messageWindow)
-    this.messageWindow = messageWindow
-    setInterval(() => {
-      messages.add('讓UI顯示在頂層讓UI顯示在頂層讓UI顯示在頂層')
-    }, 1000)
+    messageWindow.parentGroup = uiGroup
+    messageWindow.zIndex = 2
+    uiLayer.addChild(messageWindow)
+
+    messages.on('modified', messageWindow.modified.bind(messageWindow))
+    let interval = setInterval(() => {
+      messages.add(new Date())
+    }, 100)
+    setTimeout(() => {
+      clearInterval(interval)
+    }, 5000)
   }
 
   initPlayer () {
@@ -89,6 +99,10 @@ class PlayScene extends Scene {
 
     map.on('use', o => {
       this.isMapLoaded = false
+      // clear old map
+      this.removeChild(this.map)
+      this.map.destroy()
+
       this.mapFile = o.map
       this.toPosition = o.toPosition
       this.loadMap()

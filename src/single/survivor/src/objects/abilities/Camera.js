@@ -38,6 +38,10 @@ class Camera {
   }
 
   setup (owner, container) {
+    if (!container.lighting) {
+      console.log('container does NOT has lighting property')
+      return
+    }
     var lightbulb = new Graphics()
     var rr = 0xff
     var rg = 0xff
