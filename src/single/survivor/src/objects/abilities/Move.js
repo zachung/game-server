@@ -1,30 +1,23 @@
+import Ability from './Ability'
 import { ABILITY_MOVE } from '../../config/constants'
 
-class Move {
+class Move extends Ability {
   constructor (value) {
+    super()
     this.value = value
   }
 
   get type () { return ABILITY_MOVE }
 
-  // 是否需置換
-  hasToReplace (owner) {
-    let ability = owner.tickAbilities[this.type.toString()]
-    if (!ability) {
-      return true
-    }
+  isBetter (other) {
     // 只會加快
-    return this.value > ability.value
+    return this.value > other.value
   }
 
   // 配備此技能
   carryBy (owner) {
-    this.dropBy(owner)
+    super.carryBy(owner)
     owner.tickAbilities[this.type.toString()] = this
-  }
-
-  dropBy (owner) {
-    delete owner.tickAbilities[this.type.toString()]
   }
 
   // tick

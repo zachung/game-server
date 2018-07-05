@@ -6,9 +6,14 @@ import Wrapper from './Wrapper'
 class ScrollableWindow extends Window {
   constructor (opt) {
     super(opt)
-    let { width, height, padding = 5 } = opt
+    let {
+      width,
+      height,
+      padding = 8,
+      scrollBarWidth = 10
+    } = opt
+    this._opt = opt
 
-    const scrollBarWidth = 10
     this._initScrollableArea(
       width - padding * 2 - scrollBarWidth - 5,
       height - padding * 2,
@@ -56,7 +61,7 @@ class ScrollableWindow extends Window {
 
     let scrollBar = new Graphics()
     scrollBar.beginFill(0x222222)
-    scrollBar.drawRoundedRect(0, 0, 10, height, 3)
+    scrollBar.drawRoundedRect(0, 0, width, height, 3)
     scrollBar.endFill()
     scrollBar.toString = () => 'scrollBar'
     Wrapper.draggable(scrollBar, {
@@ -76,27 +81,45 @@ class ScrollableWindow extends Window {
     this.scrollBarBg = scrollBarBg
   }
 
+  // 捲動視窗
   scrollMainView () {
-    // TODO: update scroll bar height
-    let rate = this.scrollBar.y / (this.scrollBarBg.height - this.scrollBar.height)
-    let y = (this.mainView.height - this.windowHeight) * rate
-    this.mainView.y = -y
+    this.mainView.y = (this.windowHeight - this.mainView.height) * this.scrollPercent
   }
 
+  // 新增物件至視窗
   addWindowChild (child) {
     this.mainView.addChild(child)
   }
 
+  // 更新捲動棒大小, 不一定要調用
   updateScrollBarLength () {
+    let { scrollBarMinHeight = 20 } = this._opt
+
     let dh = this.mainView.height / this.windowHeight
     if (dh < 1) {
       this.scrollBar.height = this.scrollBarBg.height
     } else {
       this.scrollBar.height = this.scrollBarBg.height / dh
       // 避免太小很難拖曳
-      this.scrollBar.height = Math.max(20, this.scrollBar.height)
+      this.scrollBar.height = Math.max(scrollBarMinHeight, this.scrollBar.height)
     }
     this.scrollBar.fallbackToBoundary()
+  }
+
+  // 捲動百分比
+  get scrollPercent () {
+    let delta = this.scrollBarBg.height - this.scrollBar.height
+    return delta === 0 ? 1 : this.scrollBar.y / delta
+  }
+
+  // 捲動至百分比
+  scrollTo (percent) {
+    let delta = this.scrollBarBg.height - this.scrollBar.height
+    let y = 0
+    if (delta !== 0) {
+      y = delta * percent
+    }
+    this.scrollBar.y = y
     this.scrollMainView()
   }
 

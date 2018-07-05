@@ -15,13 +15,14 @@ class Cat extends GameObject {
   }
 
   takeAbility (ability) {
-    if (ability.hasToReplace(this)) {
+    if (ability.hasToReplace(this, ability)) {
       ability.carryBy(this)
+      this.emit('ability-carry', ability)
     }
   }
 
   toString () {
-    return 'cat'
+    return 'you'
   }
 
   tick (delta) {

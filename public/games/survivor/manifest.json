@@ -1,0 +1,15 @@
+{
+  "short_name": "Survival",
+  "name": "Survival World",
+  "icons": [
+    {
+      "src":"",
+      "sizes": "",
+      "type": ""
+    }
+  ],
+  "start_url": "",
+  "background_color": "#000",
+  "Theme_color": "",
+  "display": "standalone"
+}

@@ -1,7 +1,7 @@
 import { loader, resources, display } from '../lib/PIXI'
 import Scene from '../lib/Scene'
 import Map from '../lib/Map'
-import messages from '../lib/Messages'
+import { IS_MOBILE } from '../config/constants'
 
 import Cat from '../objects/Cat'
 import Move from '../objects/abilities/Move'
@@ -10,11 +10,29 @@ import Operate from '../objects/abilities/Operate'
 import Camera from '../objects/abilities/Camera'
 
 import MessageWindow from '../ui/MessageWindow'
+import PlayerWindow from '../ui/PlayerWindow'
 
 let sceneWidth
 let sceneHeight
 
-// TODO: make UI
+function getMessageWindowOpt () {
+  let opt = {}
+  if (IS_MOBILE) {
+    opt.width = sceneWidth
+    opt.fontSize = opt.width / 30
+    opt.scrollBarWidth = 50
+    opt.scrollBarMinHeight = 70
+  } else {
+    opt.width = sceneWidth < 400 ? sceneWidth : sceneWidth / 2
+    opt.fontSize = opt.width / 60
+  }
+  opt.height = sceneHeight / 6
+  opt.x = 0
+  opt.y = sceneHeight - opt.height
+
+  return opt
+}
+
 class PlayScene extends Scene {
   constructor ({ mapFile, position }) {
     super()
@@ -27,9 +45,9 @@ class PlayScene extends Scene {
     sceneWidth = this.parent.width
     sceneHeight = this.parent.height
     this.isMapLoaded = false
-    this.initUi()
-    this.initPlayer()
     this.loadMap()
+    this.initPlayer()
+    this.initUi()
   }
 
   initUi () {
@@ -39,31 +57,21 @@ class PlayScene extends Scene {
     uiLayer.group.enableSort = true
     this.addChild(uiLayer)
 
-    let messageWindow = new MessageWindow({
-      width: 200,
-      height: 100,
-      x: 0,
-      y: 0,
-      boundary: {
-        x: this.x,
-        y: this.y,
-        width: sceneWidth,
-        height: sceneHeight
-      },
-      enableDraggable: true
-    })
+    let messageWindow = new MessageWindow(getMessageWindowOpt())
     // 讓UI顯示在頂層
     messageWindow.parentGroup = uiGroup
-    messageWindow.zIndex = 2
-    uiLayer.addChild(messageWindow)
+    messageWindow.add(['scene size: (', sceneWidth, ', ', sceneHeight, ').'].join(''))
 
-    messages.on('modified', messageWindow.modified.bind(messageWindow))
-    let interval = setInterval(() => {
-      messages.add(new Date())
-    }, 100)
-    setTimeout(() => {
-      clearInterval(interval)
-    }, 5000)
+    let playerWindow = new PlayerWindow({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+      player: this.cat
+    })
+
+    uiLayer.addChild(messageWindow)
+    uiLayer.addChild(playerWindow)
   }
 
   initPlayer () {

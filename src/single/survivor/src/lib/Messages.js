@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 
-const MSG_KEEP_MS = 5000
+const MAX_MESSAGE_COUNT = 500
 
 class Messages extends EventEmitter {
   constructor () {
@@ -13,12 +13,11 @@ class Messages extends EventEmitter {
   }
 
   add (msg) {
-    this._messages.unshift(msg)
-    this.emit('modified')
-    setTimeout(() => {
+    let length = this._messages.unshift(msg)
+    if (length > MAX_MESSAGE_COUNT) {
       this._messages.pop()
-      this.emit('modified')
-    }, MSG_KEEP_MS)
+    }
+    this.emit('modified')
   }
 }
 

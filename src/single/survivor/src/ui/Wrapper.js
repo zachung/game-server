@@ -60,12 +60,19 @@ function _fallbackToBoundary () {
   this.y = Math.max(this.y, boundary.y)
   this.y = Math.min(this.y, boundary.y + boundary.height - height)
 }
-
 class Wrapper {
-  static draggable (container, opt) {
-    container[OPT] = opt
-    _enableDraggable.call(container)
-    container.fallbackToBoundary = _fallbackToBoundary
+  /**
+   * displayObject: will wrapped DisplayObject
+   * opt: {
+   *  boundary: 拖曳邊界 { x, y, width, height }
+   *  [, width]: 邊界碰撞寬(default: displayObject.width)
+   *  [, height]: 邊界碰撞高(default: displayObject.height)
+   *  }
+   */
+  static draggable (displayObject, opt) {
+    displayObject[OPT] = opt
+    _enableDraggable.call(displayObject)
+    displayObject.fallbackToBoundary = _fallbackToBoundary
   }
 }
 

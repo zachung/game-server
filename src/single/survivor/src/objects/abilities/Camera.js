@@ -1,35 +1,25 @@
+import Ability from './Ability'
 import { Graphics } from '../../lib/PIXI'
-
 import { ABILITY_CAMERA, CEIL_SIZE } from '../../config/constants'
 
 const LIGHT = Symbol('light')
 
-class Camera {
+class Camera extends Ability {
   constructor (value) {
+    super()
     this.radius = value
   }
 
   get type () { return ABILITY_CAMERA }
 
-  // 是否需置換
-  hasToReplace (owner) {
-    let other = owner.abilities[this.type]
-    if (!other) {
-      return true
-    }
+  isBetter (other) {
     // 只會變大
     return this.radius >= other.radius
   }
 
   // 配備此技能
   carryBy (owner) {
-    let ability = owner.abilities[this.type]
-    if (ability) {
-      // remove pre light
-      this.dropBy(owner)
-    }
-    owner.abilities[this.type] = this
-
+    super.carryBy(owner)
     if (owner.parent) {
       this.setup(owner, owner.parent)
     } else {
@@ -37,9 +27,13 @@ class Camera {
     }
   }
 
+  replacedBy (other, owner) {
+    this.removeCamera(owner)
+  }
+
   setup (owner, container) {
     if (!container.lighting) {
-      console.log('container does NOT has lighting property')
+      console.error('container does NOT has lighting property')
       return
     }
     var lightbulb = new Graphics()
@@ -60,10 +54,6 @@ class Camera {
 
     owner.removed = this.onRemoved.bind(this, owner)
     owner.once('removed', owner.removed)
-  }
-
-  dropBy (owner) {
-    this.removeCamera(owner)
   }
 
   onRemoved (owner) {

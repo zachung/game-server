@@ -1,20 +1,18 @@
+import Ability from './Ability'
 import keyboardJS from 'keyboardjs'
-
 import { LEFT, UP, RIGHT, DOWN } from '../../config/control'
 import { ABILITY_KEY_MOVE } from '../../config/constants'
 
-class Move {
+class KeyMove extends Ability {
   get type () { return ABILITY_KEY_MOVE }
 
-  // 是否需置換
-  hasToReplace (owner) {
-    return true
+  isBetter (other) {
+    return false
   }
 
   // 配備此技能
   carryBy (owner) {
-    owner.abilities[this.type] = this
-
+    super.carryBy(owner)
     this.setup(owner)
   }
 
@@ -50,16 +48,13 @@ class Move {
   }
 
   dropBy (owner) {
-    let ability = owner.abilities[this.type]
-    if (ability) {
-      keyboardJS.withContext('', () => {
-        Object.entries(owner[ABILITY_KEY_MOVE]).forEach(([key, handler]) => {
-          keyboardJS.unbind(key, handler)
-        })
+    super.dropBy(owner)
+    keyboardJS.withContext('', () => {
+      Object.entries(owner[ABILITY_KEY_MOVE]).forEach(([key, handler]) => {
+        keyboardJS.unbind(key, handler)
       })
-
-      delete owner.abilities[this.type]
-    }
+    })
+    delete owner[ABILITY_KEY_MOVE]
   }
 
   toString () {
@@ -67,4 +62,4 @@ class Move {
   }
 }
 
-export default Move
+export default KeyMove

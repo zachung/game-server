@@ -7,8 +7,10 @@ class MessageWindow extends ScrollableWindow {
   constructor (opt) {
     super(opt)
 
+    let { fontSize = 12 } = opt
+
     let style = new TextStyle({
-      fontSize: 12,
+      fontSize: fontSize,
       fill: 'green',
       breakWords: true,
       wordWrap: true,
@@ -18,11 +20,25 @@ class MessageWindow extends ScrollableWindow {
 
     this.addWindowChild(text)
     this.text = text
+
+    this.autoScrollToBottom = true
+
+    messages.on('modified', this.modified.bind(this))
   }
 
   modified () {
-    this.text.text = messages.list.join('\n')
+    let scrollPercent = this.scrollPercent
+    this.text.text = [].concat(messages.list).reverse().join('\n')
     this.updateScrollBarLength()
+
+    // 若scroll置底，自動捲動置底
+    if (scrollPercent === 1) {
+      this.scrollTo(1)
+    }
+  }
+
+  add (msg) {
+    messages.add(msg)
   }
 
   toString () {
