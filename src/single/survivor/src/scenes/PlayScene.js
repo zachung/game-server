@@ -11,6 +11,7 @@ import Camera from '../objects/abilities/Camera'
 
 import MessageWindow from '../ui/MessageWindow'
 import PlayerWindow from '../ui/PlayerWindow'
+import TouchControlPanel from '../ui/TouchControlPanel'
 
 let sceneWidth
 let sceneHeight
@@ -70,11 +71,19 @@ class PlayScene extends Scene {
       player: this.cat
     })
 
+    let touchControlPanel = new TouchControlPanel({
+      x: 100,
+      y: 200,
+      radius: 50
+    })
+    touchControlPanel.parentGroup = uiGroup
+
     uiLayer.addChild(messageWindow)
     uiLayer.addChild(playerWindow)
+    uiLayer.addChild(touchControlPanel)
 
     if (IS_MOBILE) {
-      require('../lib/demo')
+      // require('../lib/demo')
     }
   }
 
