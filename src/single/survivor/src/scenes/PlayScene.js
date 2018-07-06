@@ -34,6 +34,22 @@ function getMessageWindowOpt () {
   return opt
 }
 
+function getPlayerWindowOpt () {
+  let opt = {}
+  opt.x = 0
+  opt.y = 0
+  if (IS_MOBILE) {
+    opt.width = sceneWidth / 4
+    opt.height = sceneHeight / 6
+    opt.fontSize = opt.width / 10
+  } else {
+    opt.width = sceneWidth < 400 ? sceneWidth / 2 : sceneWidth / 4
+    opt.height = sceneHeight / 3
+    opt.fontSize = opt.width / 20
+  }
+  return opt
+}
+
 class PlayScene extends Scene {
   constructor ({ mapFile, position }) {
     super()
@@ -63,18 +79,15 @@ class PlayScene extends Scene {
     messageWindow.parentGroup = uiGroup
     messageWindow.add(['scene size: (', sceneWidth, ', ', sceneHeight, ').'].join(''))
 
-    let playerWindow = new PlayerWindow({
-      x: 0,
-      y: 0,
-      width: 100,
-      height: 80,
+    let playerWindow = new PlayerWindow(Object.assign({
       player: this.cat
-    })
+    }, getPlayerWindowOpt()))
 
     uiLayer.addChild(messageWindow)
     uiLayer.addChild(playerWindow)
 
     if (IS_MOBILE) {
+      // 只有手機要觸控板
       let touchControlPanel = new TouchControlPanel({
         x: sceneWidth / 4,
         y: sceneHeight * 4 / 6,
@@ -94,8 +107,6 @@ class PlayScene extends Scene {
       this.cat.takeAbility(new Operate('E0N0'))
       this.cat.takeAbility(new KeyMove())
       this.cat.takeAbility(new Camera(1))
-      this.cat.width = 10
-      this.cat.height = 10
     }
   }
 
@@ -114,8 +125,10 @@ class PlayScene extends Scene {
 
   spawnMap (fileName) {
     let mapData = resources[fileName].data
+    let mapScale = IS_MOBILE ? 1 : 0.5
 
-    let map = new Map()
+    let map = new Map(mapScale)
+    this.addChild(map)
     map.load(mapData)
 
     map.on('use', o => {
@@ -129,7 +142,6 @@ class PlayScene extends Scene {
       this.loadMap()
     })
 
-    this.addChild(map)
     map.addPlayer(this.cat, this.toPosition)
     this.map = map
 

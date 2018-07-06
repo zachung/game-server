@@ -1,39 +1,20 @@
-import { resources } from '../lib/PIXI'
+import Texture from '../lib/Texture'
+import Light from '../lib/Light'
 import GameObject from './GameObject'
 
-import { STAY, ABILITY_OPERATE } from '../config/constants'
+import { STATIC } from '../config/constants'
 
 class Torch extends GameObject {
-  constructor (map) {
-    // Create the cat sprite
-    super(resources['images/town_tiles.json'].textures['door.png'])
+  constructor () {
+    super(Texture.Torch)
 
-    this.map = map[0]
-    this.toPosition = map[1]
+    let radius = 3
 
-    this.on('collide', this.actionWith.bind(this))
+    this.on('added', Light.lightOn.bind(null, this, radius, 0.95))
+    this.on('removeed', Light.lightOff.bind(null, this))
   }
 
-  get type () { return STAY }
-
-  actionWith (operator) {
-    let ability = operator.abilities[ABILITY_OPERATE]
-    if (!ability) {
-      this.say([
-        operator.toString(),
-        ' dosen\'t has ability to use this door ',
-        this.map,
-        '.'
-      ].join(''))
-    } else {
-      ability.use(operator, this)
-    }
-  }
-
-  [ABILITY_OPERATE] () {
-    this.say(['Get in ', this.map, ' now.'].join(''))
-    this.emit('use')
-  }
+  get type () { return STATIC }
 }
 
 export default Torch

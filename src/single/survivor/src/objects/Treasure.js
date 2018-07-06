@@ -1,4 +1,4 @@
-import { resources } from '../lib/PIXI'
+import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 
 import { REPLY } from '../config/constants'
@@ -7,7 +7,7 @@ import { instanceByAbilityId } from '../lib/utils'
 class Treasure extends GameObject {
   constructor (inventories = []) {
     // Create the cat sprite
-    super(resources['images/town_tiles.json'].textures['treasure.png'])
+    super(Texture.Treasure)
 
     this.inventories = inventories.map(([abilityId, params]) => {
       return instanceByAbilityId(abilityId, params)
@@ -36,7 +36,8 @@ class Treasure extends GameObject {
         this.toString()
       ].join(''))
 
-      this.emit('take')
+      this.parent.removeChild(this)
+      this.destroy()
     }
   }
 }

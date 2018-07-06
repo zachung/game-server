@@ -32,6 +32,8 @@ class LoadingScene extends Scene {
     // load an image and run the `setup` function when it's done
     loader
       .add('images/town_tiles.json')
+      .add('images/terrain_atlas.json')
+      .add('images/base_out_atlas.json')
       .load(() => this.emit('changeScene', PlayScene, {
         mapFile: 'E0N0',
         position: [1, 1]

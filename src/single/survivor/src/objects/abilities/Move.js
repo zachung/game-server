@@ -22,8 +22,10 @@ class Move extends Ability {
 
   // tick
   tick (delta, owner) {
-    owner.x += owner.dx * this.value * delta
-    owner.y += owner.dy * this.value * delta
+    // NOTICE: 假設自己是正方形
+    let scale = owner.scale.x
+    owner.x += owner.dx * this.value * scale * delta
+    owner.y += owner.dy * this.value * scale * delta
   }
 
   toString () {

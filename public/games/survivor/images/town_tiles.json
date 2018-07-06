@@ -1,7 +1,6 @@
 {
   "frames":
   {
-
     "wall.png":
     {
       "frame":
@@ -117,6 +116,35 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "torch.png":
+    {
+      "frame":
+      {
+        "x": 144,
+        "y": 16,
+        "w": 16,
+        "h": 16
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize":
+      {
+        "x": 144,
+        "y": 16,
+        "w": 16,
+        "h": 16
+      },
+      "sourceSize":
+      {
+        "w": 16,
+        "h": 16
+      },
+      "pivot":
+      {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta":
@@ -130,7 +158,7 @@
       "w": 160,
       "h": 48
     },
-    "scale": "1",
+    "scale": "0.5",
     "smartupdate": "$TexturePacker:SmartUpdate:51ede84c7a85e4d6aeb31a6020a20858:3923663e59fb40b578d66a492a2cda2d:9995f8b4db1ac3cb75651b1542df8ee2$"
   }
 }

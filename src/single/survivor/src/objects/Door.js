@@ -1,4 +1,4 @@
-import { resources } from '../lib/PIXI'
+import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 
 import { STAY, ABILITY_OPERATE } from '../config/constants'
@@ -6,7 +6,7 @@ import { STAY, ABILITY_OPERATE } from '../config/constants'
 class Door extends GameObject {
   constructor (map) {
     // Create the cat sprite
-    super(resources['images/town_tiles.json'].textures['door.png'])
+    super(Texture.Door)
 
     this.map = map[0]
     this.toPosition = map[1]

@@ -1,6 +1,6 @@
 import { Container, display, BLEND_MODES, Sprite } from './PIXI'
 
-import { STAY, CEIL_SIZE } from '../config/constants'
+import { STAY, STATIC, CEIL_SIZE } from '../config/constants'
 import { instanceByItemId } from './utils'
 import bump from '../lib/Bump'
 
@@ -9,8 +9,11 @@ import bump from '../lib/Bump'
  *  use: object
  */
 class Map extends Container {
-  constructor () {
+  constructor (scale = 1) {
     super()
+    this.ceilSize = scale * CEIL_SIZE
+    this.mapScale = scale
+
     this.collideObjects = []
     this.replyObjects = []
     this.map = new Container()
@@ -48,11 +51,15 @@ class Map extends Container {
     let rows = mapData.rows
     let items = mapData.items
 
+    let ceilSize = this.ceilSize
+    let mapScale = this.mapScale
+
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
         let id = tiles[j * cols + i]
         let o = instanceByItemId(id)
-        o.position.set(i * CEIL_SIZE, j * CEIL_SIZE)
+        o.position.set(i * ceilSize, j * ceilSize)
+        o.scale.set(mapScale, mapScale)
         switch (o.type) {
           case STAY:
             // 靜態物件
@@ -66,8 +73,12 @@ class Map extends Container {
     items.forEach((item, i) => {
       let [ type, pos, params ] = item
       let o = instanceByItemId(type, params)
-      o.position.set(pos[0] * CEIL_SIZE, pos[1] * CEIL_SIZE)
+      o.position.set(pos[0] * ceilSize, pos[1] * ceilSize)
+      o.scale.set(mapScale, mapScale)
+      this.map.addChild(o)
       switch (o.type) {
+        case STATIC:
+          return
         case STAY:
           // 靜態物件
           this.collideObjects.push(o)
@@ -75,26 +86,21 @@ class Map extends Container {
         default:
           this.replyObjects.push(o)
       }
-      o.on('take', () => {
-        // destroy treasure
-        this.removeChild(o)
-        o.destroy()
+      o.on('use', () => this.emit('use', o))
+      o.on('removed', () => {
         let inx = this.replyObjects.indexOf(o)
         this.replyObjects.splice(inx, 1)
-
-        // remove item from the map
         delete items[i]
       })
-      o.on('use', () => this.emit('use', o))
-      this.map.addChild(o)
     })
   }
 
   addPlayer (player, toPosition) {
     player.position.set(
-      toPosition[0] * CEIL_SIZE,
-      toPosition[1] * CEIL_SIZE
+      toPosition[0] * this.ceilSize,
+      toPosition[1] * this.ceilSize
     )
+    player.scale.set(this.mapScale, this.mapScale)
     this.map.addChild(player)
 
     this.player = player

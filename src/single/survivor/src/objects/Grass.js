@@ -1,4 +1,4 @@
-import { resources } from '../lib/PIXI'
+import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 
 import { STATIC } from '../config/constants'
@@ -6,7 +6,7 @@ import { STATIC } from '../config/constants'
 class Grass extends GameObject {
   constructor (treasures) {
     // Create the cat sprite
-    super(resources['images/town_tiles.json'].textures['grass.png'])
+    super(Texture.Grass)
   }
 
   get type () { return STATIC }
