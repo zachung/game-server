@@ -5,16 +5,14 @@ import LoadingScene from './scenes/LoadingScene'
 let app = new Application({
   width: 256,
   height: 256,
-  antialias: true,
-  transparent: false,
+  roundPixels: true,
+  autoResize: true,
   resolution: 1,
   autoStart: false
 })
 
 app.renderer.view.style.position = 'absolute'
 app.renderer.view.style.display = 'block'
-app.renderer.autoResize = true
-app.renderer.roundPixels = true
 app.renderer.resize(window.innerWidth, window.innerHeight)
 
 // Add the canvas that Pixi automatically created for you to the HTML document

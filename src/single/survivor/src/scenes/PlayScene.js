@@ -153,9 +153,10 @@ class PlayScene extends Scene {
       return
     }
     this.map.tick(delta)
+    // FIXME: gap between tiles on iPhone Safari
     this.map.position.set(
-      sceneWidth / 2 - this.cat.x,
-      sceneHeight / 2 - this.cat.y
+      Math.floor(sceneWidth / 2 - this.cat.x),
+      Math.floor(sceneHeight / 2 - this.cat.y)
     )
   }
 }
