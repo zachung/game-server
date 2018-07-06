@@ -23,10 +23,8 @@
     1, 0, 1, 1, 1, 1, 1, 1, 1, 1
   ],
   "items": [
+    ["typeId(int)", "position(Array)", "params(Array/Object)"],
     [
-      2, [1, 2], [
-      [1, 2]
-    ]], [
       2, [3, 5], [
       [2, "E0S0"],
       [1, 5]

@@ -9,8 +9,8 @@ class Treasure extends GameObject {
     // Create the cat sprite
     super(resources['images/town_tiles.json'].textures['treasure.png'])
 
-    this.inventories = inventories.map(conf => {
-      return instanceByAbilityId(conf[0], conf[1])
+    this.inventories = inventories.map(([abilityId, params]) => {
+      return instanceByAbilityId(abilityId, params)
     })
 
     this.on('collide', this.actionWith.bind(this))

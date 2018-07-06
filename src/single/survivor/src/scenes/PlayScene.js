@@ -71,18 +71,18 @@ class PlayScene extends Scene {
       player: this.cat
     })
 
-    let touchControlPanel = new TouchControlPanel({
-      x: 100,
-      y: 200,
-      radius: 50
-    })
-    touchControlPanel.parentGroup = uiGroup
-
     uiLayer.addChild(messageWindow)
     uiLayer.addChild(playerWindow)
-    uiLayer.addChild(touchControlPanel)
 
     if (IS_MOBILE) {
+      let touchControlPanel = new TouchControlPanel({
+        x: sceneWidth / 4,
+        y: sceneHeight * 4 / 6,
+        radius: sceneWidth / 10
+      })
+      touchControlPanel.parentGroup = uiGroup
+
+      uiLayer.addChild(touchControlPanel)
       // require('../lib/demo')
     }
   }

@@ -64,8 +64,9 @@ class Map extends Container {
     }
 
     items.forEach((item, i) => {
-      let o = instanceByItemId(item.Type, item.params)
-      o.position.set(item.pos[0] * CEIL_SIZE, item.pos[1] * CEIL_SIZE)
+      let [ type, pos, params ] = item
+      let o = instanceByItemId(type, params)
+      o.position.set(pos[0] * CEIL_SIZE, pos[1] * CEIL_SIZE)
       switch (o.type) {
         case STAY:
           // 靜態物件
