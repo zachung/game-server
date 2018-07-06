@@ -2,15 +2,10 @@ import { resources } from '../lib/PIXI'
 
 class Texture {
   static get TerrainAtlas () {
-    // return Texture.TownTiles
     return resources['images/terrain_atlas.json']
   }
   static get BaseOutAtlas () {
-    // return Texture.TownTiles
     return resources['images/base_out_atlas.json']
-  }
-  static get TownTiles () {
-    return resources['images/town_tiles.json']
   }
   static get Rock () {
     return Texture.TerrainAtlas.textures['rock.png']

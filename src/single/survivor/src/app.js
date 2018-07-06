@@ -14,6 +14,7 @@ let app = new Application({
 app.renderer.view.style.position = 'absolute'
 app.renderer.view.style.display = 'block'
 app.renderer.autoResize = true
+app.renderer.roundPixels = true
 app.renderer.resize(window.innerWidth, window.innerHeight)
 
 // Add the canvas that Pixi automatically created for you to the HTML document
