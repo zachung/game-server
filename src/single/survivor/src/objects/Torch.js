@@ -15,6 +15,10 @@ class Torch extends GameObject {
   }
 
   get type () { return STATIC }
+
+  toString () {
+    return 'torch'
+  }
 }
 
 export default Torch

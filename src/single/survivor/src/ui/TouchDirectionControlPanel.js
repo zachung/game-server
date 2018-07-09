@@ -6,7 +6,7 @@ import { LEFT, UP, RIGHT, DOWN } from '../config/control'
 
 const ALL_KEYS = [RIGHT, LEFT, UP, DOWN]
 
-class TouchControlPanel extends Container {
+class TouchDirectionControlPanel extends Container {
   constructor ({ x, y, radius }) {
     super()
     this.position.set(x, y)
@@ -113,8 +113,8 @@ class TouchControlPanel extends Container {
   }
 
   toString () {
-    return 'TouchControlPanel'
+    return 'TouchDirectionControlPanel'
   }
 }
 
-export default TouchControlPanel
+export default TouchDirectionControlPanel

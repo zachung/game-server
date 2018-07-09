@@ -7,7 +7,8 @@ import Cat from '../objects/Cat'
 
 import MessageWindow from '../ui/MessageWindow'
 import PlayerWindow from '../ui/PlayerWindow'
-import TouchControlPanel from '../ui/TouchControlPanel'
+import TouchDirectionControlPanel from '../ui/TouchDirectionControlPanel'
+import TouchOperationControlPanel from '../ui/TouchOperationControlPanel'
 
 let sceneWidth
 let sceneHeight
@@ -84,14 +85,24 @@ class PlayScene extends Scene {
 
     if (IS_MOBILE) {
       // 只有手機要觸控板
-      let touchControlPanel = new TouchControlPanel({
+      // 方向控制
+      let directionPanel = new TouchDirectionControlPanel({
         x: sceneWidth / 4,
         y: sceneHeight * 4 / 6,
         radius: sceneWidth / 10
       })
-      touchControlPanel.parentGroup = uiGroup
+      directionPanel.parentGroup = uiGroup
 
-      uiLayer.addChild(touchControlPanel)
+      // 操作控制
+      let operationPanel = new TouchOperationControlPanel({
+        x: sceneWidth / 4 * 3,
+        y: sceneHeight * 4 / 6,
+        radius: sceneWidth / 10
+      })
+      operationPanel.parentGroup = uiGroup
+
+      uiLayer.addChild(directionPanel)
+      uiLayer.addChild(operationPanel)
       // require('../lib/demo')
     }
   }

@@ -22,13 +22,15 @@ class Carry extends Ability {
 
   carryBy (owner) {
     super.carryBy(owner)
-    owner[ABILITY_CARRY] = this[ABILITY_CARRY].bind(this, owner)
+    this.owner = owner
+    owner[ABILITY_CARRY] = this
   }
 
-  [ABILITY_CARRY] (owner, item, count = 1) {
+  take (item, count = 1) {
+    let owner = this.owner
     if (item instanceof Ability && owner[ABILITY_LEARN]) {
       // 取得能力
-      owner[ABILITY_LEARN](item)
+      owner[ABILITY_LEARN].learn(item)
       return
     }
     let key = item.toString()
@@ -55,6 +57,29 @@ class Carry extends Ability {
       }
       this.bags[firstEmptySlot.bi][firstEmptySlot.si] = newSlot(item, count)
     }
+  }
+
+  getSlotItem (slotInx) {
+    let bi
+    let si
+    // 照著包包加入順序查找
+    let found = this.bags.find((bag, b) => {
+      bi = b
+      return bag.find((slot, s) => {
+        si = s
+        return slotInx-- === 0
+      })
+    })
+    let item
+    if (found) {
+      found = this.bags[bi][si]
+      item = found.item
+      // 取出後減一
+      if (--found.count === 0) {
+        this.bags[bi][si] = undefined
+      }
+    }
+    return item
   }
 
   toString () {

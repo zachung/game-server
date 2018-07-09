@@ -25,7 +25,7 @@ class Treasure extends GameObject {
       return
     }
 
-    this.inventories.forEach(treasure => carryAbility(treasure))
+    this.inventories.forEach(treasure => carryAbility.take(treasure))
     operator.say(['I taked ', this.toString()].join(''))
 
     this.parent.removeChild(this)

@@ -10,11 +10,13 @@ class Learn extends Ability {
 
   carryBy (owner) {
     super.carryBy(owner)
-    owner[ABILITY_LEARN] = this[ABILITY_LEARN].bind(this, owner)
-    return owner[ABILITY_LEARN]
+    this.owner = owner
+    owner[ABILITY_LEARN] = this
+    return this
   }
 
-  [ABILITY_LEARN] (owner, ability) {
+  learn (ability) {
+    let owner = this.owner
     if (ability.hasToReplace(owner, ability)) {
       ability.carryBy(owner)
       owner.emit('ability-carry', ability)

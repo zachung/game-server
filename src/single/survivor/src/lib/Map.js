@@ -18,6 +18,11 @@ class Map extends Container {
     this.replyObjects = []
     this.map = new Container()
     this.addChild(this.map)
+
+    // player group
+    this.playerGroup = new display.Group()
+    let playerLayer = new display.Layer(this.playerGroup)
+    this.addChild(playerLayer)
   }
 
   enableFog () {
@@ -103,8 +108,14 @@ class Map extends Container {
       toPosition[1] * this.ceilSize
     )
     player.scale.set(this.mapScale, this.mapScale)
+    player.parentGroup = this.playerGroup
     this.map.addChild(player)
 
+    player.onPlace = this.addGameObject.bind(this, player)
+    player.on('place', player.onPlace)
+    player.once('removed', () => {
+      player.off('place', player.onPlace)
+    })
     this.player = player
   }
 
@@ -123,6 +134,14 @@ class Map extends Container {
         o.emit('collide', this.player)
       }
     })
+  }
+
+  addGameObject (player, object) {
+    let mapScale = this.mapScale
+    let position = player.position
+    object.position.set(position.x, position.y)
+    object.scale.set(mapScale, mapScale)
+    this.map.addChild(object)
   }
 
   // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置

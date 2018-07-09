@@ -11,6 +11,8 @@ export const ABILITY_KEY_MOVE = Symbol('key-move')
 export const ABILITY_LIFE = Symbol('life')
 export const ABILITY_CARRY = Symbol('carry')
 export const ABILITY_LEARN = Symbol('learn')
+export const ABILITY_PLACE = Symbol('place')
+export const ABILITY_KEY_PLACE = Symbol('key-place')
 export const ABILITIES_ALL = [
   ABILITY_MOVE,
   ABILITY_CAMERA,
@@ -18,7 +20,9 @@ export const ABILITIES_ALL = [
   ABILITY_KEY_MOVE,
   ABILITY_LIFE,
   ABILITY_CARRY,
-  ABILITY_LEARN
+  ABILITY_LEARN,
+  ABILITY_PLACE,
+  ABILITY_KEY_PLACE
 ]
 
 // object type, static object, not collide with
