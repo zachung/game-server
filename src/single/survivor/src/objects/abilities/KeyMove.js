@@ -1,7 +1,7 @@
 import Ability from './Ability'
 import keyboardJS from 'keyboardjs'
 import { LEFT, UP, RIGHT, DOWN } from '../../config/control'
-import { ABILITY_KEY_MOVE } from '../../config/constants'
+import { ABILITY_MOVE, ABILITY_KEY_MOVE } from '../../config/constants'
 
 class KeyMove extends Ability {
   get type () { return ABILITY_KEY_MOVE }
@@ -19,8 +19,8 @@ class KeyMove extends Ability {
   setup (owner) {
     let dir = {}
     let calcDir = () => {
-      owner.dx = -dir[LEFT] + dir[RIGHT]
-      owner.dy = -dir[UP] + dir[DOWN]
+      owner[ABILITY_MOVE].dx = -dir[LEFT] + dir[RIGHT]
+      owner[ABILITY_MOVE].dy = -dir[UP] + dir[DOWN]
     }
     let bind = code => {
       dir[code] = 0

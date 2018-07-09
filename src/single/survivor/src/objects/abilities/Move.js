@@ -17,6 +17,10 @@ class Move extends Ability {
   // 配備此技能
   carryBy (owner) {
     super.carryBy(owner)
+    owner[ABILITY_MOVE] = {
+      dx: 0,
+      dy: 0
+    }
     owner.tickAbilities[this.type.toString()] = this
   }
 
@@ -24,8 +28,8 @@ class Move extends Ability {
   tick (delta, owner) {
     // NOTICE: 假設自己是正方形
     let scale = owner.scale.x
-    owner.x += owner.dx * this.value * scale * delta
-    owner.y += owner.dy * this.value * scale * delta
+    owner.x += owner[ABILITY_MOVE].dx * this.value * scale * delta
+    owner.y += owner[ABILITY_MOVE].dy * this.value * scale * delta
   }
 
   toString () {

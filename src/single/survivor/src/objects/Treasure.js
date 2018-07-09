@@ -1,7 +1,7 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 
-import { REPLY } from '../config/constants'
+import { REPLY, ABILITY_CARRY } from '../config/constants'
 import { instanceByAbilityId } from '../lib/utils'
 
 class Treasure extends GameObject {
@@ -16,29 +16,28 @@ class Treasure extends GameObject {
     this.on('collide', this.actionWith.bind(this))
   }
 
+  get type () { return REPLY }
+
+  actionWith (operator) {
+    let carryAbility = operator[ABILITY_CARRY]
+    if (!carryAbility) {
+      operator.say('I can\'t carry items not yet.')
+      return
+    }
+
+    this.inventories.forEach(treasure => carryAbility(treasure))
+    operator.say(['I taked ', this.toString()].join(''))
+
+    this.parent.removeChild(this)
+    this.destroy()
+  }
+
   toString () {
     return [
       'treasure: [',
       this.inventories.join(', '),
       ']'
     ].join('')
-  }
-
-  get type () { return REPLY }
-
-  actionWith (operator, action = 'takeAbility') {
-    // FIXME: 暫時用預設參數 takeAbility
-    if (typeof operator[action] === 'function') {
-      this.inventories.forEach(treasure => operator[action](treasure))
-      this.say([
-        operator.toString(),
-        ' taked ',
-        this.toString()
-      ].join(''))
-
-      this.parent.removeChild(this)
-      this.destroy()
-    }
   }
 }
 

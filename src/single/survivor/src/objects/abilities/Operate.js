@@ -9,11 +9,17 @@ class Operate extends Ability {
 
   get type () { return ABILITY_OPERATE }
 
+  carryBy (owner) {
+    super.carryBy(owner)
+    owner[ABILITY_OPERATE] = this[ABILITY_OPERATE].bind(this, owner)
+    return owner[ABILITY_OPERATE]
+  }
+
   replacedBy (other) {
     this.set.forEach(other.set.add.bind(other.set))
   }
 
-  use (operator, target) {
+  [ABILITY_OPERATE] (operator, target) {
     if (this.set.has(target.map)) {
       operator.say(operator.toString() + ' use ability to open ' + target.map)
       target[this.type]()

@@ -4,10 +4,6 @@ import Map from '../lib/Map'
 import { IS_MOBILE } from '../config/constants'
 
 import Cat from '../objects/Cat'
-import Move from '../objects/abilities/Move'
-import KeyMove from '../objects/abilities/KeyMove'
-import Operate from '../objects/abilities/Operate'
-import Camera from '../objects/abilities/Camera'
 
 import MessageWindow from '../ui/MessageWindow'
 import PlayerWindow from '../ui/PlayerWindow'
@@ -103,10 +99,6 @@ class PlayScene extends Scene {
   initPlayer () {
     if (!this.cat) {
       this.cat = new Cat()
-      this.cat.takeAbility(new Move(1))
-      this.cat.takeAbility(new Operate('E0N0'))
-      this.cat.takeAbility(new KeyMove())
-      this.cat.takeAbility(new Camera(1))
     }
   }
 

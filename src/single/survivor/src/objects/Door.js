@@ -17,7 +17,7 @@ class Door extends GameObject {
   get type () { return STAY }
 
   actionWith (operator) {
-    let ability = operator.abilities[ABILITY_OPERATE]
+    let ability = operator[ABILITY_OPERATE]
     if (!ability) {
       this.say([
         operator.toString(),
@@ -26,7 +26,7 @@ class Door extends GameObject {
         '.'
       ].join(''))
     } else {
-      ability.use(operator, this)
+      ability(this)
     }
   }
 

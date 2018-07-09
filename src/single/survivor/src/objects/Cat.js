@@ -1,24 +1,25 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 
+import Learn from './abilities/Learn'
+import Move from '../objects/abilities/Move'
+import KeyMove from '../objects/abilities/KeyMove'
+import Camera from '../objects/abilities/Camera'
+import Carry from '../objects/abilities/Carry'
+
 class Cat extends GameObject {
   constructor () {
     // Create the cat sprite
     super(Texture.Rock)
 
-    // Change the sprite's position
-    this.dx = 0
-    this.dy = 0
-
     this.tickAbilities = {}
     this.abilities = {}
-  }
 
-  takeAbility (ability) {
-    if (ability.hasToReplace(this, ability)) {
-      ability.carryBy(this)
-      this.emit('ability-carry', ability)
-    }
+    new Learn().carryBy(this)(
+      new Move(3))(
+      new KeyMove())(
+      new Camera(1))(
+      new Carry(1))
   }
 
   toString () {
