@@ -125,7 +125,7 @@ class PlayScene extends Scene {
 
   spawnMap (fileName) {
     let mapData = resources[fileName].data
-    let mapScale = IS_MOBILE ? 1 : 0.5
+    let mapScale = IS_MOBILE ? 2 : 0.5
 
     let map = new Map(mapScale)
     this.addChild(map)

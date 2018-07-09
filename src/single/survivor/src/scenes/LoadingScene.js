@@ -35,7 +35,7 @@ class LoadingScene extends Scene {
       .add('images/base_out_atlas.json')
       .load(() => this.emit('changeScene', PlayScene, {
         mapFile: 'E0N0',
-        position: [1, 1]
+        position: [4, 1]
       }))
   }
 

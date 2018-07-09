@@ -8,7 +8,7 @@ class Torch extends GameObject {
   constructor () {
     super(Texture.Torch)
 
-    let radius = 3
+    let radius = 2
 
     this.on('added', Light.lightOn.bind(null, this, radius, 0.95))
     this.on('removeed', Light.lightOff.bind(null, this))

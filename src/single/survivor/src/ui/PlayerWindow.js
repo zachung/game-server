@@ -26,6 +26,7 @@ class PlayerWindow extends Window {
       lineHeight: fontSize
     })
 
+    // 更新面板數據
     let contianer = this.abilityTextContainer
     contianer.removeChildren()
     ABILITIES_ALL.forEach(abilitySymbol => {

@@ -7,7 +7,7 @@ class Light {
   static lightOn (target, radius, rand = 1) {
     let container = target.parent
     if (!container.lighting) {
-      console.error('container does NOT has lighting property')
+      // container does NOT has lighting property
       return
     }
     var lightbulb = new Graphics()
@@ -43,6 +43,10 @@ class Light {
   }
 
   static lightOff (target) {
+    if (!target[LIGHT]) {
+      // no light to remove
+      return
+    }
     // remove light
     target.removeChild(target[LIGHT].light)
     // remove interval

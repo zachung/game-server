@@ -1,12 +1,12 @@
 {
   "frames":
   {
-    "door.png":
+    "iron-fence.png":
     {
       "frame":
       {
         "x": 0,
-        "y": 672,
+        "y": 688,
         "w": 32,
         "h": 32
       },

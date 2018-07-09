@@ -18,8 +18,6 @@ class Map extends Container {
     this.replyObjects = []
     this.map = new Container()
     this.addChild(this.map)
-
-    this.once('added', this.enableFog.bind(this))
   }
 
   enableFog () {
@@ -53,6 +51,10 @@ class Map extends Container {
 
     let ceilSize = this.ceilSize
     let mapScale = this.mapScale
+
+    if (mapData.hasFog) {
+      this.enableFog()
+    }
 
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {

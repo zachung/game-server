@@ -3,13 +3,13 @@ import GameObject from './GameObject'
 
 import { STATIC } from '../config/constants'
 
-class Grass extends GameObject {
+class Air extends GameObject {
   constructor () {
     // Create the cat sprite
-    super(Texture.Grass)
+    super(Texture.Air)
   }
 
   get type () { return STATIC }
 }
 
-export default Grass
+export default Air
