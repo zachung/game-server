@@ -84,6 +84,29 @@ class Carry extends Ability {
     return item
   }
 
+  getItemByType (type) {
+    let bi
+    let si
+    let found = this.bags.find((bag, b) => {
+      bi = b
+      return bag.find((slot, s) => {
+        si = s
+        return slot && slot.item instanceof type
+      })
+    })
+    let item
+    if (found) {
+      found = this.bags[bi][si]
+      item = found.item
+      // 取出後減一
+      if (--found.count === 0) {
+        this.bags[bi][si] = undefined
+      }
+      this.owner.emit('inventory-modified', item)
+    }
+    return item
+  }
+
   toString () {
     return ['carry: ', this.bags.join(', ')].join('')
   }

@@ -1,7 +1,11 @@
 import Ability from './Ability'
 import keyboardJS from 'keyboardjs'
-import { PLACE } from '../../config/control'
+import { PLACE1, PLACE2, PLACE3, PLACE4 } from '../../config/control'
 import { ABILITY_PLACE, ABILITY_KEY_PLACE } from '../../config/constants'
+
+const SLOTS = [
+  PLACE1, PLACE2, PLACE3, PLACE4
+]
 
 class KeyPlace extends Ability {
   get type () { return ABILITY_KEY_PLACE }
@@ -17,22 +21,34 @@ class KeyPlace extends Ability {
   }
 
   setup (owner) {
+    let placeAbility = owner[ABILITY_PLACE]
+    let bind = key => {
+      let slotInx = SLOTS.indexOf(key)
+      let handler = e => {
+        e.preventRepeat()
+        placeAbility.place(slotInx)
+      }
+      keyboardJS.bind(key, handler, () => {})
+      return handler
+    }
+
     keyboardJS.setContext('')
     keyboardJS.withContext('', () => {
-      owner[ABILITY_KEY_PLACE] = e => {
-        e.preventRepeat()
-        if (owner[ABILITY_PLACE]) {
-          owner[ABILITY_PLACE].place()
-        }
+      owner[ABILITY_KEY_PLACE] = {
+        PLACE1: bind(PLACE1),
+        PLACE2: bind(PLACE2),
+        PLACE3: bind(PLACE3),
+        PLACE4: bind(PLACE4)
       }
-      keyboardJS.bind(PLACE, owner[ABILITY_KEY_PLACE], () => {})
     })
   }
 
   dropBy (owner) {
     super.dropBy(owner)
     keyboardJS.withContext('', () => {
-      keyboardJS.unbind(PLACE, owner[ABILITY_KEY_PLACE])
+      Object.entries(owner[ABILITY_KEY_PLACE]).forEach(([key, handler]) => {
+        keyboardJS.unbind(key, handler)
+      })
     })
     delete owner[ABILITY_KEY_PLACE]
   }

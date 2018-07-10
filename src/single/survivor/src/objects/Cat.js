@@ -8,14 +8,12 @@ import Camera from '../objects/abilities/Camera'
 import Carry from '../objects/abilities/Carry'
 import Place from '../objects/abilities/Place'
 import KeyPlace from '../objects/abilities/KeyPlace'
+import Fire from '../objects/abilities/Fire'
+import KeyFire from '../objects/abilities/KeyFire'
 
 class Cat extends GameObject {
   constructor () {
-    // Create the cat sprite
     super(Texture.Rock)
-
-    this.tickAbilities = {}
-    this.abilities = {}
 
     new Learn().carryBy(this)
       .learn(new Move(3))
@@ -23,7 +21,9 @@ class Cat extends GameObject {
       .learn(new Place())
       .learn(new KeyPlace())
       .learn(new Camera(1))
-      .learn(new Carry(1))
+      .learn(new Carry(3))
+      .learn(new Fire([6, 3]))
+      .learn(new KeyFire())
   }
 
   toString () {

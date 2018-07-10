@@ -16,6 +16,7 @@ class Map extends Container {
 
     this.collideObjects = []
     this.replyObjects = []
+    this.tickObjects = []
     this.map = new Container()
     this.addChild(this.map)
 
@@ -116,24 +117,37 @@ class Map extends Container {
     player.once('removed', () => {
       player.off('place', player.onPlace)
     })
+    player.onFire = this.onFire.bind(this)
+    player.on('fire', player.onFire)
+    player.once('removed', () => {
+      player.off('fire', player.onFire)
+    })
     this.player = player
   }
 
   tick (delta) {
-    this.player.tick(delta)
-
+    let objects = [this.player].concat(this.tickObjects)
+    objects.forEach(o => o.tick(delta))
     // collide detect
-    this.collideObjects.forEach(o => {
-      if (bump.rectangleCollision(this.player, o, true)) {
-        o.emit('collide', this.player)
+    for (let i = this.collideObjects.length - 1; i >= 0; i--) {
+      for (let j = objects.length - 1; j >= 0; j--) {
+        let o = this.collideObjects[i]
+        let o2 = objects[j]
+        if (bump.rectangleCollision(o2, o, true)) {
+          o.emit('collide', o2)
+        }
       }
-    })
+    }
 
-    this.replyObjects.forEach(o => {
-      if (bump.hitTestRectangle(this.player, o)) {
-        o.emit('collide', this.player)
+    for (let i = this.replyObjects.length - 1; i >= 0; i--) {
+      for (let j = objects.length - 1; j >= 0; j--) {
+        let o = this.replyObjects[i]
+        let o2 = objects[j]
+        if (bump.hitTestRectangle(o2, o)) {
+          o.emit('collide', o2)
+        }
       }
-    })
+    }
   }
 
   addGameObject (player, object) {
@@ -142,6 +156,11 @@ class Map extends Container {
     object.position.set(position.x.toFixed(0), position.y.toFixed(0))
     object.scale.set(mapScale, mapScale)
     this.map.addChild(object)
+  }
+
+  onFire (bullet) {
+    this.tickObjects.push(bullet)
+    this.map.addChild(bullet)
   }
 
   // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置

@@ -48,6 +48,8 @@ class Slot extends Container {
     if (this.item) {
       this.item.destroy()
       this.text.destroy()
+      delete this.item
+      delete this.text
     }
   }
 }
@@ -92,6 +94,7 @@ class InventoryWindow extends Window {
     let i = 0
     carryAbility.bags.forEach(bag => bag.forEach(slot => {
       this.slots[i] = slot
+      i++
     }))
     this.slotContainers.forEach((container, i) => {
       let slot = this.slots[i]

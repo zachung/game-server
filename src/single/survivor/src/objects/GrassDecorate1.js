@@ -9,6 +9,10 @@ class GrassDecorate1 extends GameObject {
   }
 
   get type () { return STATIC }
+
+  toString () {
+    return 'GrassDecorate1'
+  }
 }
 
 export default GrassDecorate1

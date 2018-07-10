@@ -9,6 +9,10 @@ class Learn extends Ability {
   }
 
   carryBy (owner) {
+    if (!owner.abilities) {
+      owner.abilities = {}
+      owner.tickAbilities = {}
+    }
     super.carryBy(owner)
     this.owner = owner
     owner[ABILITY_LEARN] = this

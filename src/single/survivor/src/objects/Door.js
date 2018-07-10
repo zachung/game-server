@@ -34,6 +34,10 @@ class Door extends GameObject {
     this.say(['Get in ', this.map, ' now.'].join(''))
     this.emit('use')
   }
+
+  toString () {
+    return 'Door'
+  }
 }
 
 export default Door

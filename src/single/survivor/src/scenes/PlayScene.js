@@ -32,8 +32,10 @@ function getMessageWindowOpt () {
   return opt
 }
 
-function getPlayerWindowOpt () {
-  let opt = {}
+function getPlayerWindowOpt (player) {
+  let opt = {
+    player
+  }
   opt.x = 0
   opt.y = 0
   if (IS_MOBILE) {
@@ -45,6 +47,21 @@ function getPlayerWindowOpt () {
     opt.height = sceneHeight / 3
     opt.fontSize = opt.width / 20
   }
+  return opt
+}
+
+function getInventoryWindowOpt (player) {
+  let opt = {
+    player
+  }
+  opt.y = 0
+  if (IS_MOBILE) {
+    opt.width = sceneWidth / 6
+  } else {
+    let divide = sceneWidth < 400 ? 6 : sceneWidth < 800 ? 12 : 20
+    opt.width = sceneWidth / divide
+  }
+  opt.x = sceneWidth - opt.width
   return opt
 }
 
@@ -73,21 +90,10 @@ class PlayScene extends Scene {
     this.addChild(uiLayer)
 
     let messageWindow = new MessageWindow(getMessageWindowOpt())
+    let playerWindow = new PlayerWindow(getPlayerWindowOpt(this.cat))
+    let inventoryWindow = new InventoryWindow(getInventoryWindowOpt(this.cat))
+
     // 讓UI顯示在頂層
-    messageWindow.add(['scene size: (', sceneWidth, ', ', sceneHeight, ').'].join(''))
-
-    let playerWindow = new PlayerWindow(Object.assign({
-      player: this.cat
-    }, getPlayerWindowOpt()))
-
-    let inventoryWindow = new InventoryWindow(Object.assign({
-      player: this.cat
-    }, {
-      x: sceneWidth - 50,
-      y: 0,
-      width: 50
-    }))
-
     messageWindow.parentGroup = uiGroup
     playerWindow.parentGroup = uiGroup
     inventoryWindow.parentGroup = uiGroup
@@ -117,6 +123,7 @@ class PlayScene extends Scene {
       uiLayer.addChild(operationPanel)
       // require('../lib/demo')
     }
+    messageWindow.add(['scene size: (', sceneWidth, ', ', sceneHeight, ').'].join(''))
   }
 
   initPlayer () {

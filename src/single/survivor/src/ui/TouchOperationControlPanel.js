@@ -1,7 +1,7 @@
 import { Container, Graphics } from '../lib/PIXI'
 
 import keyboardJS from 'keyboardjs'
-import { PLACE } from '../config/control'
+import { PLACE1 } from '../config/control'
 
 class TouchOperationControlPanel extends Container {
   constructor ({ x, y, radius }) {
@@ -35,8 +35,8 @@ class TouchOperationControlPanel extends Container {
       case 'touchend':
         if (this.drag) {
           this.drag = false
-          keyboardJS.pressKey(PLACE)
-          keyboardJS.releaseKey(PLACE)
+          keyboardJS.pressKey(PLACE1)
+          keyboardJS.releaseKey(PLACE1)
         }
         break
     }

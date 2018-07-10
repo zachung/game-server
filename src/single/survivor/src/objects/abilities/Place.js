@@ -10,10 +10,10 @@ class Place extends Ability {
     owner[ABILITY_PLACE] = this
   }
 
-  place () {
+  place (slotInx) {
     let owner = this.owner
     let carryAbility = owner[ABILITY_CARRY]
-    let item = carryAbility.getSlotItem(0)
+    let item = carryAbility.getSlotItem(slotInx)
     if (item) {
       owner.emit('place', new item.constructor())
 
