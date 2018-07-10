@@ -12,8 +12,8 @@ class Window extends Container {
     windowBg.lineStyle(lineWidth, 0x222222, 1)
     windowBg.drawRoundedRect(
       0, 0,
-      width - lineWidth,
-      height - lineWidth,
+      width,
+      height,
       5)
     windowBg.endFill()
     this.addChild(windowBg)

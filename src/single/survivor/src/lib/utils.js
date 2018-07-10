@@ -23,11 +23,11 @@ const ItemsStay = [
   // 0x0010, 0x0011, 0x0012
   Wall, IronFence, Root, Tree
 ]
-// 0x0100 ~ 0x0fff
+// 0x0100 ~ 0x01ff
 const ItemsOther = [
   Treasure, Door, Torch, GrassDecorate1
 ]
-
+// 0x0200 ~ 0x02ff
 const Abilities = [
   Move, Camera, Operate
 ]
@@ -35,20 +35,18 @@ const Abilities = [
 export function instanceByItemId (itemId, params) {
   let Types
   itemId = parseInt(itemId, 16)
-
   if ((itemId & 0xfff0) === 0) {
     // 地板
     Types = ItemsStatic
   } else if ((itemId & 0xff00) === 0) {
     Types = ItemsStay
     itemId -= 0x0010
-  } else {
+  } else if ((itemId & 0xff00) >>> 8 === 1) {
     Types = ItemsOther
     itemId -= 0x0100
+  } else {
+    Types = Abilities
+    itemId -= 0x0200
   }
   return new Types[itemId](params)
-}
-
-export function instanceByAbilityId (abilityId, params) {
-  return new Abilities[abilityId](params)
 }

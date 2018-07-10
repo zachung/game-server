@@ -57,6 +57,7 @@ class Carry extends Ability {
       }
       this.bags[firstEmptySlot.bi][firstEmptySlot.si] = newSlot(item, count)
     }
+    owner.emit('inventory-modified', item)
   }
 
   getSlotItem (slotInx) {
@@ -78,12 +79,18 @@ class Carry extends Ability {
       if (--found.count === 0) {
         this.bags[bi][si] = undefined
       }
+      this.owner.emit('inventory-modified', item)
     }
     return item
   }
 
   toString () {
     return ['carry: ', this.bags.join(', ')].join('')
+  }
+
+  // TODO: save data
+  serialize () {
+    return this.bags
   }
 }
 

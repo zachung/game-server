@@ -37,6 +37,10 @@ class Ability {
   toString () {
     return 'plz extend this class'
   }
+
+  serialize () {
+    return {}
+  }
 }
 
 export default Ability

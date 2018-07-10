@@ -7,6 +7,7 @@ import Cat from '../objects/Cat'
 
 import MessageWindow from '../ui/MessageWindow'
 import PlayerWindow from '../ui/PlayerWindow'
+import InventoryWindow from '../ui/InventoryWindow'
 import TouchDirectionControlPanel from '../ui/TouchDirectionControlPanel'
 import TouchOperationControlPanel from '../ui/TouchOperationControlPanel'
 
@@ -73,15 +74,26 @@ class PlayScene extends Scene {
 
     let messageWindow = new MessageWindow(getMessageWindowOpt())
     // 讓UI顯示在頂層
-    messageWindow.parentGroup = uiGroup
     messageWindow.add(['scene size: (', sceneWidth, ', ', sceneHeight, ').'].join(''))
 
     let playerWindow = new PlayerWindow(Object.assign({
       player: this.cat
     }, getPlayerWindowOpt()))
 
+    let inventoryWindow = new InventoryWindow(Object.assign({
+      player: this.cat
+    }, {
+      x: sceneWidth - 50,
+      y: 0,
+      width: 50
+    }))
+
+    messageWindow.parentGroup = uiGroup
+    playerWindow.parentGroup = uiGroup
+    inventoryWindow.parentGroup = uiGroup
     uiLayer.addChild(messageWindow)
     uiLayer.addChild(playerWindow)
+    uiLayer.addChild(inventoryWindow)
 
     if (IS_MOBILE) {
       // 只有手機要觸控板

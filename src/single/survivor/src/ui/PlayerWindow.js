@@ -1,7 +1,14 @@
 import { Container, Text, TextStyle } from '../lib/PIXI'
 
 import Window from './Window'
-import { ABILITIES_ALL } from '../config/constants'
+import { ABILITY_MOVE, ABILITY_CAMERA, ABILITY_OPERATE, ABILITY_CARRY, ABILITY_PLACE } from '../config/constants'
+
+const ABILITIES_ALL = [
+  ABILITY_MOVE,
+  ABILITY_CAMERA,
+  ABILITY_OPERATE,
+  ABILITY_PLACE
+]
 
 class PlayerWindow extends Window {
   constructor (opt) {

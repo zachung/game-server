@@ -78,8 +78,8 @@ class Map extends Container {
     }
 
     items.forEach((item, i) => {
-      let [ type, pos, params ] = item
-      let o = instanceByItemId(type, params)
+      let [ id, pos, params ] = item
+      let o = instanceByItemId(id, params)
       o.position.set(pos[0] * ceilSize, pos[1] * ceilSize)
       o.scale.set(mapScale, mapScale)
       this.map.addChild(o)
@@ -139,7 +139,7 @@ class Map extends Container {
   addGameObject (player, object) {
     let mapScale = this.mapScale
     let position = player.position
-    object.position.set(position.x, position.y)
+    object.position.set(position.x.toFixed(0), position.y.toFixed(0))
     object.scale.set(mapScale, mapScale)
     this.map.addChild(object)
   }

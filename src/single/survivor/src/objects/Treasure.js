@@ -2,16 +2,25 @@ import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 
 import { REPLY, ABILITY_CARRY } from '../config/constants'
-import { instanceByAbilityId } from '../lib/utils'
+import { instanceByItemId } from '../lib/utils'
+
+class Slot {
+  constructor ([itemId, params, count]) {
+    this.item = instanceByItemId(itemId, params)
+    this.count = count
+  }
+
+  toString () {
+    return [this.item.toString(), '(', this.count, ')'].join('')
+  }
+}
 
 class Treasure extends GameObject {
   constructor (inventories = []) {
     // Create the cat sprite
     super(Texture.Treasure)
 
-    this.inventories = inventories.map(([abilityId, params]) => {
-      return instanceByAbilityId(abilityId, params)
-    })
+    this.inventories = inventories.map(treasure => new Slot(treasure))
 
     this.on('collide', this.actionWith.bind(this))
   }
@@ -25,7 +34,8 @@ class Treasure extends GameObject {
       return
     }
 
-    this.inventories.forEach(treasure => carryAbility.take(treasure))
+    this.inventories.forEach(
+      treasure => carryAbility.take(treasure.item, treasure.count))
     operator.say(['I taked ', this.toString()].join(''))
 
     this.parent.removeChild(this)
