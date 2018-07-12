@@ -1,28 +1,34 @@
-var gulp = require('gulp')
-var sourcemaps = require('gulp-sourcemaps')
-var uglify = require('gulp-uglify')
-var rename = require('gulp-rename')
-var source = require('vinyl-source-stream')
-var buffer = require('vinyl-buffer')
-var watchify = require('watchify')
-var browserify = require('browserify')
-var babelify = require('babelify')
-var assign = require('lodash.assign')
+import gulp from 'gulp'
+import sourcemaps from 'gulp-sourcemaps'
+import uglify from 'gulp-uglify'
+import rename from 'gulp-rename'
+import source from 'vinyl-source-stream'
+import buffer from 'vinyl-buffer'
+import watchify from 'watchify'
+import browserify from 'browserify'
+import babelify from 'babelify'
+import assign from 'lodash.assign'
 
-var jsDir = 'public/js'
-var pubDir = '../../../public/games/survivor'
+const pubDir = '../../../public/games/survivor'
 
 // https://segmentfault.com/a/1190000003770541
 
-gulp.task('js', function () {
+const paths = {
+  scripts: {
+    src: 'src/**/*.js',
+    dest: 'public/js'
+  }
+}
+
+export function scripts () {
   // add custom browserify options here
-  var customOpts = {
+  let customOpts = {
     entries: ['./src/app.js'],
     debug: true
   }
-  var opts = assign({}, watchify.args, customOpts)
+  let opts = assign({}, watchify.args, customOpts)
   // set up the browserify instance on a task basis
-  var b = watchify(
+  let b = watchify(
     browserify(opts).transform(babelify.configure({
       presets: ['env']
     })))
@@ -30,7 +36,7 @@ gulp.task('js', function () {
   // add transformations here
   b.transform(babelify)
 
-  b
+  return b
     .bundle()
     // log errors if they happen
     // or use gulplog by log.error.bind(log, 'Browserify Error')
@@ -38,7 +44,7 @@ gulp.task('js', function () {
     .pipe(source('bundle.js'))
     // optional, remove if you don't need to buffer file contents
     .pipe(buffer())
-    .pipe(gulp.dest(jsDir))
+    .pipe(gulp.dest(paths.scripts.dest))
 
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
@@ -48,17 +54,24 @@ gulp.task('js', function () {
     // Add transformation tasks to the pipeline here.
     .pipe(sourcemaps.write('./')) // writes .map file
 
-    .pipe(gulp.dest(jsDir)) // save .min.js
+    .pipe(gulp.dest(paths.scripts.dest)) // save .min.js
+}
 
+function moveToIndex () {
   // move all public files to parent
   return gulp
     .src(['public/**/*'])
     .pipe(gulp.dest(pubDir))
-})
+}
 
-gulp.task('watch', function () {
+const buildAndMove = gulp.series(scripts, moveToIndex)
+gulp.task('build', buildAndMove)
+
+export function watch () {
   // calls 'build-js' whenever anything changes
-  gulp.watch('src/**/*.js', ['js'])
-})
+  gulp.watch(paths.scripts.src, buildAndMove)
+}
 
-gulp.task('default', ['js', 'watch'])
+const buildAndWatch = gulp.series(buildAndMove, watch)
+
+export default buildAndWatch
