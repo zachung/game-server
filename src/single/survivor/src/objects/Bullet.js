@@ -19,10 +19,10 @@ class Bullet extends GameObject {
     return 'Bullet'
   }
 
-  moveTo (point) {
+  setDirection (point) {
     let moveAbility = this[ABILITY_MOVE]
     if (moveAbility) {
-      moveAbility.moveTo(point)
+      moveAbility.setDirection(point)
     }
   }
 

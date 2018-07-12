@@ -1,8 +1,12 @@
 import { Container, display, BLEND_MODES, Sprite } from './PIXI'
 
-import { STAY, STATIC, CEIL_SIZE } from '../config/constants'
+import { STAY, STATIC, CEIL_SIZE, ABILITY_MOVE } from '../config/constants'
 import { instanceByItemId } from './utils'
+import MapGraph from './MapGraph'
 import bump from '../lib/Bump'
+
+const pipe = (first, ...more) =>
+  more.reduce((acc, curr) => (...args) => curr(acc(...args)), first)
 
 /**
  * events:
@@ -24,6 +28,7 @@ class Map extends Container {
     this.playerGroup = new display.Group()
     let playerLayer = new display.Layer(this.playerGroup)
     this.addChild(playerLayer)
+    this.mapGraph = new MapGraph()
   }
 
   enableFog () {
@@ -61,32 +66,16 @@ class Map extends Container {
     if (mapData.hasFog) {
       this.enableFog()
     }
+    let mapGraph = this.mapGraph
 
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        let id = tiles[j * cols + i]
-        let o = instanceByItemId(id)
-        o.position.set(i * ceilSize, j * ceilSize)
-        o.scale.set(mapScale, mapScale)
-        switch (o.type) {
-          case STAY:
-            // 靜態物件
-            this.collideObjects.push(o)
-            break
-        }
-        this.map.addChild(o)
-      }
-    }
-
-    items.forEach((item, i) => {
-      let [ id, pos, params ] = item
+    let addGameObject = (i, j, id, params) => {
       let o = instanceByItemId(id, params)
-      o.position.set(pos[0] * ceilSize, pos[1] * ceilSize)
+      o.position.set(i * ceilSize, j * ceilSize)
       o.scale.set(mapScale, mapScale)
-      this.map.addChild(o)
+
       switch (o.type) {
         case STATIC:
-          return
+          break
         case STAY:
           // 靜態物件
           this.collideObjects.push(o)
@@ -94,13 +83,37 @@ class Map extends Container {
         default:
           this.replyObjects.push(o)
       }
+      this.map.addChild(o)
+
+      return [o, i, j]
+    }
+
+    let addGraph = ([o, i, j]) => mapGraph.addObject(o, i, j)
+
+    let registerOn = ([o, i, j]) => {
       o.on('use', () => this.emit('use', o))
       o.on('removed', () => {
         let inx = this.replyObjects.indexOf(o)
         this.replyObjects.splice(inx, 1)
-        delete items[i]
+        // TODO: remove map item
+        // delete items[i]
       })
+      return [o, i, j]
+    }
+
+    mapGraph.beginUpdate()
+
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        pipe(addGameObject, addGraph)(i, j, tiles[j * cols + i])
+      }
+    }
+    items.forEach(item => {
+      let [ id, [i, j], params ] = item
+      pipe(addGameObject, registerOn, addGraph)(i, j, id, params)
     })
+
+    mapGraph.endUpdate()
   }
 
   addPlayer (player, toPosition) {
@@ -123,6 +136,19 @@ class Map extends Container {
       player.off('fire', player.onFire)
     })
     this.player = player
+
+    let moveAbility = player[ABILITY_MOVE]
+    if (moveAbility) {
+      let points = ['4,1', '4,4', '11,1', '6,10']
+      points.reduce((acc, cur) => {
+        let path = this.mapGraph.find(acc, cur).map(node => {
+          let [i, j] = node.id.split(',')
+          return {x: i * this.ceilSize, y: j * this.ceilSize}
+        })
+        moveAbility.addPath(path)
+        return cur
+      })
+    }
   }
 
   tick (delta) {

@@ -40,7 +40,7 @@ class Fire extends Ability {
 
     bullet.position.set(owner.x, owner.y)
     bullet.scale.set(scale, scale)
-    bullet.moveTo(this.targetPosition)
+    bullet.setDirection(this.targetPosition)
 
     owner.emit('fire', bullet)
   }

@@ -1,7 +1,7 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 
-import { STAY, ABILITY_OPERATE } from '../config/constants'
+import { REPLY, ABILITY_OPERATE } from '../config/constants'
 
 class Door extends GameObject {
   constructor (map) {
@@ -14,7 +14,7 @@ class Door extends GameObject {
     this.on('collide', this.actionWith.bind(this))
   }
 
-  get type () { return STAY }
+  get type () { return REPLY }
 
   actionWith (operator) {
     let ability = operator[ABILITY_OPERATE]

@@ -10,6 +10,10 @@ class Ground extends GameObject {
   }
 
   get type () { return STATIC }
+
+  toString () {
+    return 'Ground'
+  }
 }
 
 export default Ground

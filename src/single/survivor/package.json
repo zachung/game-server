@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/server.js",
   "dependencies": {
-    "keyboardjs": "^2.4.1"
+    "keyboardjs": "^2.4.1",
+    "ngraph.graph": "0.0.14",
+    "ngraph.path": "^1.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
