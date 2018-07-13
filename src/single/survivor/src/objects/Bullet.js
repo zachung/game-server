@@ -7,16 +7,36 @@ import Move from '../objects/abilities/Move'
 
 class Bullet extends GameObject {
   constructor (speed) {
-    super(Texture.GrassDecorate1)
+    super(Texture.Bullet)
 
     new Learn().carryBy(this)
-      .learn(new Move(speed))
+      .learn(new Move([speed, 0]))
+
+    this.on('collide', this.actionWith.bind(this))
   }
 
   get type () { return REPLY }
 
+  actionWith (operator) {
+    if (operator === this.owner) {
+      return
+    }
+    super.say([
+      'hitted ',
+      operator.toString(),
+      '.'
+    ].join(''))
+
+    this.parent.removeChild(this)
+    this.destroy()
+  }
+
   toString () {
     return 'Bullet'
+  }
+
+  say () {
+    // say nothing
   }
 
   setDirection (point) {

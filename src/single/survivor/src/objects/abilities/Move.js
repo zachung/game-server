@@ -5,11 +5,16 @@ import Vector from '../../lib/Vector'
 const DISTANCE_THRESHOLD = 1
 
 class Move extends Ability {
-  constructor (value) {
+  /**
+   * 移動能力
+   * @param  {int} value    移動速度
+   * @param  {Number} friction 摩擦力(1: 最大，0: 最小)
+   */
+  constructor ([value, friction]) {
     super()
     this.value = value
-    this.dx = 0
-    this.dy = 0
+    this.vector = new Vector(0, 0)
+    this.friction = friction
     this.path = []
     this.movingToPoint = undefined
     this.distanceThreshold = this.value * DISTANCE_THRESHOLD
@@ -30,6 +35,12 @@ class Move extends Ability {
     owner.tickAbilities[this.type.toString()] = this
   }
 
+  replacedBy (other, owner) {
+    other.vector = this.vector
+    other.path = this.path
+    other.movingToPoint = this.movingToPoint
+  }
+
   // @point 相對於 owner 的點
   setDirection (point) {
     let vector = Vector.fromPoint(point)
@@ -37,8 +48,7 @@ class Move extends Ability {
     if (len === 0) {
       return
     }
-    this.dx = vector.x / len * this.value
-    this.dy = vector.y / len * this.value
+    this.vector = vector.setLength(this.value)
   }
 
   // 移動到點
@@ -54,13 +64,17 @@ class Move extends Ability {
     if (path.length === 0) {
       // 抵達終點
       this.movingToPoint = undefined
-      this.dx = 0
-      this.dy = 0
+      this.vector = new Vector(0, 0)
       return
     }
     this.path = path
     this.movingToPoint = path.pop()
     this.moveTo(this.movingToPoint)
+  }
+
+  clearPath () {
+    this.movingToPoint = undefined
+    this.path = []
   }
 
   addPath (path) {
@@ -71,8 +85,20 @@ class Move extends Ability {
   tick (delta, owner) {
     // NOTICE: 假設自己是正方形
     let scale = owner.scale.x
-    owner.x += this.dx * this.value * scale * delta
-    owner.y += this.dy * this.value * scale * delta
+    let vector = this.vector
+    let maxValue = this.value
+
+    // 不可超出最高速度
+    if (this.vector.length > maxValue) {
+      this.vector.setLength(maxValue)
+    }
+
+    // 摩擦力
+    this.vector.add(this.vector.clone().invert().multiplyScalar(this.friction))
+
+    owner.x += vector.x * this.value * scale * delta
+    owner.y += vector.y * this.value * scale * delta
+
     if (this.movingToPoint) {
       let position = owner.position
       let targetPosition = this.movingToPoint

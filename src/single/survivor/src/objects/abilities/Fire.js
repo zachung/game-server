@@ -38,7 +38,7 @@ class Fire extends Ability {
     }
     let bullet = new BulletType.constructor(this.speed)
 
-    bullet.position.set(owner.x, owner.y)
+    bullet.position.set(owner.x + owner.width / 2, owner.y + owner.height / 2)
     bullet.scale.set(scale, scale)
     bullet.setDirection(this.targetPosition)
 

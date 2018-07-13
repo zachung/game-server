@@ -35,13 +35,16 @@ const Texture = {
     return Texture.BaseOutAtlas.textures['treasure.png']
   },
   get Door () {
-    return Texture.TerrainAtlas.textures['empty.png']
+    return Texture.BaseOutAtlas.textures['iron-fence.png']
   },
   get Torch () {
     return Texture.BaseOutAtlas.textures['torch.png']
   },
   get GrassDecorate1 () {
     return Texture.TerrainAtlas.textures['grass-decorate-1.png']
+  },
+  get Bullet () {
+    return Texture.BaseOutAtlas.textures['bullet.png']
   },
 
   get Rock () {

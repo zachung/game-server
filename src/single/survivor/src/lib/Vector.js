@@ -65,7 +65,7 @@ class Vector {
   }
 
   normalize () {
-    return this.divideScalar(this.length())
+    return this.divideScalar(this.length)
   }
 
   distanceTo (v) {
@@ -95,7 +95,7 @@ class Vector {
   }
 
   setLength (l) {
-    var oldLength = this.length()
+    var oldLength = this.length
     if (oldLength !== 0 && l !== oldLength) {
       this.multiplyScalar(l / oldLength)
     }

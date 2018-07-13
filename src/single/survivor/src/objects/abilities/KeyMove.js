@@ -19,19 +19,20 @@ class KeyMove extends Ability {
   setup (owner) {
     let dir = {}
     let calcDir = () => {
-      owner[ABILITY_MOVE].dx = -dir[LEFT] + dir[RIGHT]
-      owner[ABILITY_MOVE].dy = -dir[UP] + dir[DOWN]
+      owner[ABILITY_MOVE].setDirection({
+        x: -dir[LEFT] + dir[RIGHT],
+        y: -dir[UP] + dir[DOWN]
+      })
     }
     let bind = code => {
       dir[code] = 0
       let preHandler = e => {
         e.preventRepeat()
         dir[code] = 1
-        calcDir()
+        owner[ABILITY_MOVE].clearPath()
       }
       keyboardJS.bind(code, preHandler, () => {
         dir[code] = 0
-        calcDir()
       })
       return preHandler
     }
@@ -45,6 +46,8 @@ class KeyMove extends Ability {
         [DOWN]: bind(DOWN)
       }
     })
+
+    this.timer = setInterval(calcDir, 17)
   }
 
   dropBy (owner) {
@@ -55,6 +58,8 @@ class KeyMove extends Ability {
       })
     })
     delete owner[ABILITY_KEY_MOVE]
+
+    clearInterval(this.timer)
   }
 
   toString () {

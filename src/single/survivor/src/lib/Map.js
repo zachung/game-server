@@ -135,25 +135,25 @@ class Map extends Container {
     player.once('removed', () => {
       player.off('fire', player.onFire)
     })
-    this.player = player
+    this.tickObjects.push(player)
 
     // 自動找路
-    // let moveAbility = player[ABILITY_MOVE]
-    // if (moveAbility) {
-    //   let points = ['4,1', '4,4', '11,1', '6,10']
-    //   points.reduce((acc, cur) => {
-    //     let path = this.mapGraph.find(acc, cur).map(node => {
-    //       let [i, j] = node.id.split(',')
-    //       return {x: i * this.ceilSize, y: j * this.ceilSize}
-    //     })
-    //     moveAbility.addPath(path)
-    //     return cur
-    //   })
-    // }
+    let moveAbility = player[ABILITY_MOVE]
+    if (moveAbility) {
+      let points = ['4,1', '4,4', '11,1', '6,10']
+      points.reduce((acc, cur) => {
+        let path = this.mapGraph.find(acc, cur).map(node => {
+          let [i, j] = node.id.split(',')
+          return {x: i * this.ceilSize, y: j * this.ceilSize}
+        })
+        moveAbility.addPath(path)
+        return cur
+      })
+    }
   }
 
   tick (delta) {
-    let objects = [this.player].concat(this.tickObjects)
+    let objects = this.tickObjects
     objects.forEach(o => o.tick(delta))
     // collide detect
     for (let i = this.collideObjects.length - 1; i >= 0; i--) {
@@ -186,6 +186,10 @@ class Map extends Container {
   }
 
   onFire (bullet) {
+    bullet.on('collide', () => {
+      let inx = this.tickObjects.indexOf(bullet)
+      this.tickObjects.splice(inx, 1)
+    })
     this.tickObjects.push(bullet)
     this.map.addChild(bullet)
   }

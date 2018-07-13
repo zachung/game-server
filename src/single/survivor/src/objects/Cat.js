@@ -16,13 +16,13 @@ class Cat extends GameObject {
     super(Texture.Rock)
 
     new Learn().carryBy(this)
-      .learn(new Move(2))
+      .learn(new Move([2, 0.1]))
       .learn(new KeyMove())
       .learn(new Place())
       .learn(new KeyPlace())
       .learn(new Camera(1))
       .learn(new Carry(3))
-      .learn(new Fire([6, 3]))
+      .learn(new Fire([3, 3]))
       .learn(new KeyFire())
   }
 

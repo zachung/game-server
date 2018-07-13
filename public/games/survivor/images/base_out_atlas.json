@@ -87,6 +87,35 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "bullet.png":
+    {
+      "frame":
+      {
+        "x": 960,
+        "y": 408,
+        "w": 3,
+        "h": 16
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize":
+      {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize":
+      {
+        "w": 32,
+        "h": 32
+      },
+      "pivot":
+      {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta":
