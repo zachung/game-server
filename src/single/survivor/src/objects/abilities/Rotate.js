@@ -47,7 +47,7 @@ class Rotate extends Ability {
   }
 
   toString () {
-    return 'Rotate: ' + this.rad
+    return 'Rotate'
   }
 }
 

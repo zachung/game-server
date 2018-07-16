@@ -8,6 +8,8 @@ class GameObject extends Sprite {
     messages.add(msg)
     console.log(msg)
   }
+
+  tick (delta) {}
 }
 
 export default GameObject

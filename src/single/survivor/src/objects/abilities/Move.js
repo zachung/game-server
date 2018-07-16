@@ -46,7 +46,7 @@ class Move extends Ability {
     if (vector.length === 0) {
       return
     }
-    this.vector = Vector.fromRadLength(vector.rad, 1)
+    this.vector = vector.setLength(1)
   }
 
   // 緩慢加速，呼叫60次可達全速

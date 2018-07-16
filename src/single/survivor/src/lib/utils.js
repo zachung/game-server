@@ -10,6 +10,7 @@ import Root from '../objects/Root'
 import Tree from '../objects/Tree'
 import GrassDecorate1 from '../objects/GrassDecorate1'
 import Bullet from '../objects/Bullet'
+import WallShootBolt from '../objects/WallShootBolt'
 
 import Move from '../objects/abilities/Move'
 import Camera from '../objects/abilities/Camera'
@@ -26,7 +27,7 @@ const ItemsStay = [
 ]
 // 0x0100 ~ 0x01ff
 const ItemsOther = [
-  Treasure, Door, Torch, GrassDecorate1, Bullet
+  Treasure, Door, Torch, GrassDecorate1, Bullet, WallShootBolt
 ]
 // 0x0200 ~ 0x02ff
 const Abilities = [

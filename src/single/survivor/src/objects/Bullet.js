@@ -1,6 +1,6 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
-import { REPLY, ABILITY_MOVE } from '../config/constants'
+import { REPLY, ABILITY_MOVE, ABILITY_HEALTH } from '../config/constants'
 
 import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
@@ -10,26 +10,32 @@ class Bullet extends GameObject {
     super(Texture.Bullet)
 
     new Learn().carryBy(this)
-      .learn(new Move([3, 0]))
+      .learn(new Move([1, 0]))
 
-    this.anchor.set(0.5, 0.5)
     this.on('collide', this.actionWith.bind(this))
   }
 
   get type () { return REPLY }
 
   actionWith (operator) {
-    if (operator === this.owner) {
+    if (this.owner === operator ||
+      this.owner === operator.owner) {
+      // 避免自殺
       return
     }
-    super.say([
-      'hitted ',
-      operator.toString(),
-      '.'
-    ].join(''))
+    let healthAbility = operator[ABILITY_HEALTH]
+    if (healthAbility) {
+      healthAbility.getHurt({
+        damage: 1
+      })
+    }
 
     this.parent.removeChild(this)
     this.destroy()
+  }
+
+  setOwner (owner) {
+    this.owner = owner
   }
 
   toString () {

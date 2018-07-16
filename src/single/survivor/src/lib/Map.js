@@ -1,12 +1,25 @@
 import { Container, display, BLEND_MODES, Sprite } from './PIXI'
 
-import { STAY, STATIC, CEIL_SIZE, ABILITY_MOVE } from '../config/constants'
+import { STAY, STATIC, REPLY, CEIL_SIZE, ABILITY_MOVE } from '../config/constants'
 import { instanceByItemId } from './utils'
 import MapGraph from './MapGraph'
 import bump from '../lib/Bump'
 
 const pipe = (first, ...more) =>
   more.reduce((acc, curr) => (...args) => curr(acc(...args)), first)
+
+const objectEvent = {
+  place (object, placed) {
+    let position = object.position
+    this.addGameObject(placed, position.x, position.y)
+  },
+  fire (object, bullet) {
+    this.addGameObject(bullet)
+  },
+  die () {
+    console.log('You die.')
+  }
+}
 
 /**
  * events:
@@ -18,9 +31,11 @@ class Map extends Container {
     this.ceilSize = scale * CEIL_SIZE
     this.mapScale = scale
 
-    this.collideObjects = []
-    this.replyObjects = []
-    this.tickObjects = []
+    this.objects = {
+      [STATIC]: [],
+      [STAY]: [],
+      [REPLY]: []
+    }
     this.map = new Container()
     this.addChild(this.map)
 
@@ -61,7 +76,6 @@ class Map extends Container {
     let items = mapData.items
 
     let ceilSize = this.ceilSize
-    let mapScale = this.mapScale
 
     if (mapData.hasFog) {
       this.enableFog()
@@ -70,21 +84,7 @@ class Map extends Container {
 
     let addGameObject = (i, j, id, params) => {
       let o = instanceByItemId(id, params)
-      o.position.set(i * ceilSize, j * ceilSize)
-      o.scale.set(mapScale, mapScale)
-
-      switch (o.type) {
-        case STATIC:
-          break
-        case STAY:
-          // 靜態物件
-          this.collideObjects.push(o)
-          break
-        default:
-          this.replyObjects.push(o)
-      }
-      this.map.addChild(o)
-
+      this.addGameObject(o, i * ceilSize, j * ceilSize)
       return [o, i, j]
     }
 
@@ -92,12 +92,9 @@ class Map extends Container {
 
     let registerOn = ([o, i, j]) => {
       o.on('use', () => this.emit('use', o))
-      o.on('removed', () => {
-        let inx = this.replyObjects.indexOf(o)
-        this.replyObjects.splice(inx, 1)
-        // TODO: remove map item
-        // delete items[i]
-      })
+      o.on('fire', objectEvent.fire.bind(this, o))
+      // TODO: remove map item
+      // delete items[i]
       return [o, i, j]
     }
 
@@ -105,7 +102,7 @@ class Map extends Container {
 
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
-        pipe(addGameObject, addGraph)(i, j, tiles[j * cols + i])
+        pipe(addGameObject, registerOn, addGraph)(i, j, tiles[j * cols + i])
       }
     }
     items.forEach(item => {
@@ -125,17 +122,12 @@ class Map extends Container {
     player.parentGroup = this.playerGroup
     this.map.addChild(player)
 
-    player.onPlace = this.addGameObject.bind(this, player)
-    player.on('place', player.onPlace)
-    player.once('removed', () => {
-      player.off('place', player.onPlace)
+    Object.entries(objectEvent).forEach(([eventName, handler]) => {
+      let eInstance = handler.bind(this, player)
+      player.on(eventName, eInstance)
+      player.once('removed', player.off.bind(player, eventName, eInstance))
     })
-    player.onFire = this.onFire.bind(this)
-    player.on('fire', player.onFire)
-    player.once('removed', () => {
-      player.off('fire', player.onFire)
-    })
-    this.tickObjects.push(player)
+    this.objects[REPLY].push(player)
 
     // 自動找路
     // let moveAbility = player[ABILITY_MOVE]
@@ -153,45 +145,51 @@ class Map extends Container {
   }
 
   tick (delta) {
-    let objects = this.tickObjects
+    let objects = this.objects[REPLY]
     objects.forEach(o => o.tick(delta))
+
+    let collisionDetect = (o1, o2, f) => {
+      if (!o1 || !o2 || o1 === o2) {
+        return
+      }
+      if (f(o2, o1, true)) {
+        o1.emit('collide', o2)
+      }
+    }
+
+    let rectangleCollision = bump.rectangleCollision.bind(bump)
+    let collideArr = this.objects[STAY]
     // collide detect
-    for (let i = this.collideObjects.length - 1; i >= 0; i--) {
+    for (let i = collideArr.length - 1; i >= 0; i--) {
       for (let j = objects.length - 1; j >= 0; j--) {
-        let o = this.collideObjects[i]
-        let o2 = objects[j]
-        if (bump.rectangleCollision(o2, o, true)) {
-          o.emit('collide', o2)
-        }
+        pipe(collisionDetect)(collideArr[i], objects[j], rectangleCollision)
       }
     }
 
-    for (let i = this.replyObjects.length - 1; i >= 0; i--) {
+    let hitTestRectangle = bump.hitTestRectangle.bind(bump)
+    collideArr = this.objects[REPLY]
+    for (let i = collideArr.length - 1; i >= 0; i--) {
       for (let j = objects.length - 1; j >= 0; j--) {
-        let o = this.replyObjects[i]
-        let o2 = objects[j]
-        if (bump.hitTestRectangle(o2, o)) {
-          o.emit('collide', o2)
-        }
+        pipe(collisionDetect)(collideArr[i], objects[j], hitTestRectangle)
       }
     }
   }
 
-  addGameObject (player, object) {
+  addGameObject (o, x = undefined, y = undefined) {
     let mapScale = this.mapScale
-    let position = player.position
-    object.position.set(position.x.toFixed(0), position.y.toFixed(0))
-    object.scale.set(mapScale, mapScale)
-    this.map.addChild(object)
-  }
+    // NOTICE: 此處的 Number 必須留著，否則字串傳入 set() 物件無法顯示
+    if (x !== undefined) {
+      o.position.set(x, y)
+    }
+    o.scale.set(mapScale, mapScale)
+    this.map.addChild(o)
 
-  onFire (bullet) {
-    bullet.on('collide', () => {
-      let inx = this.tickObjects.indexOf(bullet)
-      this.tickObjects.splice(inx, 1)
+    let oArray = this.objects[o.type]
+    oArray.push(o)
+    o.once('removed', () => {
+      let inx = oArray.indexOf(o)
+      oArray.splice(inx, 1)
     })
-    this.tickObjects.push(bullet)
-    this.map.addChild(bullet)
   }
 
   // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置

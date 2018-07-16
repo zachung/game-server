@@ -18,7 +18,7 @@ class Fire extends Ability {
     owner[ABILITY_FIRE] = this
   }
 
-  fire () {
+  fire (rad = undefined) {
     let owner = this.owner
     let scale = owner.scale.x
 
@@ -31,19 +31,33 @@ class Fire extends Ability {
     }
     let bullet = new BulletType.constructor()
 
-    bullet.position.set(owner.x, owner.y)
-    bullet.scale.set(scale, scale)
-
     // set direction
     let rotateAbility = owner[ABILITY_ROTATE]
-    let rad = rotateAbility ? rotateAbility.faceRad : 0
-    bullet.setDirection(Vector.fromRadLength(rad, 1))
+    if (rad === undefined) {
+      // 如果沒指定方向，就用目前面對方向
+      rad = rotateAbility ? rotateAbility.faceRad : 0
+    }
+    let vector = Vector.fromRadLength(rad, 1)
+    bullet.setDirection(vector)
+    bullet.setOwner(owner)
+    bullet.scale.set(scale, scale)
+    bullet.anchor.set(0.5, 0.5)
+
+    // set position
+    let anchor = owner.anchor
+    let position = vector.clone()
+      .multiplyScalar(owner.width / 2 + bullet.width / 2)
+      .add(new Vector(
+        owner.x + owner.width * (0.5 - anchor.x),
+        owner.y + owner.height * (0.5 - anchor.y)
+      ))
+    bullet.position.set(position.x, position.y)
 
     owner.emit('fire', bullet)
   }
 
   toString () {
-    return 'place'
+    return 'Fire'
   }
 }
 

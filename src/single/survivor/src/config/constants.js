@@ -8,7 +8,7 @@ export const ABILITY_MOVE = Symbol('move')
 export const ABILITY_CAMERA = Symbol('camera')
 export const ABILITY_OPERATE = Symbol('operate')
 export const ABILITY_KEY_MOVE = Symbol('key-move')
-export const ABILITY_LIFE = Symbol('life')
+export const ABILITY_HEALTH = Symbol('health')
 export const ABILITY_CARRY = Symbol('carry')
 export const ABILITY_LEARN = Symbol('learn')
 export const ABILITY_PLACE = Symbol('place')
@@ -20,7 +20,7 @@ export const ABILITIES_ALL = [
   ABILITY_CAMERA,
   ABILITY_OPERATE,
   ABILITY_KEY_MOVE,
-  ABILITY_LIFE,
+  ABILITY_HEALTH,
   ABILITY_CARRY,
   ABILITY_LEARN,
   ABILITY_PLACE,

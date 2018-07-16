@@ -11,6 +11,7 @@ import KeyPlace from '../objects/abilities/KeyPlace'
 import Fire from '../objects/abilities/Fire'
 import KeyFire from '../objects/abilities/KeyFire'
 import Rotate from '../objects/abilities/Rotate'
+import Health from '../objects/abilities/Health'
 import Bullet from '../objects/Bullet'
 
 class Cat extends GameObject {
@@ -19,7 +20,7 @@ class Cat extends GameObject {
 
     let carry = new Carry(3)
     new Learn().carryBy(this)
-      .learn(new Move([2, 0.01]))
+      .learn(new Move([3, 0]))
       .learn(new KeyMove())
       .learn(new Place())
       .learn(new KeyPlace())
@@ -28,6 +29,7 @@ class Cat extends GameObject {
       .learn(new Fire([3, 3]))
       .learn(new KeyFire())
       .learn(new Rotate())
+      .learn(new Health(1))
 
     let bullet = new Bullet()
     carry.take(bullet, Infinity)
