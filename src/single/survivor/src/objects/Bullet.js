@@ -4,13 +4,15 @@ import { REPLY, ABILITY_MOVE, ABILITY_HEALTH } from '../config/constants'
 
 import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
+import Health from '../objects/abilities/Health'
 
 class Bullet extends GameObject {
   constructor () {
     super(Texture.Bullet)
 
     new Learn().carryBy(this)
-      .learn(new Move([1, 0]))
+      .learn(new Move([3, 0]))
+      .learn(new Health(1))
 
     this.on('collide', this.actionWith.bind(this))
   }

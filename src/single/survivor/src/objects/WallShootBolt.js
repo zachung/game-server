@@ -18,7 +18,7 @@ class WallShootBolt extends GameObject {
     new Learn().carryBy(this)
       .learn(new Fire([3, 3]))
       .learn(carry)
-      .learn(new Health(1))
+      .learn(new Health(10))
 
     let bullet = new Bullet()
     carry.take(bullet, Infinity)

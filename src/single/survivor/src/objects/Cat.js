@@ -20,7 +20,7 @@ class Cat extends GameObject {
 
     let carry = new Carry(3)
     new Learn().carryBy(this)
-      .learn(new Move([3, 0]))
+      .learn(new Move([2, 0]))
       .learn(new KeyMove())
       .learn(new Place())
       .learn(new KeyPlace())
