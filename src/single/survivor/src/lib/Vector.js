@@ -10,9 +10,9 @@ class Vector {
     return new Vector(p.x, p.y)
   }
 
-  static fromDegLength (deg, length) {
-    let x = length * Math.cos(deg)
-    let y = length * Math.sin(deg)
+  static fromRadLength (rad, length) {
+    let x = length * Math.cos(rad)
+    let y = length * Math.sin(rad)
     return new Vector(x, y)
   }
 
@@ -108,12 +108,12 @@ class Vector {
     return this
   }
 
-  rad () {
+  get rad () {
     return Math.atan2(this.y, this.x)
   }
 
   get deg () {
-    return this.rad() * degrees
+    return this.rad * degrees
   }
 
   equals (v) {

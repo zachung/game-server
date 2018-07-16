@@ -33,8 +33,9 @@ class LoadingScene extends Scene {
     loader
       .add('images/terrain_atlas.json')
       .add('images/base_out_atlas.json')
+      .add('images/fire_bolt.png')
       .load(() => this.emit('changeScene', PlayScene, {
-        mapFile: 'E0N0',
+        mapFile: 'W0N0',
         position: [4, 1]
       }))
   }

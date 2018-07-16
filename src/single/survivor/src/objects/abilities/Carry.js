@@ -37,7 +37,7 @@ class Carry extends Ability {
     let firstEmptySlot
     let found = this.bags.some((bag, bi) => {
       return bag.some((slot, si) => {
-        // 第一個空格
+        // 暫存第一個空格
         if (!slot && !firstEmptySlot) {
           firstEmptySlot = {si, bi}
         }
@@ -55,6 +55,7 @@ class Carry extends Ability {
         owner.say('no empty slot for new item got.')
         return
       }
+      // 放入第一個空格
       this.bags[firstEmptySlot.bi][firstEmptySlot.si] = newSlot(item, count)
     }
     owner.emit('inventory-modified', item)

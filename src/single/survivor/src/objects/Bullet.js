@@ -6,12 +6,13 @@ import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
 
 class Bullet extends GameObject {
-  constructor (speed) {
+  constructor () {
     super(Texture.Bullet)
 
     new Learn().carryBy(this)
-      .learn(new Move([speed, 0]))
+      .learn(new Move([3, 0]))
 
+    this.anchor.set(0.5, 0.5)
     this.on('collide', this.actionWith.bind(this))
   }
 
@@ -39,10 +40,11 @@ class Bullet extends GameObject {
     // say nothing
   }
 
-  setDirection (point) {
+  setDirection (vector) {
     let moveAbility = this[ABILITY_MOVE]
     if (moveAbility) {
-      moveAbility.setDirection(point)
+      moveAbility.setDirection(vector)
+      this.rotation = vector.rad
     }
   }
 

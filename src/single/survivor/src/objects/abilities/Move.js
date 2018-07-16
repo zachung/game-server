@@ -41,22 +41,31 @@ class Move extends Ability {
     other.movingToPoint = this.movingToPoint
   }
 
-  // @point 相對於 owner 的點
-  setDirection (point) {
-    let vector = Vector.fromPoint(point)
-    let len = vector.length
-    if (len === 0) {
+  // 設定方向最大速度
+  setDirection (vector) {
+    if (vector.length === 0) {
       return
     }
-    this.vector = vector.setLength(this.value)
+    this.vector = Vector.fromRadLength(vector.rad, 1)
+  }
+
+  // 緩慢加速，呼叫60次可達全速
+  addDirection (vector) {
+    let len = this.value / 60
+    vector.setLength(len)
+    this.vector.add(vector)
+
+    let maxValue = this.value
+    // 不可超出最高速度
+    if (this.vector.length > maxValue) {
+      this.vector.setLength(maxValue)
+    }
   }
 
   // 移動到點
   moveTo (point) {
-    this.setDirection({
-      x: point.x - this.owner.x,
-      y: point.y - this.owner.y
-    })
+    let vector = new Vector(point.x - this.owner.x, point.y - this.owner.y)
+    this.setDirection(vector)
   }
 
   // 設定移動路徑
@@ -86,12 +95,6 @@ class Move extends Ability {
     // NOTICE: 假設自己是正方形
     let scale = owner.scale.x
     let vector = this.vector
-    let maxValue = this.value
-
-    // 不可超出最高速度
-    if (this.vector.length > maxValue) {
-      this.vector.setLength(maxValue)
-    }
 
     // 摩擦力
     this.vector.add(this.vector.clone().invert().multiplyScalar(this.friction))

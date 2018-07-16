@@ -1,13 +1,11 @@
 import Ability from './Ability'
-import { ABILITY_FIRE, ABILITY_CARRY } from '../../config/constants'
+import { ABILITY_FIRE, ABILITY_CARRY, ABILITY_ROTATE } from '../../config/constants'
 import Bullet from '../Bullet'
-
-const MOUSEMOVE = Symbol('mousemove')
+import Vector from '../../lib/Vector'
 
 class Fire extends Ability {
-  constructor ([ speed, power ]) {
+  constructor ([ power ]) {
     super()
-    this.speed = speed
     // TODO: implement
     this.power = power
   }
@@ -18,11 +16,6 @@ class Fire extends Ability {
     super.carryBy(owner)
     this.owner = owner
     owner[ABILITY_FIRE] = this
-    owner.interactive = true
-    owner[MOUSEMOVE] = e => {
-      this.targetPosition = e.data.getLocalPosition(owner)
-    }
-    owner.on('mousemove', owner[MOUSEMOVE])
   }
 
   fire () {
@@ -36,11 +29,15 @@ class Fire extends Ability {
       console.log('no more bullet in inventory')
       return
     }
-    let bullet = new BulletType.constructor(this.speed)
+    let bullet = new BulletType.constructor()
 
-    bullet.position.set(owner.x + owner.width / 2, owner.y + owner.height / 2)
+    bullet.position.set(owner.x, owner.y)
     bullet.scale.set(scale, scale)
-    bullet.setDirection(this.targetPosition)
+
+    // set direction
+    let rotateAbility = owner[ABILITY_ROTATE]
+    let rad = rotateAbility ? rotateAbility.faceRad : 0
+    bullet.setDirection(Vector.fromRadLength(rad, 1))
 
     owner.emit('fire', bullet)
   }

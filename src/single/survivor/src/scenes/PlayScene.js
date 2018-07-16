@@ -107,7 +107,7 @@ class PlayScene extends Scene {
       let directionPanel = new TouchDirectionControlPanel({
         x: sceneWidth / 4,
         y: sceneHeight * 4 / 6,
-        radius: sceneWidth / 10
+        radius: sceneWidth / 8
       })
       directionPanel.parentGroup = uiGroup
 

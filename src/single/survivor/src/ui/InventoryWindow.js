@@ -21,8 +21,9 @@ class Slot extends Container {
     let height = this.height
     // 置中
     item = new item.constructor()
-    item.width = width * 0.8
-    item.height = height * 0.8
+    let maxSide = Math.max(item.width, item.height)
+    let scale = width / maxSide
+    item.scale.set(scale, scale)
     item.anchor.set(0.5, 0.5)
     item.position.set(width / 2, height / 2)
     this.addChild(item)
@@ -35,7 +36,8 @@ class Slot extends Container {
       fontWeight: '600',
       lineHeight: fontSize
     })
-    let text = new Text(count, style)
+    let countText = count === Infinity ? '∞' : count
+    let text = new Text(countText, style)
     text.position.set(width * 0.95, height)
     text.anchor.set(1, 1)
     this.addChild(text)

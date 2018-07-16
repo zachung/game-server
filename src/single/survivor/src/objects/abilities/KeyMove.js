@@ -2,6 +2,7 @@ import Ability from './Ability'
 import keyboardJS from 'keyboardjs'
 import { LEFT, UP, RIGHT, DOWN } from '../../config/control'
 import { ABILITY_MOVE, ABILITY_KEY_MOVE } from '../../config/constants'
+import Vector from '../../lib/Vector'
 
 class KeyMove extends Ability {
   get type () { return ABILITY_KEY_MOVE }
@@ -19,10 +20,8 @@ class KeyMove extends Ability {
   setup (owner) {
     let dir = {}
     let calcDir = () => {
-      owner[ABILITY_MOVE].setDirection({
-        x: -dir[LEFT] + dir[RIGHT],
-        y: -dir[UP] + dir[DOWN]
-      })
+      let vector = new Vector(-dir[LEFT] + dir[RIGHT], -dir[UP] + dir[DOWN])
+      owner[ABILITY_MOVE].addDirection(vector)
     }
     let bind = code => {
       dir[code] = 0

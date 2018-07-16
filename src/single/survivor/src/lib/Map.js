@@ -138,18 +138,18 @@ class Map extends Container {
     this.tickObjects.push(player)
 
     // 自動找路
-    let moveAbility = player[ABILITY_MOVE]
-    if (moveAbility) {
-      let points = ['4,1', '4,4', '11,1', '6,10']
-      points.reduce((acc, cur) => {
-        let path = this.mapGraph.find(acc, cur).map(node => {
-          let [i, j] = node.id.split(',')
-          return {x: i * this.ceilSize, y: j * this.ceilSize}
-        })
-        moveAbility.addPath(path)
-        return cur
-      })
-    }
+    // let moveAbility = player[ABILITY_MOVE]
+    // if (moveAbility) {
+    //   let points = ['4,1', '4,4', '11,1', '6,10']
+    //   points.reduce((acc, cur) => {
+    //     let path = this.mapGraph.find(acc, cur).map(node => {
+    //       let [i, j] = node.id.split(',')
+    //       return {x: i * this.ceilSize, y: j * this.ceilSize}
+    //     })
+    //     moveAbility.addPath(path)
+    //     return cur
+    //   })
+    // }
   }
 
   tick (delta) {

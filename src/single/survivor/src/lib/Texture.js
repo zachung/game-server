@@ -44,7 +44,7 @@ const Texture = {
     return Texture.TerrainAtlas.textures['grass-decorate-1.png']
   },
   get Bullet () {
-    return Texture.BaseOutAtlas.textures['bullet.png']
+    return resources['images/fire_bolt.png'].texture
   },
 
   get Rock () {
