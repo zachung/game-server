@@ -36,7 +36,7 @@ class LoadingScene extends Scene {
       .add('images/fire_bolt.png')
       .load(() => this.emit('changeScene', PlayScene, {
         mapFile: 'W0N0',
-        position: [4, 1]
+        position: [8, 12]
       }))
   }
 

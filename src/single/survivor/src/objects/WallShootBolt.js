@@ -18,7 +18,7 @@ class WallShootBolt extends GameObject {
     new Learn().carryBy(this)
       .learn(new Fire([3, 3]))
       .learn(carry)
-      .learn(new Health(10))
+      .learn(new Health(1000))
 
     let bullet = new Bullet()
     carry.take(bullet, Infinity)
@@ -33,7 +33,6 @@ class WallShootBolt extends GameObject {
       this[ABILITY_FIRE].fire(rad + Math.PI / 2)
       this[ABILITY_FIRE].fire(rad + Math.PI)
       this[ABILITY_FIRE].fire(rad + Math.PI / 2 * 3)
-      console.log('fire')
     }, 200)
 
     setInterval(() => {

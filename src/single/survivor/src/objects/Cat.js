@@ -1,5 +1,6 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
+import { REPLY } from '../config/constants'
 
 import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
@@ -20,27 +21,25 @@ class Cat extends GameObject {
 
     let carry = new Carry(3)
     new Learn().carryBy(this)
-      .learn(new Move([2, 0]))
+      .learn(new Move([1]))
       .learn(new KeyMove())
       .learn(new Place())
       .learn(new KeyPlace())
       .learn(new Camera(1))
       .learn(carry)
       .learn(new Fire([3, 3]))
-      .learn(new KeyFire())
       .learn(new Rotate())
+      .learn(new KeyFire())
       .learn(new Health(1))
 
     let bullet = new Bullet()
     carry.take(bullet, Infinity)
   }
 
+  get type () { return REPLY }
+
   toString () {
     return 'you'
-  }
-
-  tick (delta) {
-    Object.values(this.tickAbilities).forEach(ability => ability.tick(delta, this))
   }
 }
 

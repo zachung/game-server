@@ -12,3 +12,4 @@ export const Graphics = PIXI.Graphics
 export const BLEND_MODES = PIXI.BLEND_MODES
 export const display = PIXI.display
 export const utils = PIXI.utils
+export const ObservablePoint = PIXI.ObservablePoint

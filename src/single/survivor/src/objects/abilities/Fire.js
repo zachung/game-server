@@ -32,15 +32,14 @@ class Fire extends Ability {
     let bullet = new BulletType.constructor()
 
     // set direction
-    let rotateAbility = owner[ABILITY_ROTATE]
     if (rad === undefined) {
       // 如果沒指定方向，就用目前面對方向
+      let rotateAbility = owner[ABILITY_ROTATE]
       rad = rotateAbility ? rotateAbility.faceRad : 0
     }
     let vector = Vector.fromRadLength(rad, 1)
-    bullet.setDirection(vector)
-    bullet.setOwner(owner)
     bullet.scale.set(scale, scale)
+    bullet.setOwner(owner)
     bullet.anchor.set(0.5, 0.5)
 
     // set position
@@ -52,6 +51,9 @@ class Fire extends Ability {
         owner.y + owner.height * (0.5 - anchor.y)
       ))
     bullet.position.set(position.x, position.y)
+    bullet.once('added', () => {
+      bullet.setDirection(vector)
+    })
 
     owner.emit('fire', bullet)
   }

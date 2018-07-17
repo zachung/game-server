@@ -4,6 +4,7 @@ import { STAY, STATIC, REPLY, CEIL_SIZE, ABILITY_MOVE } from '../config/constant
 import { instanceByItemId } from './utils'
 import MapGraph from './MapGraph'
 import bump from '../lib/Bump'
+import MapWorld from '../lib/MapWorld'
 
 const pipe = (first, ...more) =>
   more.reduce((acc, curr) => (...args) => curr(acc(...args)), first)
@@ -16,8 +17,8 @@ const objectEvent = {
   fire (object, bullet) {
     this.addGameObject(bullet)
   },
-  die () {
-    console.log('You die.')
+  die (object) {
+    object.say('You die.')
   }
 }
 
@@ -44,6 +45,9 @@ class Map extends Container {
     let playerLayer = new display.Layer(this.playerGroup)
     this.addChild(playerLayer)
     this.mapGraph = new MapGraph()
+
+    // physic
+    this.mapWorld = new MapWorld()
   }
 
   enableFog () {
@@ -114,20 +118,20 @@ class Map extends Container {
   }
 
   addPlayer (player, toPosition) {
-    player.position.set(
-      toPosition[0] * this.ceilSize,
-      toPosition[1] * this.ceilSize
-    )
-    player.scale.set(this.mapScale, this.mapScale)
-    player.parentGroup = this.playerGroup
-    this.map.addChild(player)
-
+    // 註冊事件
     Object.entries(objectEvent).forEach(([eventName, handler]) => {
       let eInstance = handler.bind(this, player)
       player.on(eventName, eInstance)
       player.once('removed', player.off.bind(player, eventName, eInstance))
     })
-    this.objects[REPLY].push(player)
+    // 新增至地圖上
+    this.addGameObject(
+      player,
+      toPosition[0] * this.ceilSize,
+      toPosition[1] * this.ceilSize)
+
+    // player 置頂顯示
+    player.parentGroup = this.playerGroup
 
     // 自動找路
     // let moveAbility = player[ABILITY_MOVE]
@@ -148,31 +152,31 @@ class Map extends Container {
     let objects = this.objects[REPLY]
     objects.forEach(o => o.tick(delta))
 
-    let collisionDetect = (o1, o2, f) => {
-      if (!o1 || !o2 || o1 === o2) {
-        return
-      }
-      if (f(o2, o1, true)) {
-        o1.emit('collide', o2)
-      }
-    }
+    // let collisionDetect = (o1, o2, f) => {
+    //   if (!o1 || !o2 || o1 === o2) {
+    //     return
+    //   }
+    //   if (f(o2, o1, true)) {
+    //     o1.emit('collide', o2)
+    //   }
+    // }
 
-    let rectangleCollision = bump.rectangleCollision.bind(bump)
-    let collideArr = this.objects[STAY]
-    // collide detect
-    for (let i = collideArr.length - 1; i >= 0; i--) {
-      for (let j = objects.length - 1; j >= 0; j--) {
-        pipe(collisionDetect)(collideArr[i], objects[j], rectangleCollision)
-      }
-    }
+    // let rectangleCollision = bump.rectangleCollision.bind(bump)
+    // let collideArr = this.objects[STAY]
+    // // collide detect
+    // for (let i = collideArr.length - 1; i >= 0; i--) {
+    //   for (let j = objects.length - 1; j >= 0; j--) {
+    //     pipe(collisionDetect)(collideArr[i], objects[j], rectangleCollision)
+    //   }
+    // }
 
-    let hitTestRectangle = bump.hitTestRectangle.bind(bump)
-    collideArr = this.objects[REPLY]
-    for (let i = collideArr.length - 1; i >= 0; i--) {
-      for (let j = objects.length - 1; j >= 0; j--) {
-        pipe(collisionDetect)(collideArr[i], objects[j], hitTestRectangle)
-      }
-    }
+    // let hitTestRectangle = bump.hitTestRectangle.bind(bump)
+    // collideArr = this.objects[REPLY]
+    // for (let i = collideArr.length - 1; i >= 0; i--) {
+    //   for (let j = objects.length - 1; j >= 0; j--) {
+    //     pipe(collisionDetect)(collideArr[i], objects[j], hitTestRectangle)
+    //   }
+    // }
   }
 
   addGameObject (o, x = undefined, y = undefined) {
@@ -182,7 +186,6 @@ class Map extends Container {
       o.position.set(x, y)
     }
     o.scale.set(mapScale, mapScale)
-    this.map.addChild(o)
 
     let oArray = this.objects[o.type]
     oArray.push(o)
@@ -190,6 +193,10 @@ class Map extends Container {
       let inx = oArray.indexOf(o)
       oArray.splice(inx, 1)
     })
+
+    // add to world
+    this.mapWorld.add(o)
+    this.map.addChild(o)
   }
 
   // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置

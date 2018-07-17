@@ -1,6 +1,6 @@
-/* global addEventListener, removeEventListener */
 import Ability from './Ability'
 import { ABILITY_FIRE, ABILITY_KEY_FIRE } from '../../config/constants'
+import globalEventManager from '../../lib/globalEventManager'
 
 class KeyFire extends Ability {
   get type () { return ABILITY_KEY_FIRE }
@@ -17,20 +17,28 @@ class KeyFire extends Ability {
 
   setup (owner) {
     let fireAbility = owner[ABILITY_FIRE]
-    let bind = () => {
-      let handler = e => {
-        fireAbility.fire()
+    let mouseHandler = e => {
+      if (e.stopped) {
+        return
       }
-      addEventListener('click', handler)
-      return handler
+      globalEventManager.emit('fire')
     }
+    let fireHandler = fireAbility.fire.bind(fireAbility)
 
-    owner[ABILITY_KEY_FIRE] = bind()
+    owner[ABILITY_KEY_FIRE] = {
+      mousedown: mouseHandler,
+      fire: fireHandler
+    }
+    Object.entries(owner[ABILITY_KEY_FIRE]).forEach(([eventName, handler]) => {
+      globalEventManager.on(eventName, handler)
+    })
   }
 
   dropBy (owner) {
     super.dropBy(owner)
-    removeEventListener('click', owner[ABILITY_KEY_FIRE])
+    Object.entries(owner[ABILITY_KEY_FIRE]).forEach(([eventName, handler]) => {
+      globalEventManager.off(eventName, handler)
+    })
     delete owner[ABILITY_KEY_FIRE]
   }
 

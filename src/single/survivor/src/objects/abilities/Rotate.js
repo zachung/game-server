@@ -1,6 +1,7 @@
 import Ability from './Ability'
 import { ABILITY_ROTATE } from '../../config/constants'
 import Vector from '../../lib/Vector'
+import globalEventManager from '../../lib/globalEventManager'
 
 const MOUSEMOVE = Symbol('mousemove')
 
@@ -28,18 +29,39 @@ class Rotate extends Ability {
     this.owner = owner
     owner[ABILITY_ROTATE] = this
     owner.interactive = true
-    owner[MOUSEMOVE] = e => {
-      let ownerPoint = owner.getGlobalPosition()
+    let mouseHandler = e => {
+      let ownerPoint = this.owner.getGlobalPosition()
       let pointer = e.data.global
-      let targetPosition = {
-        x: pointer.x - ownerPoint.x,
-        y: pointer.y - ownerPoint.y
-      }
-      this._faceRad = Vector.fromPoint(targetPosition).rad - this.initRad
-      this.rotate(this._faceRad)
+      let vector = new Vector(
+        pointer.x - ownerPoint.x,
+        pointer.y - ownerPoint.y)
+      globalEventManager.emit('rotate', vector)
     }
-    owner.on('mousemove', owner[MOUSEMOVE])
-    owner.rotation = Math.PI / 2
+    let rotateHandler = this.setFaceRad.bind(this)
+
+    owner[MOUSEMOVE] = {
+      rotate: rotateHandler,
+      mousemove: mouseHandler
+    }
+    Object.entries(owner[MOUSEMOVE]).forEach(([eventName, handler]) => {
+      globalEventManager.on(eventName, handler)
+    })
+
+    this.setFaceRad(new Vector(0, 0))
+  }
+
+  dropBy (owner) {
+    super.dropBy(owner)
+    Object.entries(owner[MOUSEMOVE]).forEach(([eventName, handler]) => {
+      globalEventManager.off(eventName, handler)
+    })
+    delete owner[MOUSEMOVE]
+    delete owner[ABILITY_ROTATE]
+  }
+
+  setFaceRad (vector) {
+    this._faceRad = vector.rad - this.initRad
+    this.rotate(this._faceRad)
   }
 
   rotate (rad) {

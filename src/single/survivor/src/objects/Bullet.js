@@ -1,6 +1,7 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 import { REPLY, ABILITY_MOVE, ABILITY_HEALTH } from '../config/constants'
+import { Body } from '../lib/Matter'
 
 import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
@@ -11,10 +12,11 @@ class Bullet extends GameObject {
     super(Texture.Bullet)
 
     new Learn().carryBy(this)
-      .learn(new Move([3, 0]))
+      .learn(new Move([2, 0]))
       .learn(new Health(1))
 
     this.on('collide', this.actionWith.bind(this))
+    this.on('die', this.onDie.bind(this))
   }
 
   get type () { return REPLY }
@@ -26,12 +28,19 @@ class Bullet extends GameObject {
       return
     }
     let healthAbility = operator[ABILITY_HEALTH]
+    // 傷害他人
     if (healthAbility) {
       healthAbility.getHurt({
         damage: 1
       })
     }
+    // TODO: 收到他人傷害
+    this[ABILITY_HEALTH].getHurt({
+      damage: 1
+    })
+  }
 
+  onDie () {
     this.parent.removeChild(this)
     this.destroy()
   }
@@ -53,11 +62,8 @@ class Bullet extends GameObject {
     if (moveAbility) {
       moveAbility.setDirection(vector)
       this.rotation = vector.rad
+      Body.setAngle(this.body, vector.rad)
     }
-  }
-
-  tick (delta) {
-    Object.values(this.tickAbilities).forEach(ability => ability.tick(delta, this))
   }
 }
 

@@ -1,6 +1,19 @@
 import { Application as PixiApplication, Graphics, display } from './PIXI'
+import globalEventManager from './globalEventManager'
+
+let app
 
 class Application extends PixiApplication {
+  constructor (...args) {
+    super(...args)
+    app = this
+  }
+
+  // only one instance for now
+  static getApp () {
+    return app
+  }
+
   changeStage () {
     this.stage = new display.Stage()
   }
@@ -29,6 +42,8 @@ class Application extends PixiApplication {
     this.stage.addChild(
       new Graphics().drawRect(0, 0, view.width, view.height)
     )
+
+    globalEventManager.setInteraction(this.renderer.plugins.interaction)
 
     // Start the game loop
     this.ticker.add(delta => this.gameLoop.bind(this)(delta))

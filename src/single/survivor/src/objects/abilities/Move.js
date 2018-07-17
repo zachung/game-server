@@ -1,6 +1,7 @@
 import Ability from './Ability'
 import { ABILITY_MOVE } from '../../config/constants'
 import Vector from '../../lib/Vector'
+import { Body } from '../../lib/Matter'
 
 const DISTANCE_THRESHOLD = 1
 
@@ -8,13 +9,13 @@ class Move extends Ability {
   /**
    * 移動能力
    * @param  {int} value    移動速度
-   * @param  {Number} friction 摩擦力(1: 最大，0: 最小)
+   * @param  {float} frictionAir    空間摩擦力
    */
-  constructor ([value, friction]) {
+  constructor ([value, frictionAir]) {
     super()
     this.value = value
+    this.frictionAir = frictionAir
     this.vector = new Vector(0, 0)
-    this.friction = friction
     this.path = []
     this.movingToPoint = undefined
     this.distanceThreshold = this.value * DISTANCE_THRESHOLD
@@ -32,7 +33,6 @@ class Move extends Ability {
     super.carryBy(owner)
     this.owner = owner
     owner[ABILITY_MOVE] = this
-    owner.tickAbilities[this.type.toString()] = this
   }
 
   replacedBy (other, owner) {
@@ -43,23 +43,19 @@ class Move extends Ability {
 
   // 設定方向最大速度
   setDirection (vector) {
-    if (vector.length === 0) {
-      return
-    }
-    this.vector = vector.setLength(1)
+    Body.setVelocity(this.owner.body, vector.setLength(this.value))
   }
 
-  // 緩慢加速，呼叫60次可達全速
-  addDirection (vector) {
-    let len = this.value / 60
-    vector.setLength(len)
-    this.vector.add(vector)
-
-    let maxValue = this.value
-    // 不可超出最高速度
-    if (this.vector.length > maxValue) {
-      this.vector.setLength(maxValue)
+  // 施予力
+  addDirection (vector, forceDivide = 0.17) {
+    let owner = this.owner
+    if (!owner.body) {
+      return
     }
+    Body.applyForce(
+      owner.body,
+      owner.position,
+      vector.multiplyScalar(this.value * forceDivide / 1000))
   }
 
   // 移動到點
@@ -88,32 +84,6 @@ class Move extends Ability {
 
   addPath (path) {
     this.setPath(path.concat(this.path))
-  }
-
-  // tick
-  tick (delta, owner) {
-    // NOTICE: 假設自己是正方形
-    let scale = owner.scale.x
-    let vector = this.vector
-
-    // 摩擦力
-    this.vector.add(this.vector.clone().invert().multiplyScalar(this.friction))
-
-    owner.x += vector.x * this.value * scale * delta
-    owner.y += vector.y * this.value * scale * delta
-
-    if (this.movingToPoint) {
-      let position = owner.position
-      let targetPosition = this.movingToPoint
-      let a = position.x - targetPosition.x
-      let b = position.y - targetPosition.y
-      let c = Math.sqrt(a * a + b * b)
-      if (c < this.distanceThreshold) {
-        this.setPath(this.path)
-      } else {
-        this.moveTo(this.movingToPoint)
-      }
-    }
   }
 
   toString () {

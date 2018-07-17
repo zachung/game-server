@@ -10,6 +10,7 @@ import PlayerWindow from '../ui/PlayerWindow'
 import InventoryWindow from '../ui/InventoryWindow'
 import TouchDirectionControlPanel from '../ui/TouchDirectionControlPanel'
 import TouchOperationControlPanel from '../ui/TouchOperationControlPanel'
+import globalEventManager from '../lib/globalEventManager'
 
 let sceneWidth
 let sceneHeight
@@ -71,6 +72,7 @@ class PlayScene extends Scene {
 
     this.mapFile = mapFile
     this.toPosition = position
+    this.group.enableSort = true
   }
 
   create () {
@@ -80,13 +82,15 @@ class PlayScene extends Scene {
     this.loadMap()
     this.initPlayer()
     this.initUi()
+    // setInterval(() => {
+    //   globalEventManager.emit('fire')
+    // }, 100)
   }
 
   initUi () {
-    let uiGroup = new display.Group(0, true)
+    let uiGroup = new display.Group(1, true)
     let uiLayer = new display.Layer(uiGroup)
     uiLayer.parentLayer = this
-    uiLayer.group.enableSort = true
     this.addChild(uiLayer)
 
     let messageWindow = new MessageWindow(getMessageWindowOpt())
@@ -113,9 +117,10 @@ class PlayScene extends Scene {
 
       // 操作控制
       let operationPanel = new TouchOperationControlPanel({
-        x: sceneWidth / 4 * 3,
-        y: sceneHeight * 4 / 6,
-        radius: sceneWidth / 10
+        x: sceneWidth / 5 * 3,
+        y: sceneHeight / 5 * 3,
+        width: sceneWidth / 3,
+        height: sceneHeight / 5
       })
       operationPanel.parentGroup = uiGroup
 
@@ -146,11 +151,17 @@ class PlayScene extends Scene {
   }
 
   spawnMap (fileName) {
+    let mapGroup = new display.Group(0, true)
+    let mapLayer = new display.Layer(mapGroup)
+    mapLayer.parentLayer = this
+    mapLayer.group.enableSort = true
+    this.addChild(mapLayer)
+
     let mapData = resources[fileName].data
     let mapScale = IS_MOBILE ? 2 : 0.5
 
     let map = new Map(mapScale)
-    this.addChild(map)
+    mapLayer.addChild(map)
     map.load(mapData)
 
     map.on('use', o => {
