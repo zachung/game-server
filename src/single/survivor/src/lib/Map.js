@@ -153,9 +153,9 @@ class Map extends Container {
   addGameObject (o, x = undefined, y = undefined) {
     let mapScale = this.mapScale
     if (x !== undefined) {
-      o.position.set(x, y)
+      o.positionEx.set(x, y)
     }
-    o.scale.set(mapScale, mapScale)
+    o.scaleEx.set(mapScale)
     o.anchor.set(0.5, 0.5)
 
     let oArray = this.objects[o.type]

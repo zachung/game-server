@@ -54,7 +54,7 @@ class Move extends Ability {
     }
     Body.applyForce(
       owner.body,
-      owner.position,
+      owner.positionEx,
       vector.multiplyScalar(this.value * forceDivide / 1000))
   }
 

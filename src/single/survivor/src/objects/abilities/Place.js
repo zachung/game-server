@@ -17,7 +17,7 @@ class Place extends Ability {
     if (item) {
       owner.emit('place', new item.constructor())
 
-      let position = owner.position
+      let position = owner.positionEx
       owner.say(['place ', item.toString(), ' at ',
         ['(', position.x.toFixed(0), ', ', position.y.toFixed(0), ')'].join('')].join(''))
     }

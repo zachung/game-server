@@ -36,6 +36,11 @@ class Cat extends GameObject {
     carry.take(bullet, Infinity)
   }
 
+  bodyOpt () {
+    return {
+    }
+  }
+
   get type () { return REPLY }
 
   toString () {

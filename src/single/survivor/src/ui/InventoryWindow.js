@@ -23,7 +23,7 @@ class Slot extends Container {
     item = new item.constructor()
     let maxSide = Math.max(item.width, item.height)
     let scale = width / maxSide
-    item.scale.set(scale, scale)
+    item.scaleEx.set(scale)
     item.anchor.set(0.5, 0.5)
     item.position.set(width / 2, height / 2)
     this.addChild(item)

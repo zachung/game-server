@@ -56,7 +56,7 @@ class Fire extends Ability {
       rad = rotateAbility ? rotateAbility.faceRad : 0
     }
     let vector = Vector.fromRadLength(rad, 1)
-    bullet.scale.set(scale, scale)
+    bullet.scaleEx.set(scale)
     bullet.setOwner(owner)
 
     // set position
@@ -64,12 +64,11 @@ class Fire extends Ability {
     let bulletLen = bullet.height / 2 // 射出角等於自身旋角，所以免去運算
     let len = rectLen + bulletLen
     let position = Vector.fromRadLength(rad, len)
-      .add(Vector.fromPoint(owner.position))
-    bullet.position.set(position.x, position.y)
+      .add(Vector.fromPoint(owner.positionEx))
+    bullet.positionEx.set(position.x, position.y)
 
     bullet.once('added', () => {
       bullet.setDirection(vector)
-      bullet.body.isSensor = true
     })
 
     owner.emit('fire', bullet)

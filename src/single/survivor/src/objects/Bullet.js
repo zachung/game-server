@@ -22,6 +22,12 @@ class Bullet extends GameObject {
 
   get type () { return REPLY }
 
+  bodyOpt () {
+    return {
+      isSensor: true
+    }
+  }
+
   actionWith (operator) {
     if (this.owner === operator ||
       this.owner === operator.owner) {
