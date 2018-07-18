@@ -2,10 +2,10 @@ import Ability from './Ability'
 import { ABILITY_HEALTH } from '../../config/constants'
 
 class Health extends Ability {
-  constructor (healthPoint = 1) {
+  constructor (hp = 1) {
     super()
-    this.healthPoint = healthPoint
-    this.mapHealthPoint = healthPoint
+    this.hp = hp
+    this.hpMax = hp
   }
 
   get type () { return ABILITY_HEALTH }
@@ -17,9 +17,9 @@ class Health extends Ability {
   }
 
   getHurt (hurt) {
-    let preHp = this.healthPoint
-    this.healthPoint -= hurt.damage
-    let sufHp = this.healthPoint
+    let preHp = this.hp
+    this.hp -= hurt.damage
+    let sufHp = this.hp
     this.owner.say([
       this.owner.toString(),
       ' get hurt ',
@@ -29,13 +29,19 @@ class Health extends Ability {
       ' -> ',
       sufHp
     ].join(''))
-    if (this.healthPoint <= 0) {
+    this.owner.emit('health-change')
+    if (this.hp <= 0) {
       this.owner.emit('die')
     }
   }
 
   toString () {
-    return 'Health'
+    return [
+      'Health: ',
+      this.hp,
+      ' / ',
+      this.hpMax
+    ].join('')
   }
 }
 

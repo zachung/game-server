@@ -30,7 +30,7 @@ class Cat extends GameObject {
       .learn(new Fire([3, 3]))
       .learn(new Rotate())
       .learn(new KeyFire())
-      .learn(new Health(1))
+      .learn(new Health(10))
 
     let bullet = new Bullet()
     carry.take(bullet, Infinity)

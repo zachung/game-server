@@ -82,9 +82,9 @@ class PlayScene extends Scene {
     this.loadMap()
     this.initPlayer()
     this.initUi()
-    setInterval(() => {
-      globalEventManager.emit('fire')
-    }, 100)
+    // setInterval(() => {
+    //   globalEventManager.emit('fire')
+    // }, 100)
   }
 
   initUi () {

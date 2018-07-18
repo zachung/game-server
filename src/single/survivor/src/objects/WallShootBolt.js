@@ -18,34 +18,36 @@ class WallShootBolt extends GameObject {
     new Learn().carryBy(this)
       .learn(new Fire([3, 3]))
       .learn(carry)
-      .learn(new Health(1000))
+      .learn(new Health(10))
 
     let bullet = new Bullet()
     carry.take(bullet, Infinity)
 
     this.on('collide', this.actionWith.bind(this))
     this.on('die', this.onDie.bind(this))
+    this.once('added', this.setup.bind(this))
+  }
 
-    setInterval(() => {
+  get type () { return STAY }
+
+  setup () {
+    this.timer = setInterval(() => {
+      this.rotate(Math.PI / 10, true)
+
       let rad = this.rotation
       this[ABILITY_FIRE].fire(rad)
       this[ABILITY_FIRE].fire(rad + Math.PI / 2)
       this[ABILITY_FIRE].fire(rad + Math.PI)
       this[ABILITY_FIRE].fire(rad + Math.PI / 2 * 3)
     }, 200)
-
-    setInterval(() => {
-      this.rotate(Math.PI / 30 / 10, true)
-    }, 17)
   }
-
-  get type () { return STAY }
 
   actionWith (operator) {
     operator.emit('collide', this)
   }
 
   onDie () {
+    clearInterval(this.timer)
     this.parent.removeChild(this)
     this.destroy()
   }
