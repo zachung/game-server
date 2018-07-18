@@ -1,11 +1,12 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
 import { REPLY, ABILITY_MOVE, ABILITY_HEALTH } from '../config/constants'
-import { Body } from '../lib/Matter'
 
 import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
 import Health from '../objects/abilities/Health'
+
+const HealthPoint = 1
 
 class Bullet extends GameObject {
   constructor () {
@@ -13,7 +14,7 @@ class Bullet extends GameObject {
 
     new Learn().carryBy(this)
       .learn(new Move([2, 0]))
-      .learn(new Health(1))
+      .learn(new Health(HealthPoint))
 
     this.on('collide', this.actionWith.bind(this))
     this.on('die', this.onDie.bind(this))
@@ -34,9 +35,9 @@ class Bullet extends GameObject {
         damage: 1
       })
     }
-    // TODO: 收到他人傷害
+    // 自我毀滅
     this[ABILITY_HEALTH].getHurt({
-      damage: 1
+      damage: HealthPoint
     })
   }
 
@@ -61,8 +62,7 @@ class Bullet extends GameObject {
     let moveAbility = this[ABILITY_MOVE]
     if (moveAbility) {
       moveAbility.setDirection(vector)
-      this.rotation = vector.rad
-      Body.setAngle(this.body, vector.rad)
+      this.rotate(vector.rad)
     }
   }
 }

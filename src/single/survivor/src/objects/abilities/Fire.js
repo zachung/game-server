@@ -3,6 +3,24 @@ import { ABILITY_FIRE, ABILITY_CARRY, ABILITY_ROTATE } from '../../config/consta
 import Bullet from '../Bullet'
 import Vector from '../../lib/Vector'
 
+const PI = Math.PI
+
+function calcApothem (o, rad) {
+  let width = o.width / 2
+  let height = o.height / 2
+  let rectRad = Math.atan2(height, width)
+  let len
+  // 如果射出角穿過 width
+  let r1 = Math.abs(rad % PI)
+  let r2 = Math.abs(rectRad % PI)
+  if (r1 < r2 || r1 > r2 + PI / 2) {
+    len = width / Math.cos(rad)
+  } else {
+    len = height / Math.sin(rad)
+  }
+  return Math.abs(len)
+}
+
 class Fire extends Ability {
   constructor ([ power ]) {
     super()
@@ -40,19 +58,18 @@ class Fire extends Ability {
     let vector = Vector.fromRadLength(rad, 1)
     bullet.scale.set(scale, scale)
     bullet.setOwner(owner)
-    bullet.anchor.set(0.5, 0.5)
 
     // set position
-    let anchor = owner.anchor
-    let position = vector.clone()
-      .multiplyScalar(owner.width / 2 + bullet.width / 2)
-      .add(new Vector(
-        owner.x + owner.width * (0.5 - anchor.x),
-        owner.y + owner.height * (0.5 - anchor.y)
-      ))
+    let rectLen = calcApothem(owner, rad + owner.rotation)
+    let bulletLen = bullet.height / 2 // 射出角等於自身旋角，所以免去運算
+    let len = rectLen + bulletLen
+    let position = Vector.fromRadLength(rad, len)
+      .add(Vector.fromPoint(owner.position))
     bullet.position.set(position.x, position.y)
+
     bullet.once('added', () => {
       bullet.setDirection(vector)
+      bullet.body.isSensor = true
     })
 
     owner.emit('fire', bullet)

@@ -24,7 +24,6 @@ class Rotate extends Ability {
   // 配備此技能
   carryBy (owner) {
     super.carryBy(owner)
-    owner.anchor.set(0.5, 0.5)
 
     this.owner = owner
     owner[ABILITY_ROTATE] = this
@@ -61,11 +60,7 @@ class Rotate extends Ability {
 
   setFaceRad (vector) {
     this._faceRad = vector.rad - this.initRad
-    this.rotate(this._faceRad)
-  }
-
-  rotate (rad) {
-    this.owner.rotation = rad
+    this.owner.rotate(this._faceRad)
   }
 
   toString () {

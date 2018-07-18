@@ -1,5 +1,5 @@
 import { Sprite } from '../lib/PIXI'
-import { Bodies } from '../lib/Matter'
+import { Bodies, Body } from '../lib/Matter'
 import { STAY, STATIC, ABILITY_MOVE } from '../config/constants'
 import messages from '../lib/Messages'
 
@@ -20,7 +20,6 @@ class GameObject extends Sprite {
     let frictionAir = (moveAbility && moveAbility.frictionAir !== undefined)
       ? moveAbility.frictionAir
       : 0.01
-    console.log(friction, frictionAir)
     let mass = this.mass ? this.mass : 1
     let body = Bodies.rectangle(this.x, this.y, this.width, this.height, {
       isStatic: this.type === STAY,
@@ -31,6 +30,13 @@ class GameObject extends Sprite {
     })
     body.position = this.position
     this.body = body
+  }
+
+  rotate (rad, delta = false) {
+    this.rotation = delta ? this.rotation + rad : rad
+    if (this.body) {
+      Body.setAngle(this.body, rad)
+    }
   }
 
   tick (delta) {}

@@ -1,5 +1,5 @@
-import { Engine, Events, World, Bodies } from './Matter'
-import { STAY, STATIC } from '../config/constants'
+import { Engine, Events, World } from './Matter'
+import { STATIC } from '../config/constants'
 
 let PARENT = Symbol('parent')
 
@@ -14,7 +14,7 @@ class MapWorld {
         let o1 = pair.bodyA[PARENT]
         let o2 = pair.bodyB[PARENT]
         o1.emit('collide', o2)
-        // console.log(o1.toString(), o2.toString())
+        o2.emit('collide', o1)
       }
     })
     Engine.run(engine)

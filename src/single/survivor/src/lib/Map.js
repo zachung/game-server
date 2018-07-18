@@ -3,7 +3,6 @@ import { Container, display, BLEND_MODES, Sprite } from './PIXI'
 import { STAY, STATIC, REPLY, CEIL_SIZE, ABILITY_MOVE } from '../config/constants'
 import { instanceByItemId } from './utils'
 import MapGraph from './MapGraph'
-import bump from '../lib/Bump'
 import MapWorld from '../lib/MapWorld'
 
 const pipe = (first, ...more) =>
@@ -149,43 +148,15 @@ class Map extends Container {
   }
 
   tick (delta) {
-    let objects = this.objects[REPLY]
-    objects.forEach(o => o.tick(delta))
-
-    // let collisionDetect = (o1, o2, f) => {
-    //   if (!o1 || !o2 || o1 === o2) {
-    //     return
-    //   }
-    //   if (f(o2, o1, true)) {
-    //     o1.emit('collide', o2)
-    //   }
-    // }
-
-    // let rectangleCollision = bump.rectangleCollision.bind(bump)
-    // let collideArr = this.objects[STAY]
-    // // collide detect
-    // for (let i = collideArr.length - 1; i >= 0; i--) {
-    //   for (let j = objects.length - 1; j >= 0; j--) {
-    //     pipe(collisionDetect)(collideArr[i], objects[j], rectangleCollision)
-    //   }
-    // }
-
-    // let hitTestRectangle = bump.hitTestRectangle.bind(bump)
-    // collideArr = this.objects[REPLY]
-    // for (let i = collideArr.length - 1; i >= 0; i--) {
-    //   for (let j = objects.length - 1; j >= 0; j--) {
-    //     pipe(collisionDetect)(collideArr[i], objects[j], hitTestRectangle)
-    //   }
-    // }
   }
 
   addGameObject (o, x = undefined, y = undefined) {
     let mapScale = this.mapScale
-    // NOTICE: 此處的 Number 必須留著，否則字串傳入 set() 物件無法顯示
     if (x !== undefined) {
       o.position.set(x, y)
     }
     o.scale.set(mapScale, mapScale)
+    o.anchor.set(0.5, 0.5)
 
     let oArray = this.objects[o.type]
     oArray.push(o)

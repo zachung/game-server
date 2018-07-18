@@ -26,7 +26,6 @@ class WallShootBolt extends GameObject {
     this.on('collide', this.actionWith.bind(this))
     this.on('die', this.onDie.bind(this))
 
-    this.anchor.set(0.5, 0.5)
     setInterval(() => {
       let rad = this.rotation
       this[ABILITY_FIRE].fire(rad)
@@ -36,7 +35,7 @@ class WallShootBolt extends GameObject {
     }, 200)
 
     setInterval(() => {
-      this.rotation += Math.PI / 30 / 10
+      this.rotate(Math.PI / 30 / 10, true)
     }, 17)
   }
 
