@@ -16,8 +16,9 @@ class Light {
     var rb = 0xff
     var rad = radius * CEIL_SIZE
 
-    let x = target.width / 2 / target.scale.x
-    let y = target.height / 2 / target.scale.y
+    let anchor = target.anchor
+    let x = target.width * (0.5 - anchor.x)
+    let y = target.height * (0.5 - anchor.y)
     lightbulb.beginFill((rr << 16) + (rg << 8) + rb, 1.0)
     lightbulb.drawCircle(x, y, rad)
     lightbulb.endFill()

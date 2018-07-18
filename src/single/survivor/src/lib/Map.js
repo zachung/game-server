@@ -28,8 +28,7 @@ const objectEvent = {
 class Map extends Container {
   constructor (scale = 1) {
     super()
-    this.ceilSize = scale * CEIL_SIZE
-    this.mapScale = scale
+    this.ceilSize = 1 * CEIL_SIZE
 
     this.objects = {
       [STATIC]: [],
@@ -49,29 +48,6 @@ class Map extends Container {
     this.mapWorld = new MapWorld()
   }
 
-  enableFog () {
-    let lighting = new display.Layer()
-    lighting.on('display', function (element) {
-      element.blendMode = BLEND_MODES.ADD
-    })
-    lighting.useRenderTexture = true
-    lighting.clearColor = [0, 0, 0, 1] // ambient gray
-
-    this.addChild(lighting)
-
-    var lightingSprite = new Sprite(lighting.getRenderTexture())
-    lightingSprite.blendMode = BLEND_MODES.MULTIPLY
-
-    this.addChild(lightingSprite)
-
-    this.map.lighting = lighting
-  }
-
-  // 消除迷霧
-  disableFog () {
-    this.lighting.clearColor = [1, 1, 1, 1]
-  }
-
   load (mapData) {
     let tiles = mapData.tiles
     let cols = mapData.cols
@@ -80,9 +56,6 @@ class Map extends Container {
 
     let ceilSize = this.ceilSize
 
-    if (mapData.hasFog) {
-      this.enableFog()
-    }
     let mapGraph = this.mapGraph
 
     let addGameObject = (i, j, id, params) => {
@@ -148,14 +121,13 @@ class Map extends Container {
   }
 
   tick (delta) {
+    this.mapWorld.update(delta)
   }
 
   addGameObject (o, x = undefined, y = undefined) {
-    let mapScale = this.mapScale
     if (x !== undefined) {
       o.positionEx.set(x, y)
     }
-    o.scaleEx.set(mapScale)
     o.anchor.set(0.5, 0.5)
 
     let oArray = this.objects[o.type]
@@ -170,26 +142,26 @@ class Map extends Container {
     this.map.addChild(o)
   }
 
-  // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置
-  get position () {
-    return this.map.position
-  }
+  // // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置
+  // get position () {
+  //   return this.map.position
+  // }
 
-  get x () {
-    return this.map.x
-  }
+  // get x () {
+  //   return this.map.x
+  // }
 
-  get y () {
-    return this.map.y
-  }
+  // get y () {
+  //   return this.map.y
+  // }
 
-  set x (x) {
-    this.map.x = x
-  }
+  // set x (x) {
+  //   this.map.x = x
+  // }
 
-  set y (y) {
-    this.map.y = y
-  }
+  // set y (y) {
+  //   this.map.y = y
+  // }
 }
 
 export default Map

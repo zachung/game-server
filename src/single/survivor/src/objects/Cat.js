@@ -25,9 +25,9 @@ class Cat extends GameObject {
       .learn(new KeyMove())
       .learn(new Place())
       .learn(new KeyPlace())
-      .learn(new Camera(1))
+      .learn(new Camera(5))
       .learn(carry)
-      .learn(new Fire([3, 3]))
+      .learn(new Fire([2]))
       .learn(new Rotate())
       .learn(new KeyFire())
       .learn(new Health(10))
@@ -36,12 +36,12 @@ class Cat extends GameObject {
     carry.take(bullet, Infinity)
   }
 
+  get type () { return REPLY }
+
   bodyOpt () {
     return {
     }
   }
-
-  get type () { return REPLY }
 
   toString () {
     return 'you'

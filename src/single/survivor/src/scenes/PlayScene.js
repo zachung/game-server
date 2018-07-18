@@ -1,6 +1,7 @@
 import { loader, resources, display } from '../lib/PIXI'
 import Scene from '../lib/Scene'
 import Map from '../lib/Map'
+import MapFog from '../lib/MapFog'
 import { IS_MOBILE } from '../config/constants'
 
 import Cat from '../objects/Cat'
@@ -73,6 +74,8 @@ class PlayScene extends Scene {
     this.mapFile = mapFile
     this.toPosition = position
     this.group.enableSort = true
+    this.mapScale = IS_MOBILE ? 2 : 0.5
+    this.mapFog = new MapFog()
   }
 
   create () {
@@ -82,9 +85,9 @@ class PlayScene extends Scene {
     this.loadMap()
     this.initPlayer()
     this.initUi()
-    setInterval(() => {
-      globalEventManager.emit('fire')
-    }, 100)
+    // setInterval(() => {
+    //   globalEventManager.emit('fire')
+    // }, 100)
   }
 
   initUi () {
@@ -158,10 +161,17 @@ class PlayScene extends Scene {
     this.addChild(mapLayer)
 
     let mapData = resources[fileName].data
-    let mapScale = IS_MOBILE ? 2 : 0.5
 
-    let map = new Map(mapScale)
+    let map = new Map()
+    map.scale.set(this.mapScale)
     mapLayer.addChild(map)
+    // enable fog
+    if (!mapData.hasFog) {
+      this.mapFog.disable()
+    } else {
+      this.mapFog.enable(map)
+    }
+    mapLayer.addChild(this.mapFog)
     map.load(mapData)
 
     map.on('use', o => {
@@ -188,8 +198,8 @@ class PlayScene extends Scene {
     this.map.tick(delta)
     // FIXME: gap between tiles on iPhone Safari
     this.map.position.set(
-      Math.floor(sceneWidth / 2 - this.cat.x),
-      Math.floor(sceneHeight / 2 - this.cat.y)
+      Math.floor(sceneWidth / 2 - this.cat.x * this.mapScale),
+      Math.floor(sceneHeight / 2 - this.cat.y * this.mapScale)
     )
   }
 }

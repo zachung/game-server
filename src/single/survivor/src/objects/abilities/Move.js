@@ -47,7 +47,7 @@ class Move extends Ability {
   }
 
   // 施予力
-  addDirection (vector, forceDivide = 0.17) {
+  addDirection (vector) {
     let owner = this.owner
     if (!owner.body) {
       return
@@ -55,7 +55,7 @@ class Move extends Ability {
     Body.applyForce(
       owner.body,
       owner.positionEx,
-      vector.multiplyScalar(this.value * forceDivide / 1000))
+      vector.multiplyScalar(this.value / 3))
   }
 
   // 移動到點

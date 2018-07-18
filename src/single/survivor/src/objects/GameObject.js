@@ -39,8 +39,8 @@ function bodyOpt () {
 class GameObject extends Sprite {
   constructor (...args) {
     super(...args)
-    this.scaleEx = new ObservablePoint(onScale, this)
-    this.positionEx = new ObservablePoint(onPosition, this)
+    this.scaleEx = this.scale // new ObservablePoint(onScale, this)
+    this.positionEx = this.position // new ObservablePoint(onPosition, this)
   }
   get type () { return STATIC }
 

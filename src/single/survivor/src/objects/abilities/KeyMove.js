@@ -21,6 +21,7 @@ class KeyMove extends Ability {
     let dir = {}
     let calcDir = () => {
       let vector = new Vector(-dir[LEFT] + dir[RIGHT], -dir[UP] + dir[DOWN])
+      vector.multiplyScalar(0.17)
       owner[ABILITY_MOVE].addDirection(vector)
     }
     let bind = code => {

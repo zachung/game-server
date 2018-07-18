@@ -17,25 +17,29 @@ class MapWorld {
         o2.emit('collide', o1)
       }
     })
-    Engine.run(engine)
 
     let world = engine.world
     world.gravity.y = 0
 
-    this.world = world
+    this.engine = engine
   }
 
   add (o) {
     if (o.type === STATIC) {
       return
     }
+    let world = this.engine.world
     o.addBody()
     let body = o.body
     o.once('removed', () => {
-      World.remove(this.world, body)
+      World.remove(world, body)
     })
     body[PARENT] = o
-    World.add(this.world, body)
+    World.add(world, body)
+  }
+
+  update (delta) {
+    Engine.update(this.engine, delta)
   }
 }
 

@@ -1,5 +1,5 @@
 import Ability from './Ability'
-import { ABILITY_FIRE, ABILITY_CARRY, ABILITY_ROTATE } from '../../config/constants'
+import { ABILITY_FIRE, ABILITY_CARRY, ABILITY_ROTATE, ABILITY_MOVE } from '../../config/constants'
 import Bullet from '../Bullet'
 import Vector from '../../lib/Vector'
 
@@ -22,10 +22,10 @@ function calcApothem (o, rad) {
 }
 
 class Fire extends Ability {
-  constructor ([ power ]) {
+  constructor ([ reactForce ]) {
     super()
     // TODO: implement
-    this.power = power
+    this.reactForce = reactForce
   }
 
   get type () { return ABILITY_FIRE }
@@ -69,6 +69,12 @@ class Fire extends Ability {
 
     bullet.once('added', () => {
       bullet.setDirection(vector)
+
+      let moveAbility = owner[ABILITY_MOVE]
+      if (moveAbility) {
+        moveAbility.addDirection(
+          vector.clone().setLength(this.reactForce).invert())
+      }
     })
 
     owner.emit('fire', bullet)

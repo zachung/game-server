@@ -16,7 +16,7 @@ class WallShootBolt extends GameObject {
 
     let carry = new Carry(3)
     new Learn().carryBy(this)
-      .learn(new Fire([3, 3]))
+      .learn(new Fire([3]))
       .learn(carry)
       .learn(new Health(10))
 
@@ -29,6 +29,12 @@ class WallShootBolt extends GameObject {
   }
 
   get type () { return STAY }
+
+  bodyOpt () {
+    return {
+      isStatic: true
+    }
+  }
 
   setup () {
     this.timer = setInterval(() => {
