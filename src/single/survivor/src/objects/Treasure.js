@@ -38,8 +38,7 @@ class Treasure extends GameObject {
       treasure => carryAbility.take(treasure.item, treasure.count))
     operator.say(['I taked ', this.toString()].join(''))
 
-    this.parent.removeChild(this)
-    this.destroy()
+    this.parent.willRemoveChild(this)
   }
 
   toString () {

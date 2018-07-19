@@ -1,9 +1,10 @@
-import { Container, display, BLEND_MODES, Sprite } from './PIXI'
+import { Container, display } from './PIXI'
 
-import { STAY, STATIC, REPLY, CEIL_SIZE, ABILITY_MOVE } from '../config/constants'
+import { STAY, STATIC, REPLY, CEIL_SIZE, ABILITY_KEY_FIRE, ABILITY_KEY_MOVE, ABILITY_ROTATE } from '../config/constants'
 import { instanceByItemId } from './utils'
-import MapGraph from './MapGraph'
 import MapWorld from '../lib/MapWorld'
+
+let isGameOver = false
 
 const pipe = (first, ...more) =>
   more.reduce((acc, curr) => (...args) => curr(acc(...args)), first)
@@ -17,6 +18,10 @@ const objectEvent = {
     this.addGameObject(bullet)
   },
   die (object) {
+    isGameOver = true
+    object[ABILITY_KEY_FIRE].dropBy(object)
+    object[ABILITY_KEY_MOVE].dropBy(object)
+    object[ABILITY_ROTATE].dropBy(object)
     object.say('You die.')
   }
 }
@@ -26,9 +31,9 @@ const objectEvent = {
  *  use: object
  */
 class Map extends Container {
-  constructor (scale = 1) {
+  constructor () {
     super()
-    this.ceilSize = 1 * CEIL_SIZE
+    this.ceilSize = CEIL_SIZE
 
     this.objects = {
       [STATIC]: [],
@@ -36,16 +41,18 @@ class Map extends Container {
       [REPLY]: []
     }
     this.map = new Container()
+    this.map.willRemoveChild = this.willRemoveChild.bind(this)
     this.addChild(this.map)
 
     // player group
     this.playerGroup = new display.Group()
     let playerLayer = new display.Layer(this.playerGroup)
     this.addChild(playerLayer)
-    this.mapGraph = new MapGraph()
 
     // physic
     this.mapWorld = new MapWorld()
+
+    this.willRemoved = []
   }
 
   load (mapData) {
@@ -56,15 +63,11 @@ class Map extends Container {
 
     let ceilSize = this.ceilSize
 
-    let mapGraph = this.mapGraph
-
     let addGameObject = (i, j, id, params) => {
       let o = instanceByItemId(id, params)
       this.addGameObject(o, i * ceilSize, j * ceilSize)
       return [o, i, j]
     }
-
-    let addGraph = ([o, i, j]) => mapGraph.addObject(o, i, j)
 
     let registerOn = ([o, i, j]) => {
       o.on('use', () => this.emit('use', o))
@@ -74,19 +77,15 @@ class Map extends Container {
       return [o, i, j]
     }
 
-    mapGraph.beginUpdate()
-
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
-        pipe(addGameObject, registerOn, addGraph)(i, j, tiles[j * cols + i])
+        pipe(addGameObject, registerOn)(i, j, tiles[j * cols + i])
       }
     }
     items.forEach(item => {
       let [ id, [i, j], params ] = item
-      pipe(addGameObject, registerOn, addGraph)(i, j, id, params)
+      pipe(addGameObject, registerOn)(i, j, id, params)
     })
-
-    mapGraph.endUpdate()
   }
 
   addPlayer (player, toPosition) {
@@ -105,23 +104,19 @@ class Map extends Container {
     // player 置頂顯示
     player.parentGroup = this.playerGroup
 
-    // 自動找路
-    // let moveAbility = player[ABILITY_MOVE]
-    // if (moveAbility) {
-    //   let points = ['4,1', '4,4', '11,1', '6,10']
-    //   points.reduce((acc, cur) => {
-    //     let path = this.mapGraph.find(acc, cur).map(node => {
-    //       let [i, j] = node.id.split(',')
-    //       return {x: i * this.ceilSize, y: j * this.ceilSize}
-    //     })
-    //     moveAbility.addPath(path)
-    //     return cur
-    //   })
-    // }
+    this.player = player
   }
 
   tick (delta) {
+    if (isGameOver) {
+      return
+    }
+    this.objects[STAY].forEach(o => o.tick(delta))
     this.mapWorld.update(delta)
+    this.willRemoved.forEach(child => {
+      this.map.removeChild(child)
+      // child.destroy()wadwa
+    })
   }
 
   addGameObject (o, x = undefined, y = undefined) {
@@ -142,26 +137,23 @@ class Map extends Container {
     this.map.addChild(o)
   }
 
-  // // fog 的 parent container 不能被移動(會錯位)，因此改成修改 map 位置
-  // get position () {
-  //   return this.map.position
-  // }
+  setScale (scale) {
+    this.scale.set(scale)
+    this.mapWorld.scale(scale)
+  }
 
-  // get x () {
-  //   return this.map.x
-  // }
+  setPosition (x, y) {
+    this.position.set(x, y)
+  }
 
-  // get y () {
-  //   return this.map.y
-  // }
+  debug (opt) {
+    this.mapWorld.enableRender(opt)
+    this.mapWorld.follow(this.player.body)
+  }
 
-  // set x (x) {
-  //   this.map.x = x
-  // }
-
-  // set y (y) {
-  //   this.map.y = y
-  // }
+  willRemoveChild (child) {
+    this.willRemoved.push(child)
+  }
 }
 
 export default Map

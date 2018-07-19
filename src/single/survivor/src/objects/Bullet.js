@@ -1,10 +1,11 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
-import { REPLY, ABILITY_MOVE, ABILITY_HEALTH } from '../config/constants'
+import { REPLY, ABILITY_MOVE, ABILITY_DAMAGE } from '../config/constants'
 
 import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
 import Health from '../objects/abilities/Health'
+import Damage from '../objects/abilities/Damage'
 
 const HealthPoint = 1
 
@@ -15,6 +16,7 @@ class Bullet extends GameObject {
     new Learn().carryBy(this)
       .learn(new Move([2, 0]))
       .learn(new Health(HealthPoint))
+      .learn(new Damage([1, 0.01]))
 
     this.on('collide', this.actionWith.bind(this))
     this.on('die', this.onDie.bind(this))
@@ -34,22 +36,14 @@ class Bullet extends GameObject {
       // 避免自殺
       return
     }
-    let healthAbility = operator[ABILITY_HEALTH]
-    // 傷害他人
-    if (healthAbility) {
-      healthAbility.getHurt({
-        damage: 1
-      })
-    }
+    let damageAbility = this[ABILITY_DAMAGE]
+    damageAbility.effect(operator)
     // 自我毀滅
-    this[ABILITY_HEALTH].getHurt({
-      damage: HealthPoint
-    })
+    this.onDie()
   }
 
   onDie () {
-    this.parent.removeChild(this)
-    this.destroy()
+    this.parent.willRemoveChild(this)
   }
 
   setOwner (owner) {

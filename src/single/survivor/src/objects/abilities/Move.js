@@ -52,10 +52,15 @@ class Move extends Ability {
     if (!owner.body) {
       return
     }
-    Body.applyForce(
-      owner.body,
-      owner.positionEx,
-      vector.multiplyScalar(this.value / 3))
+    this.punch(vector.multiplyScalar(this.value / 300))
+  }
+
+  punch (vector) {
+    let owner = this.owner
+    if (!owner.body) {
+      return
+    }
+    owner.body.world.forcesWaitForApply.push({owner, vector})
   }
 
   // 移動到點

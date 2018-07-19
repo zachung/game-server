@@ -158,12 +158,12 @@ class PlayScene extends Scene {
     let mapLayer = new display.Layer(mapGroup)
     mapLayer.parentLayer = this
     mapLayer.group.enableSort = true
+    mapLayer.position.set(sceneWidth / 2, sceneHeight / 2)
     this.addChild(mapLayer)
 
     let mapData = resources[fileName].data
 
     let map = new Map()
-    map.scale.set(this.mapScale)
     mapLayer.addChild(map)
     // enable fog
     if (!mapData.hasFog) {
@@ -171,6 +171,7 @@ class PlayScene extends Scene {
     } else {
       this.mapFog.enable(map)
     }
+    // this.mapFog.position.set(-sceneWidth / 2, -sceneHeight / 2)
     mapLayer.addChild(this.mapFog)
     map.load(mapData)
 
@@ -186,6 +187,9 @@ class PlayScene extends Scene {
     })
 
     map.addPlayer(this.cat, this.toPosition)
+    // TODO: debug render
+    // map.debug({width: sceneWidth, height: sceneHeight})
+    map.setScale(this.mapScale)
     this.map = map
 
     this.isMapLoaded = true
@@ -197,10 +201,9 @@ class PlayScene extends Scene {
     }
     this.map.tick(delta)
     // FIXME: gap between tiles on iPhone Safari
-    this.map.position.set(
-      Math.floor(sceneWidth / 2 - this.cat.x * this.mapScale),
-      Math.floor(sceneHeight / 2 - this.cat.y * this.mapScale)
-    )
+    this.map.setPosition(
+      -this.cat.x * this.mapScale,
+      -this.cat.y * this.mapScale)
   }
 }
 

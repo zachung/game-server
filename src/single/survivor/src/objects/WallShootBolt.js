@@ -23,9 +23,9 @@ class WallShootBolt extends GameObject {
     let bullet = new Bullet()
     carry.take(bullet, Infinity)
 
+    this.life = 0
     this.on('collide', this.actionWith.bind(this))
     this.on('die', this.onDie.bind(this))
-    this.once('added', this.setup.bind(this))
   }
 
   get type () { return STAY }
@@ -36,26 +36,27 @@ class WallShootBolt extends GameObject {
     }
   }
 
-  setup () {
-    this.timer = setInterval(() => {
-      this.rotate(Math.PI / 10, true)
-
-      let rad = this.rotation
-      this[ABILITY_FIRE].fire(rad)
-      this[ABILITY_FIRE].fire(rad + Math.PI / 2)
-      this[ABILITY_FIRE].fire(rad + Math.PI)
-      this[ABILITY_FIRE].fire(rad + Math.PI / 2 * 3)
-    }, 200)
-  }
-
   actionWith (operator) {
     operator.emit('collide', this)
   }
 
   onDie () {
-    clearInterval(this.timer)
-    this.parent.removeChild(this)
-    this.destroy()
+    this.parent.willRemoveChild(this)
+  }
+
+  tick (delta) {
+    this.life++
+    if (this.life % 30 !== 0) {
+      return
+    }
+    this.life = 0
+    this.rotate(Math.PI / 10, true)
+
+    let rad = this.rotation
+    this[ABILITY_FIRE].fire(rad)
+    this[ABILITY_FIRE].fire(rad + Math.PI / 2)
+    this[ABILITY_FIRE].fire(rad + Math.PI)
+    this[ABILITY_FIRE].fire(rad + Math.PI / 2 * 3)
   }
 
   toString () {

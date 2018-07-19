@@ -2,6 +2,8 @@ import Ability from './Ability'
 import { ABILITY_FIRE, ABILITY_KEY_FIRE } from '../../config/constants'
 import globalEventManager from '../../lib/globalEventManager'
 
+const KEYS = Symbol('keys')
+
 class KeyFire extends Ability {
   get type () { return ABILITY_KEY_FIRE }
 
@@ -12,6 +14,7 @@ class KeyFire extends Ability {
   // 配備此技能
   carryBy (owner) {
     super.carryBy(owner)
+    owner[ABILITY_KEY_FIRE] = this
     this.setup(owner)
   }
 
@@ -25,20 +28,21 @@ class KeyFire extends Ability {
     }
     let fireHandler = fireAbility.fire.bind(fireAbility)
 
-    owner[ABILITY_KEY_FIRE] = {
+    owner[KEYS] = {
       mousedown: mouseHandler,
       fire: fireHandler
     }
-    Object.entries(owner[ABILITY_KEY_FIRE]).forEach(([eventName, handler]) => {
+    Object.entries(owner[KEYS]).forEach(([eventName, handler]) => {
       globalEventManager.on(eventName, handler)
     })
   }
 
   dropBy (owner) {
     super.dropBy(owner)
-    Object.entries(owner[ABILITY_KEY_FIRE]).forEach(([eventName, handler]) => {
+    Object.entries(owner[KEYS]).forEach(([eventName, handler]) => {
       globalEventManager.off(eventName, handler)
     })
+    delete owner[KEYS]
     delete owner[ABILITY_KEY_FIRE]
   }
 

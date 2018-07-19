@@ -72,8 +72,8 @@ class Fire extends Ability {
 
       let moveAbility = owner[ABILITY_MOVE]
       if (moveAbility) {
-        moveAbility.addDirection(
-          vector.clone().setLength(this.reactForce).invert())
+        moveAbility.punch(
+          vector.clone().setLength(this.reactForce / 300).invert())
       }
     })
 

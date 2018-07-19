@@ -22,7 +22,7 @@ class MapFog extends Container {
 
   enable (map) {
     this.lighting.clearColor = [0, 0, 0, 1]
-    map.map.lighting = this.mapFog.lighting
+    map.map.lighting = this.lighting
   }
 
   // 消除迷霧
