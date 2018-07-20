@@ -3,7 +3,7 @@ import { Container, Graphics } from '../lib/PIXI'
 class ValueBar extends Container {
   constructor (opt) {
     super()
-    let { x, y, width, height, color } = opt
+    let { x = 0, y = 0, width, height, color } = opt
 
     // background
     let hpBarBg = new Graphics()

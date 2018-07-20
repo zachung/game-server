@@ -10,11 +10,7 @@ const pipe = (first, ...more) =>
   more.reduce((acc, curr) => (...args) => curr(acc(...args)), first)
 
 const objectEvent = {
-  place (object, placed) {
-    let position = object.position
-    this.addGameObject(placed, position.x, position.y)
-  },
-  fire (object, bullet) {
+  addObject (object, bullet) {
     this.addGameObject(bullet)
   },
   die (object) {
@@ -71,7 +67,7 @@ class Map extends Container {
 
     let registerOn = ([o, i, j]) => {
       o.on('use', () => this.emit('use', o))
-      o.on('fire', objectEvent.fire.bind(this, o))
+      o.on('addObject', objectEvent.addObject.bind(this, o))
       // TODO: remove map item
       // delete items[i]
       return [o, i, j]
@@ -112,6 +108,7 @@ class Map extends Container {
       return
     }
     this.objects[STAY].forEach(o => o.tick(delta))
+    this.objects[REPLY].forEach(o => o.tick(delta))
     this.mapWorld.update(delta)
     this.willRemoved.forEach(child => {
       this.map.removeChild(child)

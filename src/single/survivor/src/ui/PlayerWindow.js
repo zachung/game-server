@@ -2,7 +2,9 @@ import { Container, Text, TextStyle } from '../lib/PIXI'
 import ValueBar from './ValueBar'
 
 import Window from './Window'
-import { ABILITY_MOVE, ABILITY_CAMERA, ABILITY_HEALTH } from '../config/constants'
+import { ABILITY_MOVE, ABILITY_CAMERA, ABILITY_HEALTH, ABILITY_MANA } from '../config/constants'
+
+const floor = Math.floor
 
 const ABILITIES_ALL = [
   ABILITY_MOVE,
@@ -16,13 +18,15 @@ class PlayerWindow extends Window {
     let { player } = opt
     this._opt = opt
 
-    this.renderHealthBar({x: 5, y: 5})
-    this.renderAbility({x: 5, y: 20})
+    this.healthBar = this.renderBar({x: 5, y: 5, color: 0xD23200})
+    this.manaBar = this.renderBar({x: 5, y: 17, color: 0x0032D2})
+    this.renderAbility({x: 5, y: 32})
 
     this.onAbilityCarry(player)
 
     player.on('ability-carry', this.onAbilityCarry.bind(this, player))
     player.on('health-change', this.onHealthChange.bind(this, player))
+    player.on('mana-change', this.onManaChange.bind(this, player))
   }
 
   renderAbility ({x, y}) {
@@ -32,26 +36,38 @@ class PlayerWindow extends Window {
     this.abilityTextContainer = abilityTextContainer
   }
 
-  renderHealthBar ({x, y}) {
+  renderBar ({x, y, color}) {
     let {width} = this._opt
     width /= 2
     let height = 10
-    let color = 0xD23200
-    let healthBar = new ValueBar({x, y, width, height, color})
+    let container = new Container()
+    container.position.set(x, y)
+    let bar = new ValueBar({width, height, color})
+    let text = new Text('(10/20)', this._getTextStyle())
+    text.x = width + 3
+    text.y = -3
 
-    this.addChild(healthBar)
+    container.addChild(bar)
+    container.addChild(text)
+    this.addChild(container)
 
-    this.healthBar = healthBar
+    container.bar = bar
+    container.text = text
+
+    return container
   }
 
-  onAbilityCarry (player) {
-    let i = 0
+  _getTextStyle () {
     let { fontSize = 10 } = this._opt
-    let style = new TextStyle({
+    return new TextStyle({
       fontSize: fontSize,
       fill: 'green',
       lineHeight: fontSize
     })
+  }
+
+  onAbilityCarry (player) {
+    let i = 0
 
     // 更新面板數據
     let contianer = this.abilityTextContainer
@@ -59,8 +75,8 @@ class PlayerWindow extends Window {
     ABILITIES_ALL.forEach(abilitySymbol => {
       let ability = player.abilities[abilitySymbol]
       if (ability) {
-        let text = new Text(ability.toString(), style)
-        text.y = i * (fontSize + 5)
+        let text = new Text(ability.toString(), this._getTextStyle())
+        text.y = i * (text.height)
 
         contianer.addChild(text)
 
@@ -70,15 +86,26 @@ class PlayerWindow extends Window {
   }
 
   onHealthChange (player) {
-    let healthAbility = player[ABILITY_HEALTH]
-    if (!healthAbility) {
-      this.healthBar.visible = false
+    this._updateValueBar(this.healthBar, player[ABILITY_HEALTH])
+  }
+
+  onManaChange (player) {
+    this._updateValueBar(this.manaBar, player[ABILITY_MANA])
+  }
+
+  _updateValueBar (panel, ability) {
+    if (!ability) {
+      panel.visible = false
       return
     }
-    if (!this.healthBar.visible) {
-      this.healthBar.visible = true
+    if (!panel.visible) {
+      panel.visible = true
     }
-    this.healthBar.emit('value-change', healthAbility.hp / healthAbility.hpMax)
+
+    panel.text.text = [
+      '(', floor(ability.value), '/', floor(ability.valueMax), ')'
+    ].join('')
+    panel.bar.emit('value-change', ability.value / ability.valueMax)
   }
 
   toString () {

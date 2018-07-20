@@ -16,6 +16,7 @@ export const ABILITY_KEY_PLACE = Symbol('key-place')
 export const ABILITY_KEY_FIRE = Symbol('fire')
 export const ABILITY_ROTATE = Symbol('rotate')
 export const ABILITY_DAMAGE = Symbol('damage')
+export const ABILITY_MANA = Symbol('mana')
 export const ABILITIES_ALL = [
   ABILITY_MOVE,
   ABILITY_CAMERA,
@@ -28,7 +29,8 @@ export const ABILITIES_ALL = [
   ABILITY_KEY_PLACE,
   ABILITY_KEY_FIRE,
   ABILITY_ROTATE,
-  ABILITY_DAMAGE
+  ABILITY_DAMAGE,
+  ABILITY_MANA
 ]
 
 // object type, static object, not collide with

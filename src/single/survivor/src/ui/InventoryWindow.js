@@ -1,6 +1,10 @@
 import Window from './Window'
 import { Container, Graphics, Text, TextStyle } from '../lib/PIXI'
 import { ABILITY_CARRY } from '../config/constants'
+import keyboardJS from 'keyboardjs'
+import { SWITCH1, SWITCH2, SWITCH3, SWITCH4 } from '../config/control'
+
+const SLOTS = [ SWITCH1, SWITCH2, SWITCH3, SWITCH4 ]
 
 class Slot extends Container {
   constructor ({ x, y, width, height }) {
@@ -12,21 +16,30 @@ class Slot extends Container {
     rect.drawRoundedRect(0, 0, width, height, 5)
     rect.endFill()
     this.addChild(rect)
+
+    let borderRect = new Graphics()
+    borderRect.lineStyle(3, 0xFF0000, 1)
+    borderRect.drawRect(0, 0, width, height)
+    borderRect.endFill()
+    borderRect.visible = false
+    this.addChild(borderRect)
+
+    this.borderRect = borderRect
   }
 
-  setContext (item, count) {
+  setContext (skill, count) {
     this.clearContext()
 
     let width = this.width
     let height = this.height
     // 置中
-    item = new item.constructor()
-    let maxSide = Math.max(item.width, item.height)
+    let sprite = skill.sprite()
+    let maxSide = Math.max(sprite.width, sprite.height)
     let scale = width / maxSide
-    item.scaleEx.set(scale)
-    item.anchor.set(0.5, 0.5)
-    item.position.set(width / 2, height / 2)
-    this.addChild(item)
+    sprite.scale.set(scale)
+    sprite.anchor.set(0.5, 0.5)
+    sprite.position.set(width / 2, height / 2)
+    this.addChild(sprite)
 
     // 數量
     let fontSize = this.width * 0.3
@@ -42,17 +55,25 @@ class Slot extends Container {
     text.anchor.set(1, 1)
     this.addChild(text)
 
-    this.item = item
+    this.sprite = sprite
     this.text = text
   }
 
   clearContext () {
-    if (this.item) {
-      this.item.destroy()
+    if (this.sprite) {
+      this.sprite.destroy()
       this.text.destroy()
-      delete this.item
+      delete this.sprite
       delete this.text
     }
+  }
+
+  select () {
+    this.borderRect.visible = true
+  }
+
+  deselect () {
+    this.borderRect.visible = false
   }
 }
 
@@ -76,15 +97,17 @@ class InventoryWindow extends Window {
     player.on('inventory-modified', this.onInventoryModified.bind(this, player))
 
     this.slotContainers = []
-    this.slots = []
     for (var i = 0; i < slotCount; i++) {
       let slot = new Slot(ceilOpt)
       this.addChild(slot)
       this.slotContainers.push(slot)
       ceilOpt.y += ceilSize + padding
     }
+    // default use first one
+    this.slotContainers[0].select()
 
     this.onInventoryModified(player)
+    this.setup(player)
   }
 
   onInventoryModified (player) {
@@ -93,18 +116,56 @@ class InventoryWindow extends Window {
       // no inventory yet
       return
     }
+    let slots = []
     let i = 0
-    carryAbility.bags.forEach(bag => bag.forEach(slot => {
-      this.slots[i] = slot
+    carryAbility.bags.forEach(slot => {
+      slots[i] = slot
       i++
-    }))
+    })
     this.slotContainers.forEach((container, i) => {
-      let slot = this.slots[i]
+      let slot = slots[i]
       if (slot) {
-        container.setContext(slot.item, slot.count)
+        container.setContext(slot.skill, slot.count)
       } else {
         container.clearContext()
       }
+    })
+  }
+
+  setup (player) {
+    let carryAbility = player[ABILITY_CARRY]
+    let bind = key => {
+      let slotInx = SLOTS.indexOf(key)
+      let handler = e => {
+        e.preventRepeat()
+        carryAbility.setCurrent(slotInx)
+        this.slotContainers.forEach((container, i) => {
+          if (i === slotInx) {
+            container.select()
+          } else {
+            container.deselect()
+          }
+        })
+      }
+      keyboardJS.bind(key, handler, () => {})
+      return handler
+    }
+
+    let binds
+    keyboardJS.setContext('')
+    keyboardJS.withContext('', () => {
+      binds = {
+        SWITCH1: bind(SWITCH1),
+        SWITCH2: bind(SWITCH2),
+        SWITCH3: bind(SWITCH3),
+        SWITCH4: bind(SWITCH4)
+      }
+    })
+
+    player.once('removed', () => {
+      Object.entries(binds).forEach(([key, handler]) => {
+        keyboardJS.unbind(key, handler)
+      })
     })
   }
 

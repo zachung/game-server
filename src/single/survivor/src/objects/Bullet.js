@@ -10,13 +10,13 @@ import Damage from '../objects/abilities/Damage'
 const HealthPoint = 1
 
 class Bullet extends GameObject {
-  constructor () {
+  constructor ({speed = 1, damage = 1, force = 0} = {}) {
     super(Texture.Bullet)
 
     new Learn().carryBy(this)
-      .learn(new Move([2, 0]))
+      .learn(new Move([speed, 0]))
       .learn(new Health(HealthPoint))
-      .learn(new Damage([1, 0.01]))
+      .learn(new Damage([damage, force]))
 
     this.on('collide', this.actionWith.bind(this))
     this.on('die', this.onDie.bind(this))
@@ -26,7 +26,11 @@ class Bullet extends GameObject {
 
   bodyOpt () {
     return {
-      isSensor: true
+      isSensor: true,
+      collisionFilter: {
+        category: 0b100,
+        mask: 0b101
+      }
     }
   }
 

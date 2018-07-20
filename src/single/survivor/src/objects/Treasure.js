@@ -27,6 +27,16 @@ class Treasure extends GameObject {
 
   get type () { return REPLY }
 
+  bodyOpt () {
+    return {
+      isSensor: true,
+      collisionFilter: {
+        category: 0b10,
+        mask: 0b1
+      }
+    }
+  }
+
   actionWith (operator) {
     let carryAbility = operator[ABILITY_CARRY]
     if (!carryAbility) {

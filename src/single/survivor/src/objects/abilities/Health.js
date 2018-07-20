@@ -3,10 +3,10 @@ import { ABILITY_HEALTH, ABILITY_DAMAGE, ABILITY_MOVE } from '../../config/const
 import Vector from '../../lib/Vector'
 
 class Health extends Ability {
-  constructor (hp = 1) {
+  constructor (value = 1) {
     super()
-    this.hp = hp
-    this.hpMax = hp
+    this.value = value
+    this.valueMax = value
   }
 
   get type () { return ABILITY_HEALTH }
@@ -24,8 +24,8 @@ class Health extends Ability {
     }
     let force = damageAbility.force
     let damage = damageAbility.damage
-    let preHp = this.hp
-    let sufHp = Math.max(this.hp - damage, 0)
+    let preHp = this.value
+    let sufHp = Math.max(this.value - damage, 0)
     let vector = Vector.fromPoint(this.owner.position)
       .sub(from.position)
       .setLength(force)
@@ -45,10 +45,10 @@ class Health extends Ability {
       moveAbility.punch(vector)
     }
 
-    this.hp = sufHp
+    this.value = sufHp
 
     this.owner.emit('health-change')
-    if (this.hp <= 0) {
+    if (this.value <= 0) {
       this.owner.emit('die')
     }
   }
@@ -56,9 +56,9 @@ class Health extends Ability {
   toString () {
     return [
       'Health: ',
-      this.hp,
+      this.value,
       ' / ',
-      this.hpMax
+      this.valueMax
     ].join('')
   }
 }

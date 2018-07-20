@@ -1,12 +1,12 @@
 import Ability from './Ability'
 import { ABILITY_CARRY, ABILITY_LEARN } from '../../config/constants'
 
-function newSlot (item, count) {
+function newSlot (skill, count) {
   return {
-    item,
+    skill,
     count,
     toString () {
-      return [item.toString(), '(', this.count, ')'].join('')
+      return [skill.toString(), '(', this.count, ')'].join('')
     }
   }
 }
@@ -14,8 +14,8 @@ function newSlot (item, count) {
 class Carry extends Ability {
   constructor (initSlots) {
     super()
-    this.bags = []
-    this.bags.push(Array(initSlots).fill())
+    this.current = 0
+    this.bags = Array(initSlots).fill()
   }
 
   get type () { return ABILITY_CARRY }
@@ -26,86 +26,77 @@ class Carry extends Ability {
     owner[ABILITY_CARRY] = this
   }
 
-  take (item, count = 1) {
+  // 暫時沒有限制施放次數
+  take (skill, count = Infinity) {
     let owner = this.owner
-    if (item instanceof Ability && owner[ABILITY_LEARN]) {
+    if (skill instanceof Ability && owner[ABILITY_LEARN]) {
       // 取得能力
-      owner[ABILITY_LEARN].learn(item)
+      owner[ABILITY_LEARN].learn(skill)
       return
     }
-    let key = item.toString()
+    let key = skill.toString()
     let firstEmptySlot
-    let found = this.bags.some((bag, bi) => {
-      return bag.some((slot, si) => {
-        // 暫存第一個空格
-        if (!slot && !firstEmptySlot) {
-          firstEmptySlot = {si, bi}
-        }
-        // 物品疊加(同類型)
-        if (slot && slot.item.toString() === key) {
-          slot.count += count
-          return true
-        }
-        return false
-      })
+    let found = this.bags.some((slot, si) => {
+      // 暫存第一個空格
+      if (slot === undefined && firstEmptySlot === undefined) {
+        firstEmptySlot = si
+      }
+      // 技能升級(同類型)
+      if (slot && slot.skill.toString() === key &&
+        skill.level > slot.skill.level) {
+        this.bags[si] = newSlot(skill, count)
+        return true
+      }
+      return false
     })
     if (!found) {
-      if (!firstEmptySlot) {
+      if (firstEmptySlot === undefined) {
         // 沒有空格可放物品
-        owner.say('no empty slot for new item got.')
+        owner.say('no empty slot for new skill got.')
         return
       }
       // 放入第一個空格
-      this.bags[firstEmptySlot.bi][firstEmptySlot.si] = newSlot(item, count)
+      this.bags[firstEmptySlot] = newSlot(skill, count)
     }
-    owner.emit('inventory-modified', item)
+    owner.emit('inventory-modified', skill)
   }
 
   getSlotItem (slotInx) {
-    let bi
     let si
     // 照著包包加入順序查找
-    let found = this.bags.find((bag, b) => {
-      bi = b
-      return bag.find((slot, s) => {
-        si = s
-        return slotInx-- === 0
-      })
+    let found = this.bags.find((slot, s) => {
+      si = s
+      return slotInx-- === 0
     })
-    let item
+    let skill
     if (found) {
-      found = this.bags[bi][si]
-      item = found.item
+      found = this.bags[si]
+      skill = found.skill
       // 取出後減一
       if (--found.count === 0) {
-        this.bags[bi][si] = undefined
+        this.bags[si] = undefined
       }
-      this.owner.emit('inventory-modified', item)
+      this.owner.emit('inventory-modified', skill)
     }
-    return item
+    return skill
   }
 
-  getItemByType (type) {
-    let bi
-    let si
-    let found = this.bags.find((bag, b) => {
-      bi = b
-      return bag.find((slot, s) => {
-        si = s
-        return slot && slot.item instanceof type
-      })
-    })
-    let item
+  getCurrent () {
+    let found = this.bags[this.current]
+    let skill
     if (found) {
-      found = this.bags[bi][si]
-      item = found.item
+      skill = found.skill
       // 取出後減一
       if (--found.count === 0) {
-        this.bags[bi][si] = undefined
+        this.bags[this.current] = undefined
       }
-      this.owner.emit('inventory-modified', item)
+      this.owner.emit('inventory-modified', skill)
     }
-    return item
+    return skill
+  }
+
+  setCurrent (current) {
+    this.current = current
   }
 
   toString () {

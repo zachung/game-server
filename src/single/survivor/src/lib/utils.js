@@ -9,7 +9,7 @@ import IronFence from '../objects/IronFence'
 import Root from '../objects/Root'
 import Tree from '../objects/Tree'
 import GrassDecorate1 from '../objects/GrassDecorate1'
-import Bullet from '../objects/Bullet'
+import FireBolt from '../objects/skills/FireBolt'
 import WallShootBolt from '../objects/WallShootBolt'
 
 import Move from '../objects/abilities/Move'
@@ -27,7 +27,7 @@ const ItemsStay = [
 ]
 // 0x0100 ~ 0x01ff
 const ItemsOther = [
-  Treasure, Door, Torch, GrassDecorate1, Bullet, WallShootBolt
+  Treasure, Door, Torch, GrassDecorate1, FireBolt, WallShootBolt
 ]
 // 0x0200 ~ 0x02ff
 const Abilities = [

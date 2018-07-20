@@ -1,19 +1,18 @@
 import Texture from '../lib/Texture'
 import GameObject from './GameObject'
-import { REPLY } from '../config/constants'
+import { REPLY, ABILITY_MANA } from '../config/constants'
 
 import Learn from './abilities/Learn'
 import Move from '../objects/abilities/Move'
 import KeyMove from '../objects/abilities/KeyMove'
 import Camera from '../objects/abilities/Camera'
 import Carry from '../objects/abilities/Carry'
-import Place from '../objects/abilities/Place'
-import KeyPlace from '../objects/abilities/KeyPlace'
 import Fire from '../objects/abilities/Fire'
 import KeyFire from '../objects/abilities/KeyFire'
 import Rotate from '../objects/abilities/Rotate'
 import Health from '../objects/abilities/Health'
-import Bullet from '../objects/Bullet'
+import Mana from '../objects/abilities/Mana'
+import FireBolt from '../objects/skills/FireBolt'
 
 class Cat extends GameObject {
   constructor () {
@@ -23,24 +22,30 @@ class Cat extends GameObject {
     new Learn().carryBy(this)
       .learn(new Move([1]))
       .learn(new KeyMove())
-      .learn(new Place())
-      .learn(new KeyPlace())
       .learn(new Camera(5))
       .learn(carry)
-      .learn(new Fire([2]))
+      .learn(new Fire())
       .learn(new Rotate())
       .learn(new KeyFire())
-      .learn(new Health(10))
+      .learn(new Health(20))
+      .learn(new Mana(20))
 
-    let bullet = new Bullet()
-    carry.take(bullet, Infinity)
+    carry.take(new FireBolt(0), Infinity)
   }
 
   get type () { return REPLY }
 
   bodyOpt () {
     return {
+      collisionFilter: {
+        category: 0b1,
+        mask: 0b111
+      }
     }
+  }
+
+  tick (delta) {
+    this[ABILITY_MANA].tick(delta)
   }
 
   toString () {

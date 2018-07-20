@@ -7,7 +7,7 @@ import Learn from './abilities/Learn'
 import Carry from '../objects/abilities/Carry'
 import Fire from '../objects/abilities/Fire'
 import Health from '../objects/abilities/Health'
-import Bullet from '../objects/Bullet'
+import FireBolt from '../objects/skills/FireBolt'
 
 class WallShootBolt extends GameObject {
   constructor (treasures) {
@@ -16,12 +16,11 @@ class WallShootBolt extends GameObject {
 
     let carry = new Carry(3)
     new Learn().carryBy(this)
-      .learn(new Fire([3]))
+      .learn(new Fire())
       .learn(carry)
       .learn(new Health(10))
 
-    let bullet = new Bullet()
-    carry.take(bullet, Infinity)
+    carry.take(new FireBolt(0), Infinity)
 
     this.life = 0
     this.on('collide', this.actionWith.bind(this))
@@ -46,7 +45,7 @@ class WallShootBolt extends GameObject {
 
   tick (delta) {
     this.life++
-    if (this.life % 30 !== 0) {
+    if (this.life % 10 !== 0) {
       return
     }
     this.life = 0
