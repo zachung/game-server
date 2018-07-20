@@ -5,17 +5,11 @@ import messages from '../lib/Messages'
 
 function onScale () {
   this.scale.copy(this.scaleEx)
-  if (this.body) {
-    Body.scale(this.body, this.scaleEx.x, this.scaleEx.y)
-  }
 }
 
 function onPosition () {
   let position = this.positionEx
   this.position.copy(position)
-  if (this.body) {
-    this.body.position.copy(position)
-  }
 }
 
 function bodyOpt () {
@@ -26,21 +20,21 @@ function bodyOpt () {
   let frictionAir = (moveAbility && moveAbility.frictionAir !== undefined)
     ? moveAbility.frictionAir
     : 0.01
-  let mass = this.mass ? this.mass : 1
+  let density = this.density ? this.density : 0.001
   return {
     isStatic: this.type === STAY,
     friction,
     frictionAir,
     frictionStatic: friction,
-    mass
+    density
   }
 }
 
 class GameObject extends Sprite {
   constructor (...args) {
     super(...args)
-    this.scaleEx = this.scale // new ObservablePoint(onScale, this)
-    this.positionEx = this.position // new ObservablePoint(onPosition, this)
+    this.scaleEx = new ObservablePoint(onScale, this)
+    this.positionEx = new ObservablePoint(onPosition, this)
   }
   get type () { return STATIC }
 

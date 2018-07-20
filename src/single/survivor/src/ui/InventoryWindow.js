@@ -37,8 +37,7 @@ class Slot extends Container {
     let maxSide = Math.max(sprite.width, sprite.height)
     let scale = width / maxSide
     sprite.scale.set(scale)
-    sprite.anchor.set(0.5, 0.5)
-    sprite.position.set(width / 2, height / 2)
+    sprite.position.set(width / 2 - sprite.width / 2, height / 2 - sprite.height / 2)
     this.addChild(sprite)
 
     // 數量
@@ -99,6 +98,15 @@ class InventoryWindow extends Window {
     this.slotContainers = []
     for (var i = 0; i < slotCount; i++) {
       let slot = new Slot(ceilOpt)
+      let key = SLOTS[i]
+      let press = () => {
+        keyboardJS.pressKey(key)
+        keyboardJS.releaseKey(key)
+      }
+      slot.interactive = true
+      // tap for switch skill
+      slot.on('click', press)
+      slot.on('tap', press)
       this.addChild(slot)
       this.slotContainers.push(slot)
       ceilOpt.y += ceilSize + padding

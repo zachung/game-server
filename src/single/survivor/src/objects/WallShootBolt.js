@@ -45,7 +45,7 @@ class WallShootBolt extends GameObject {
 
   tick (delta) {
     this.life++
-    if (this.life % 10 !== 0) {
+    if (this.life % 3 !== 0) {
       return
     }
     this.life = 0

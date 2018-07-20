@@ -60,7 +60,10 @@ class Move extends Ability {
     if (!owner.body) {
       return
     }
-    owner.body.world.forcesWaitForApply.push({owner, vector})
+    if (!owner.body.isSensor) {
+      // sensor 不會受力
+      owner.body.world.forcesWaitForApply.push({owner, vector})
+    }
   }
 
   // 移動到點

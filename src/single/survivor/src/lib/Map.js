@@ -3,6 +3,7 @@ import { Container, display } from './PIXI'
 import { STAY, STATIC, REPLY, CEIL_SIZE, ABILITY_KEY_FIRE, ABILITY_KEY_MOVE, ABILITY_ROTATE } from '../config/constants'
 import { instanceByItemId } from './utils'
 import MapWorld from '../lib/MapWorld'
+import globalEventManager from '../lib/globalEventManager'
 
 let isGameOver = false
 
@@ -29,8 +30,6 @@ const objectEvent = {
 class Map extends Container {
   constructor () {
     super()
-    this.ceilSize = CEIL_SIZE
-
     this.objects = {
       [STATIC]: [],
       [STAY]: [],
@@ -49,6 +48,7 @@ class Map extends Container {
     this.mapWorld = new MapWorld()
 
     this.willRemoved = []
+    this.life = 0
   }
 
   load (mapData) {
@@ -57,19 +57,15 @@ class Map extends Container {
     let rows = mapData.rows
     let items = mapData.items
 
-    let ceilSize = this.ceilSize
-
     let addGameObject = (i, j, id, params) => {
       let o = instanceByItemId(id, params)
-      this.addGameObject(o, i * ceilSize, j * ceilSize)
+      this.addGameObject(o, i * CEIL_SIZE, j * CEIL_SIZE)
       return [o, i, j]
     }
 
     let registerOn = ([o, i, j]) => {
       o.on('use', () => this.emit('use', o))
       o.on('addObject', objectEvent.addObject.bind(this, o))
-      // TODO: remove map item
-      // delete items[i]
       return [o, i, j]
     }
 
@@ -84,7 +80,7 @@ class Map extends Container {
     })
   }
 
-  addPlayer (player, toPosition) {
+  addPlayer (player, [i, j]) {
     // 註冊事件
     Object.entries(objectEvent).forEach(([eventName, handler]) => {
       let eInstance = handler.bind(this, player)
@@ -92,10 +88,7 @@ class Map extends Container {
       player.once('removed', player.off.bind(player, eventName, eInstance))
     })
     // 新增至地圖上
-    this.addGameObject(
-      player,
-      toPosition[0] * this.ceilSize,
-      toPosition[1] * this.ceilSize)
+    this.addGameObject(player, i * CEIL_SIZE, j * CEIL_SIZE)
 
     // player 置頂顯示
     player.parentGroup = this.playerGroup
@@ -112,8 +105,11 @@ class Map extends Container {
     this.mapWorld.update(delta)
     this.willRemoved.forEach(child => {
       this.map.removeChild(child)
-      // child.destroy()wadwa
     })
+    this.life += delta
+    if (this.life % 10 < 1) {
+      globalEventManager.emit('fire')
+    }
   }
 
   addGameObject (o, x = undefined, y = undefined) {

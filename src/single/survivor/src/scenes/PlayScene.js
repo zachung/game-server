@@ -11,7 +11,6 @@ import PlayerWindow from '../ui/PlayerWindow'
 import InventoryWindow from '../ui/InventoryWindow'
 import TouchDirectionControlPanel from '../ui/TouchDirectionControlPanel'
 import TouchOperationControlPanel from '../ui/TouchOperationControlPanel'
-import globalEventManager from '../lib/globalEventManager'
 
 let sceneWidth
 let sceneHeight
@@ -85,9 +84,6 @@ class PlayScene extends Scene {
     this.loadMap()
     this.initPlayer()
     this.initUi()
-    // setInterval(() => {
-    //   globalEventManager.emit('fire')
-    // }, 100)
   }
 
   initUi () {

@@ -1,29 +1,51 @@
+import { Container } from '../../lib/PIXI'
 import Skill from './Skill'
 import Texture from '../../lib/Texture'
 import Bullet from '../Bullet'
 import Vector from '../../lib/Vector'
-import { ABILITY_ROTATE, ABILITY_MOVE } from '../../config/constants'
+import { ABILITY_ROTATE } from '../../config/constants'
 import { calcApothem } from '../../lib/utils'
 
+const PI2 = Math.PI * 2
 const levels = [
-  // cost, hp, reactForce, speed, damage, force, scale
-  [0.2, 1, 0.001, 6, 1, 0.01],
-  [2, 3, 0.005, 10, 3, 5, 2]
+  // cost, boltCount, hp, reactForce, speed, damage, force, scale
+  [0.8, 8, 1, 6, 1, 0.01],
+  [0.8, 16, 3, 10, 3, 5, 2]
 ]
 
-class FireBolt extends Skill {
+class FireStar extends Skill {
   sprite () {
-    return Skill.sprite(Texture.Bullet)
+    let container = new Container()
+    let bullets = []
+    let [ , boltCount ] = levels[this.level]
+    for (let rad = 0, maxRad = PI2; rad < maxRad; rad += PI2 / boltCount) {
+      let bullet = Skill.sprite(Texture.Bullet)
+      bullet.anchor.set(0.3, 0.5)
+      bullet.rotation = rad
+      bullet.position.set(bullet.width * 0.7, bullet.width * 0.7)
+      bullets.push(bullet)
+    }
+
+    container.addChild(...bullets)
+
+    return container
   }
 
   // 建立實體並釋放
   cast ({caster, rad = undefined}) {
-    let [ cost, hp, reactForce, speed = 1, damage = 1, force = 0, scale = 1 ] = levels[this.level]
+    let [ cost, boltCount, hp, speed = 1, damage = 1, force = 0, scale = 1 ] = levels[this.level]
     if (!this._cost(caster, cost)) {
       return
     }
-    let bullet = new Bullet({speed, damage, force, hp})
 
+    for (let rad = 0, maxRad = PI2; rad < maxRad; rad += PI2 / boltCount) {
+      let bullet = new Bullet({speed, damage, force, hp})
+      bullet.scale.set(scale)
+      this._genBullet(caster, bullet, rad)
+    }
+  }
+
+  _genBullet (caster, bullet, rad) {
     // set direction
     if (rad === undefined) {
       // 如果沒指定方向，就用目前面對方向
@@ -31,7 +53,6 @@ class FireBolt extends Skill {
       rad = rotateAbility ? rotateAbility.faceRad : 0
     }
     let vector = Vector.fromRadLength(rad, 1)
-    bullet.scale.set(scale)
     bullet.setOwner(caster)
 
     // set position
@@ -44,19 +65,14 @@ class FireBolt extends Skill {
 
     bullet.once('added', () => {
       bullet.setDirection(vector)
-
-      let moveAbility = caster[ABILITY_MOVE]
-      if (moveAbility) {
-        moveAbility.punch(vector.clone().setLength(reactForce).invert())
-      }
     })
 
     caster.emit('addObject', bullet)
   }
 
   toString () {
-    return 'FireBolt'
+    return 'FireStar'
   }
 }
 
-export default FireBolt
+export default FireStar

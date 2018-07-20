@@ -7,15 +7,13 @@ import Move from '../objects/abilities/Move'
 import Health from '../objects/abilities/Health'
 import Damage from '../objects/abilities/Damage'
 
-const HealthPoint = 1
-
 class Bullet extends GameObject {
-  constructor ({speed = 1, damage = 1, force = 0} = {}) {
+  constructor ({speed = 1, damage = 1, force = 0, hp = 1} = {}) {
     super(Texture.Bullet)
 
     new Learn().carryBy(this)
       .learn(new Move([speed, 0]))
-      .learn(new Health(HealthPoint))
+      .learn(new Health(hp))
       .learn(new Damage([damage, force]))
 
     this.on('collide', this.actionWith.bind(this))
@@ -42,8 +40,10 @@ class Bullet extends GameObject {
     }
     let damageAbility = this[ABILITY_DAMAGE]
     damageAbility.effect(operator)
-    // 自我毀滅
-    this.onDie()
+    // 對方不是 sensor(代表實體物件, i.e. Wall/Player)，自我毀滅
+    if (!operator.bodyOpt().isSensor) {
+      this.onDie()
+    }
   }
 
   onDie () {

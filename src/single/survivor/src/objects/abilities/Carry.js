@@ -27,13 +27,14 @@ class Carry extends Ability {
   }
 
   // 暫時沒有限制施放次數
-  take (skill, count = Infinity) {
+  take (skill, count) {
     let owner = this.owner
     if (skill instanceof Ability && owner[ABILITY_LEARN]) {
       // 取得能力
       owner[ABILITY_LEARN].learn(skill)
       return
     }
+    count = count === -1 ? Infinity : count
     let key = skill.toString()
     let firstEmptySlot
     let found = this.bags.some((slot, si) => {
