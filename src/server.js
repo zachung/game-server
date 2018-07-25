@@ -35,6 +35,10 @@ app.use('/', (function () {
 {
   name: 'tower-defence',
   index: 'tower_defence/index'
+},
+{
+  name: 'webrtc-chat',
+  index: 'webrtc_chat/index'
 }
 ].forEach(game => {
   let name = '/' + game.name

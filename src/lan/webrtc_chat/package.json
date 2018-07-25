@@ -1,13 +1,14 @@
 {
-  "name": "lan_game",
+  "name": "webrtc",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
   "dependencies": {
     "keyboardjs": "^2.4.1",
     "matter-js": "^0.14.2",
-    "ngraph.graph": "0.0.14",
-    "ngraph.path": "^1.0.2"
+    "simple-peer": "^9.1.2",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -25,7 +26,8 @@
     "watchify": "^3.11.0"
   },
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "server": "node src/server.js"
   },
   "author": "",
   "license": "ISC"

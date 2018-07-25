@@ -9,8 +9,6 @@ import browserify from 'browserify'
 import babelify from 'babelify'
 import assign from 'lodash.assign'
 
-const pubDir = '../../../public/games/survivor'
-
 // https://segmentfault.com/a/1190000003770541
 
 const paths = {
@@ -57,14 +55,7 @@ export function scripts () {
     .pipe(gulp.dest(paths.scripts.dest)) // save .min.js
 }
 
-function moveToIndex () {
-  // move all public files to parent
-  return gulp
-    .src(['public/**/*'])
-    .pipe(gulp.dest(pubDir))
-}
-
-const buildAndMove = gulp.series(scripts, moveToIndex)
+const buildAndMove = gulp.series(scripts)
 gulp.task('build', buildAndMove)
 
 export function watch () {
