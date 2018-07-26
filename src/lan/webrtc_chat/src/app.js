@@ -64,6 +64,8 @@ sendButton.addEventListener('click', () => {
   let msg = messageInput.value
   let to = toNameInput.value
   let spanContainer = document.createElement('span')
+  let msgContainer = document.createElement('span')
+  msgContainer.textContent = msg
   if (to !== '') {
     // 給單人
     let isSuccess = room.sendToSinglePeer(CHAT_PRIVATE_MESSAGE, to, msg)
@@ -74,12 +76,13 @@ sendButton.addEventListener('click', () => {
     spanContainer.appendChild(document.createTextNode('to'))
     spanContainer.appendChild(getNameLabel(to))
     spanContainer.style.color = PRIVATE_MESSAGE_COLOR
+    msgContainer.style.color = PRIVATE_MESSAGE_COLOR
   } else {
     // 給所有人
     room.sendToPeers(CHAT_MESSAGE, msg)
     spanContainer.appendChild(document.createTextNode('me'))
   }
-  addChatChild(document.createTextNode(msg), spanContainer)
+  addChatChild(msgContainer, spanContainer)
 
   // 清空輸入
   messageInput.value = ''
@@ -142,13 +145,14 @@ function onPeerLeaved (name) {
 }
 
 function addChatMessage (name, msg, isPrivate = false) {
-  let span = document.createElement('span')
+  let msgContainer = document.createElement('span')
   let nameLabel = getNameLabel(name)
+  msgContainer.textContent = msg
   if (isPrivate) {
     nameLabel.style.color = PRIVATE_MESSAGE_COLOR
+    msgContainer.style.color = PRIVATE_MESSAGE_COLOR
   }
-  span.appendChild(document.createTextNode(msg))
-  addChatChild(document.createTextNode(msg), nameLabel)
+  addChatChild(msgContainer, nameLabel)
 }
 
 function addChatChild (msgChild, nameChild = null) {
