@@ -20,9 +20,11 @@ const CHAT_PRIVATE_MESSAGE = 'chat-private-message'
 const IS_READY = 'is-ready'
 
 const PRIVATE_MESSAGE_COLOR = 'fuchsia'
+const ERROR_COLOR = 'red'
 
 // TODO: sort peers
-// TODO: host can't be ready unless everyone is ready
+// TODO: leave room
+// TODO: virtual peer of self
 
 let room = new Room()
 room.on(E.ROOM_CREATED, name => {
@@ -33,14 +35,22 @@ room.on(E.ROOM_CREATED, name => {
   myName.value = name
 })
 room.on(E.ROOM_CLOSED, () => addSystemMessage('Room closed.'))
+room.on(E.ROOM_ERROR, error => {
+  // 房間出現錯誤，解鎖
+  lockRoom(false)
+  addSystemMessage(error, ERROR_COLOR)
+})
 // peers events
 room.peersOn(CHAT_MESSAGE, (name, msg) =>
   addChatMessage(name, msg))
 room.peersOn(CHAT_PRIVATE_MESSAGE, (name, msg) =>
   addChatMessage(name, msg, true))
 room.peersOn(IS_READY, (name, isReady) => {
+  console.log(isReady)
   let isReadyCheckbox = document.getElementById('checkbox-peer-' + name)
   isReadyCheckbox.checked = isReady
+  // check all peers ready
+  checkAllPeersReady()
 })
 
 hostButton.addEventListener('click', () => {
@@ -91,6 +101,8 @@ isReadyButton.addEventListener('click', () => {
   let isReady = !isReadyButton.isReady
   isReadyButton.isReady = isReady
   room.sendToPeers(IS_READY, isReady)
+  // check all peers ready
+  checkAllPeersReady()
 })
 // prevent default
 messageForm.addEventListener('submit', e => e.preventDefault())
@@ -166,16 +178,16 @@ function addChatChild (msgChild, nameChild = null) {
   chatMessages.insertBefore(li, chatMessages.firstChild)
 }
 
-function addSystemMessage (msg) {
+function addSystemMessage (msg, color = 'yellowgreen') {
   let span = document.createElement('span')
-  span.style.color = 'yellowgreen'
+  span.style.color = color
   span.textContent = msg
   addChatChild(span)
 }
 
-function lockRoom () {
-  hostButton.disabled = true
-  joinButton.disabled = true
+function lockRoom (isLock = true) {
+  hostButton.disabled = isLock
+  joinButton.disabled = isLock
   let name = myName.value
   if (name === '') {
     // 隨機產生用戶代號
@@ -183,9 +195,17 @@ function lockRoom () {
   }
   room.setMyName(myName.value)
   // 禁止更改名字
-  myName.readOnly = true
+  myName.readOnly = isLock
   // 禁止更改房號
-  roomInput.readOnly = true
+  roomInput.readOnly = isLock
+}
+
+function checkAllPeersReady () {
+  let allChecked = !Array.from(document.querySelectorAll('[id^="checkbox-peer"]'))
+    .some(checkbox => !checkbox.checked)
+  if (allChecked && isReadyButton.isReady) {
+    addSystemMessage('all peers is ready.')
+  }
 }
 
 function guidGenerator () {

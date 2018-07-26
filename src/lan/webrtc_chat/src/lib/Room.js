@@ -10,7 +10,8 @@ const E = {
   PEER_JOINED: 'peer-joined',
   PEER_LEAVED: 'peer-leaved',
   ROOM_CREATED: 'room-created',
-  ROOM_CLOSED: 'room-closed'
+  ROOM_CLOSED: 'room-closed',
+  ROOM_ERROR: 'room-error'
 }
 
 const PE = {
@@ -59,6 +60,9 @@ class Room extends EventEmitter {
     }
     let holder = new PeerHostSocket(this.myName)
     holder.join(roomId, onHostPeerConnected)
+      .catch(e => {
+        this.emit(E.ROOM_ERROR, e)
+      })
   }
 
   _onPeerAdd (peer) {
