@@ -4,36 +4,32 @@ class CustomPeer extends EventEmitter {
   // 通訊協定
   constructor (peer) {
     super()
-    let myName = peer.myName
-
     peer.on('close', () => {
       this.emit('close')
     })
     peer.on('data', json => {
       try {
-        let { myName, type, data } = JSON.parse(json)
+        let { type, data } = JSON.parse(json)
         // console.log('receive', type)
-        this.emit(type, data, myName)
+        this.emit(type, data, peer.otherName)
       } catch (e) {
         console.error('data parse error', e)
       }
     })
 
     this._peer = peer
-    this.myName = myName
+    this.myName = peer.myName
     this.otherName = peer.otherName
   }
 
   // local to remote
   send (messageType, data = {}) {
-    let { _peer, myName } = this
     let str = JSON.stringify({
-      myName,
       type: messageType,
       data
     })
     // console.log('send', messageType)
-    _peer.send(str)
+    this._peer.send(str)
   }
 
   off (...args) {

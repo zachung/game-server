@@ -1,25 +1,36 @@
+function guidGenerator () {
+  return (((1 + Math.random()) * 10000) | 0).toString(10).substring(1)
+}
+
 class Room {
-  constructor (client) {
-    let roomId = client.id
-    let name = client.id
-    client.roomId = roomId
-    client.name = name
-    this.roomId = roomId
+  constructor (client, myName) {
+    this.roomId = client.id
     this.host = client
     this.clients = {}
-    this.clients[name] = client
+    this._decorateClient(client, myName)
   }
 
-  join (client) {
-    let name = client.id
-    client.name = name
+  join (client, myName) {
+    this._decorateClient(client, myName)
+    this.host.emit('join', client.myName)
+  }
+
+  _decorateClient (client, myName) {
+    // 注意名稱衝突
+    if (this.isNameDuplicated(myName)) {
+      myName += '#' + guidGenerator()
+    }
+    client.myName = myName
     client.roomId = this.roomId
-    this.host.emit('join', name)
-    this.clients[name] = client
+    this.clients[myName] = client
+  }
+
+  isNameDuplicated (myName) {
+    return Object.values(this.clients).some(client => client.myName === myName)
   }
 
   signal (from, to, signal) {
-    let isHost = from === this.host.name
+    let isHost = from === this.host.myName
     let eventName = isHost ? 'signal-host' : 'signal-join'
     this.clients[to].emit(eventName, {signal, otherName: from})
   }
@@ -60,17 +71,17 @@ class Hosts {
 
     let roomId = client.roomId
     let room = this._getRoom(roomId)
-    room.signal(client.name, name, signal)
+    room.signal(client.myName, name, signal)
   }
 
-  joinRoom (client, roomId) {
+  joinRoom (client, myName, roomId) {
     // let host know this new client want join
-    this._getRoom(roomId).join(client)
+    this._getRoom(roomId).join(client, myName)
   }
 
-  createRoom (client) {
+  createRoom (client, myName) {
     // add record
-    let room = new Room(client)
+    let room = new Room(client, myName)
     let roomId = room.roomId
     this.rooms[roomId] = room
     return roomId
@@ -82,22 +93,29 @@ class Hosts {
   }
 }
 
-function register (io) {
-  const hosts = new Hosts()
+const hosts = new Hosts()
 
+let isRegistered = false
+
+function register (io) {
+  if (isRegistered) {
+    return
+  }
+  isRegistered = true
   io.on('connection', function (client) {
     // join: broadcast for peers which in room
-    client.on('join', (roomId, handler) => {
+    client.on('join', (roomId, myName, cb) => {
       try {
-        hosts.joinRoom(client, roomId)
+        hosts.joinRoom(client, myName, roomId)
+        cb(null, client.myName)
       } catch (e) {
-        handler(e.message)
+        cb(e.message)
       }
     })
     // host: create room
-    client.on('host', fn => {
+    client.on('host', (myName, cb) => {
       client.isHost = true
-      fn(hosts.createRoom(client))
+      cb(hosts.createRoom(client, myName))
     })
 
     client.on('signal', (signalData, handler) => {

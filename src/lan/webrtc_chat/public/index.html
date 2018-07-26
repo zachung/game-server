@@ -11,18 +11,25 @@
 </head>
 <body>
   <div>
+    <input id="my_name" placeholder="your name">
     <button id="host">Host</button>
     <button id="join">Join</button>
     <br />
-    <input type="text" id="roomId"></input>
-    <button id="copyButton">Copy</button>
-    <p id="errorText"></p>
-    <ul id="peersUl"></ul>
-  </div>
-  <div>
-    <button id="send">Send</button>
+    <input type="text" id="room_id" placeholder="room id">
+    <button id="copy_button">Copy room id</button>
+    <p id="error_text"></p>
+    <ul id="peers_ul"></ul>
   </div>
   <hr>
+  <div id="message_container">
+    <form id="message_form">
+      <input type="text" id="to_name" placeholder="to all" style="width: 5em">
+      <input type="text" id="message">
+      <button id="send" type="submit">Send</button>
+    </form>
+    <ul id="chat_messages"></ul>
+  </div>
+  <button id="is_ready">Ready</button>
   <script src="/webrtc-chat/js/bundle.min.js"></script>
 </body>
 </html>

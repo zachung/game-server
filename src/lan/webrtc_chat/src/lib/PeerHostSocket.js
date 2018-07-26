@@ -13,58 +13,66 @@ import io from 'socket.io-client'
  *   signal set: I already to link
  */
 class PeerHostSocket {
-  static _getExchanger (onPeerConnected) {
+  constructor (myName) {
+    this.myName = myName
+  }
+
+  _getExchanger (onPeerConnected) {
     let socket = io(window.location.toString())
-    socket.on('connect', () => console.log('my name is: ' + socket.id))
-    socket.on('join', PeerHostSocket._onJoin.bind(socket, onPeerConnected))
-    socket.on('signal-join', PeerHostSocket._onSignalJoin.bind(socket))
-    socket.on('signal-host', PeerHostSocket._onSignalHost.bind(socket, onPeerConnected))
+    socket.on('join', PeerHostSocket._onJoin.bind(this, socket, onPeerConnected))
+    socket.on('signal-join', PeerHostSocket._onSignalJoin.bind(this, socket))
+    socket.on('signal-host', PeerHostSocket._onSignalHost.bind(this, socket, onPeerConnected))
+    socket.myName = this.myName
     return socket
   }
 
-  static host (onRoomCreated, onPeerConnected) {
+  host (onRoomCreated, onPeerConnected) {
     return new Promise((resolve, reject) => {
-      let exchanger = PeerHostSocket._getExchanger(onPeerConnected)
-      exchanger.on('connect', PeerHostSocket._onConnect.bind(exchanger, onRoomCreated))
+      let exchanger = this._getExchanger(onPeerConnected)
+      exchanger.on('connect', () => {
+        exchanger.emit('host', this.myName, onRoomCreated)
+      })
       resolve(exchanger)
     })
   }
 
-  static join (roomId, onPeerConnected) {
+  join (roomId, onPeerConnected) {
     return new Promise((resolve, reject) => {
-      let exchanger = PeerHostSocket._getExchanger(onPeerConnected)
-      exchanger.emit('join', roomId, reject)
-      resolve(exchanger)
+      let exchanger = this._getExchanger(onPeerConnected)
+      exchanger.emit('join', roomId, this.myName, (err, myName) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        // server 有可能會更改名字，所以要接受新名字
+        exchanger.myName = myName
+        resolve(exchanger)
+      })
     })
   }
 
-  static _onConnect (onRoomCreated) {
-    this.emit('host', onRoomCreated)
-  }
-
-  static _onJoin (onPeerConnected, otherName) {
+  static _onJoin (exchanger, onPeerConnected, otherName) {
     console.log('hosting for ' + otherName)
     // new node want join
-    let p = PeerHostSocket._createPeer(true, this, otherName)
+    let p = PeerHostSocket._createPeer(true, exchanger, otherName)
     p.on('connect', () => {
       console.log('new peer connected')
       onPeerConnected(new CustomPeer(p))
     })
-    this.p = p
+    exchanger.p = p
   }
 
-  static _onSignalJoin ({signal, otherName}) {
-    let { p } = this
-    p.signal(signal)
+  static _onSignalJoin (exchanger, {signal, otherName}) {
+    exchanger.p.signal(signal)
   }
 
-  static _onSignalHost (onPeerConnected, {signal, otherName}) {
+  static _onSignalHost (exchanger, onPeerConnected, {signal, otherName}) {
     console.log('joining ' + otherName)
 
-    let p = PeerHostSocket._createPeer(false, this, otherName)
+    let p = PeerHostSocket._createPeer(false, exchanger, otherName)
     p.on('connect', () => {
       // peer connected, close exchanger
-      this.close()
+      exchanger.close()
       onPeerConnected(new CustomPeer(p))
     })
     p.signal(signal)
@@ -74,7 +82,8 @@ class PeerHostSocket {
     let p = new SimplePeer({ initiator, trickle: false })
 
     // record name of peer
-    p.myName = exchanger.id
+    p.myName = exchanger.myName
+    console.log('my name is' + p.myName)
     p.otherName = otherName
     p.on('signal', signal => {
       exchanger.emit('signal', {signal, name: p.otherName, initiator}, error => {

@@ -15,7 +15,7 @@ class PeerHostPeer extends PeerHostSocket {
   static listen (p, onPeerConnected) {
     return new Promise((resolve, reject) => {
       let emitter = new EventEmitter()
-      emitter.id = p.myName
+      emitter.myName = p.myName
       emitter.close = () => { /* blank */ }
 
       emitter.on('signal', data => {
@@ -25,9 +25,9 @@ class PeerHostPeer extends PeerHostSocket {
           : 'peer-signal-join' + name // 加上 name 避免另一邊peer同時 listen 相同事件，造成衝突
         p.send(eventName, data)
       })
-      p.on('peer-join', PeerHostSocket._onJoin.bind(emitter, onPeerConnected))
-      p.on('peer-signal-join', PeerHostSocket._onSignalJoin.bind(emitter))
-      p.on('peer-signal-host', PeerHostSocket._onSignalHost.bind(emitter, onPeerConnected))
+      p.on('peer-join', PeerHostSocket._onJoin.bind(null, emitter, onPeerConnected))
+      p.on('peer-signal-join', PeerHostSocket._onSignalJoin.bind(null, emitter))
+      p.on('peer-signal-host', PeerHostSocket._onSignalHost.bind(null, emitter, onPeerConnected))
     })
   }
 }
