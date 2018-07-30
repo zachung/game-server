@@ -85,8 +85,8 @@ class Room extends EventEmitter {
       }
     }
     // 給 peer 加上之前的所有事件監聽
-    this.peersOnHandlers.forEach(eventName =>
-      this._peerRegistListener(peer, eventName))
+    this.peersOnHandlers.forEach(([eventName, fn]) =>
+      this._peerOnListener(peer, eventName, fn))
     // NOTICE: peer 的 close 事件是 simple peer 內部觸發
     peer.on(PE.CLOSE, () => this.emit(LEAVED, peer))
     this.peers.push(peer)
@@ -125,18 +125,36 @@ class Room extends EventEmitter {
     // room 開始監聽此事件
     this.on(eventName, fn)
     // 給目前所有的 peer 加上事件監聽
-    this.peers.forEach(peer => this._peerRegistListener(peer, eventName))
+    this.peers.forEach(peer => this._peerOnListener(peer, eventName, fn))
     // 給之後加入的 peer 註冊
-    this.peersOnHandlers.push(eventName)
+    this.peersOnHandlers.push([eventName, fn])
+  }
+
+  peersOff (eventName, fn) {
+    this.off(eventName, fn)
+    this.peers.forEach(peer => this._peerOffListener(peer, eventName, fn))
+    let inx = this.peersOnHandlers.indexOf(eventName)
+    if (inx !== -1) {
+      this.peersOnHandlers.splice(inx, 1)
+    }
   }
 
   _getPeerEventName (eventName) {
     return 'peer-' + eventName
   }
 
-  _peerRegistListener (peer, eventName) {
-    peer.on(this._getPeerEventName(eventName),
-      (...args) => this.emit(eventName, peer.otherName, ...args))
+  _peerOnListener (peer, eventName, fn) {
+    peer[fn] = (...args) => this.emit(eventName, peer.otherName, ...args)
+    // 派發 peer 事件給 room
+    peer.on(this._getPeerEventName(eventName), peer[fn])
+  }
+
+  _peerOffListener (peer, eventName, fn) {
+    peer.off(this._getPeerEventName(eventName), peer[fn])
+  }
+
+  off (...args) {
+    this.removeListener(...args)
   }
 }
 

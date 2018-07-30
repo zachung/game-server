@@ -14,50 +14,38 @@ let messageInput = document.getElementById('message')
 let chatMessages = document.getElementById('chat_messages')
 let isReadyButton = document.getElementById('is_ready')
 let messageForm = document.getElementById('message_form')
+let startButton = document.getElementById('start')
 
 const CHAT_MESSAGE = 'chat-message'
 const CHAT_PRIVATE_MESSAGE = 'chat-private-message'
 const IS_READY = 'is-ready'
+const GAME_START = 'start'
 
 const PRIVATE_MESSAGE_COLOR = 'fuchsia'
 const ERROR_COLOR = 'red'
 
 // TODO: sort peers
 // TODO: leave room
-// TODO: virtual peer of self
 
 let room = new Room()
-room.on(E.ROOM_CREATED, name => {
-  addSystemMessage('Room connected.')
-  room.on(E.PEER_JOINED, onPeerJoined)
-  room.on(E.PEER_LEAVED, onPeerLeaved)
-  console.log('name is ' + name)
-  myName.value = name
-})
-room.on(E.ROOM_CLOSED, () => addSystemMessage('Room closed.'))
-room.on(E.ROOM_ERROR, error => {
-  // 房間出現錯誤，解鎖
-  lockRoom(false)
-  addSystemMessage(error, ERROR_COLOR)
-})
+room.on(E.ROOM_CREATED, onRoomCreated)
+room.on(E.ROOM_CLOSED, onRoomClosed)
+room.on(E.ROOM_ERROR, onRoomError)
 // peers events
-room.peersOn(CHAT_MESSAGE, (name, msg) =>
-  addChatMessage(name, msg))
-room.peersOn(CHAT_PRIVATE_MESSAGE, (name, msg) =>
-  addChatMessage(name, msg, true))
-room.peersOn(IS_READY, (name, isReady) => {
-  console.log(isReady)
-  let isReadyCheckbox = document.getElementById('checkbox-peer-' + name)
-  isReadyCheckbox.checked = isReady
-  // check all peers ready
-  checkAllPeersReady()
-})
+room.peersOn(CHAT_MESSAGE, onChatMessage)
+room.peersOn(CHAT_PRIVATE_MESSAGE, onPrivateMessage)
+room.peersOn(IS_READY, onPeerReady)
+room.peersOn(GAME_START, onStart)
 
 hostButton.addEventListener('click', () => {
   lockRoom()
   room.host(roomId => {
     roomInput.value = roomId
   })
+  // show startButton
+  startButton.style.display = 'inherit'
+  // virtual peer for myself
+  onPeerJoined(myName.value, true)
   // Then, waiting for client connect
   addSystemMessage('Waiting for other clients.')
 })
@@ -65,6 +53,10 @@ joinButton.addEventListener('click', () => {
   lockRoom()
   let roomId = roomInput.value
   room.client(roomId)
+  // virtual peer for myself
+  room.once(E.ROOM_CREATED, name => {
+    onPeerJoined(name, false)
+  })
   addSystemMessage(['Connecting to room(', roomId, ')...'].join(''))
 })
 copyButton.addEventListener('click', () => {
@@ -77,6 +69,10 @@ sendButton.addEventListener('click', () => {
   let msgContainer = document.createElement('span')
   msgContainer.textContent = msg
   if (to !== '') {
+    if (to === myName.value) {
+      addSystemMessage('You can\'t talk with yourself')
+      return
+    }
     // 給單人
     let isSuccess = room.sendToSinglePeer(CHAT_PRIVATE_MESSAGE, to, msg)
     if (!isSuccess) {
@@ -99,19 +95,12 @@ sendButton.addEventListener('click', () => {
 })
 isReadyButton.addEventListener('click', () => {
   let isReady = !isReadyButton.isReady
-  isReadyButton.isReady = isReady
-  room.sendToPeers(IS_READY, isReady)
-  // check all peers ready
-  checkAllPeersReady()
+  document.getElementById('checkbox-peer-' + myName.value).checked = isReady
+  setReady(isReady)
 })
 // prevent default
 messageForm.addEventListener('submit', e => e.preventDefault())
-
-function onConnected (p) {
-  let game = new Game(p)
-  game.start()
-  game.addPlayer()
-}
+startButton.addEventListener('click', start)
 
 function onPeerJoined (name, isHost) {
   // 新增一筆至 peer 列表
@@ -131,6 +120,7 @@ function onPeerJoined (name, isHost) {
   peersUl[name] = li
 
   addSystemMessage([name, ' joined'].join(''))
+  setReady(isReadyButton.isReady)
 }
 
 function getNameLabel (name, color = undefined) {
@@ -154,9 +144,34 @@ function onPeerLeaved (name) {
   peersUl.removeChild(li)
 
   addSystemMessage([name, ' leaved'].join(''))
+  checkAllPeersReady()
 }
 
-function addChatMessage (name, msg, isPrivate = false) {
+function onPeerReady (name, isReady) {
+  let isReadyCheckbox = document.getElementById('checkbox-peer-' + name)
+  isReadyCheckbox.checked = isReady
+  // check all peers ready
+  checkAllPeersReady()
+}
+
+function onRoomCreated (name) {
+  addSystemMessage('Room connected.')
+  room.on(E.PEER_JOINED, onPeerJoined)
+  room.on(E.PEER_LEAVED, onPeerLeaved)
+  myName.value = name
+}
+
+function onRoomClosed () {
+  addSystemMessage('Room closed.')
+}
+
+function onRoomError (error) {
+  // 房間出現錯誤，解鎖
+  lockRoom(false)
+  addSystemMessage(error, ERROR_COLOR)
+}
+
+function addChatMessage (name, msg, isPrivate) {
   let msgContainer = document.createElement('span')
   let nameLabel = getNameLabel(name)
   msgContainer.textContent = msg
@@ -203,11 +218,53 @@ function lockRoom (isLock = true) {
 function checkAllPeersReady () {
   let allChecked = !Array.from(document.querySelectorAll('[id^="checkbox-peer"]'))
     .some(checkbox => !checkbox.checked)
-  if (allChecked && isReadyButton.isReady) {
+  if (allChecked) {
     addSystemMessage('all peers is ready.')
   }
+  // set startButton enable
+  startButton.disabled = !allChecked
+  return allChecked
+}
+
+function setReady (isReady = false) {
+  isReadyButton.isReady = isReady
+  isReadyButton.innerHTML = isReady ? 'unReady' : 'Ready'
+  room.sendToPeers(IS_READY, isReady)
+  // check all peers ready
+  checkAllPeersReady()
+}
+
+function onChatMessage (name, msg) {
+  addChatMessage(name, msg, false)
+}
+
+function onPrivateMessage (name, msg) {
+  addChatMessage(name, msg, true)
 }
 
 function guidGenerator () {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+}
+
+function onStart () {
+  // clear all event before leave this page
+  room.off(E.ROOM_CREATED, onRoomCreated)
+  room.off(E.ROOM_CLOSED, onRoomClosed)
+  room.off(E.ROOM_ERROR, onRoomError)
+  room.off(E.PEER_JOINED, onPeerJoined)
+  room.off(E.PEER_LEAVED, onPeerLeaved)
+  room.peersOff(CHAT_MESSAGE, onChatMessage)
+  room.peersOff(CHAT_PRIVATE_MESSAGE, onPrivateMessage)
+  room.peersOff(IS_READY, onPeerReady)
+  room.peersOff(GAME_START, onStart)
+  // start the game
+  let game = new Game(room)
+  game.start()
+  game.initPlayers()
+}
+
+/** only host can process this function */
+function start () {
+  room.sendToPeers(GAME_START)
+  onStart()
 }
