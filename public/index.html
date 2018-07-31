@@ -12,44 +12,104 @@
 		<span>人在大廳閒晃</span>
 	</div>
 	<h3>Lan</h3>
-	<ul class="website-list">
-		<li data-label="pending...">
-			<a href="/hero-siege">hero siege</a>
-		</li>
-		<li data-label="2018/02/02">
-			<a href="/wizard-battle">wizard battle</a>
-			<span class="span-game-player-count" data-game-name="/wizard-battle"></span>
-			<span>playing</span>
-		</li>
-		<li data-label="2018/01/31">
-			<a href="/bomb-man">bomb man</a>
-			<span class="span-game-player-count" data-game-name="/bomb-man"></span>
-			<span>playing</span>
-		</li>
-		<li data-label="2018/01/24">
-			<a href="/zombie-shooter">zombie shooter</a>
-			<span class="span-game-player-count" data-game-name="/zombie-shooter"></span>
-			<span>playing</span>
-		</li>
-	</ul>
+  <div class="section-container">
+    <section>
+      <div class="title">
+        <a href="/hero-siege">hero siege</a>
+      </div>
+      <p>pending...</p>
+    </section>
+		<section>
+      <div class="title">
+        <a href="/webrtc-chat">webrtc-chat</a>
+        <span class="title-suffix">
+          <span class="last-update">2018/07/31</span>
+        </span>
+      </div>
+      <p>p2p聊天室。透過輕量的 web socket 實現 webrtc 連線，連線後即不需要 socket 支持。</p>
+		</section>
+		<section>
+      <div class="title">
+        <a href="/wizard-battle">wizard battle</a>
+        <span class="title-suffix">
+          <span class="span-game-player-count" data-game-name="/wizard-battle"></span>
+          <span>playing</span>
+          <span class="last-update">2018/02/02</span>
+        </span>
+      </div>
+      <p>巫師對決，多人射擊對抗</p>
+    </section>
+    <section>
+      <div class="title">
+        <a href="/bomb-man">bomb man</a>
+        <span class="title-suffix">
+          <span class="span-game-player-count" data-game-name="/bomb-man"></span>
+          <span>playing</span>
+          <span class="last-update">2018/01/31</span>
+        </span>
+      </div>
+      <p>粗糙的炸彈超人實作</p>
+		</section>
+		<section>
+      <div class="title">
+        <a href="/zombie-shooter">zombie shooter</a>
+        <span class="title-suffix">
+          <span class="span-game-player-count" data-game-name="/zombie-shooter"></span>
+          <span>playing</span>
+          <span class="last-update">2018/01/24</span>
+        </span>
+      </div>
+      <p>簡單的俯視平面第三人稱射擊遊戲</p>
+		</section>
+  </div>
 	<h3>Single</h3>
-	<ul class="website-list single">
-    <li data-label="2018/06/28">
-      <a href="/games/survivor/index.html">survivor</a>
-    </li>
-		<li data-label="2018/02/09">
-			<a href="/tower-defence">tower defence</a>
-		</li>
-		<li data-label="2018/01/23">
-      <a href="/games/zombie_shooter/index.html">zombie shooter</a>
-    </li>
-		<li data-label="2018/01/22">
-      <a href="/games/rect_dancer/index.html">rect dance</a>
-    </li>
-		<li data-label="2018/01/18">
-      <a href="/games/brick_breaker/index.html">brick breaker</a>
-    </li>
-	</ul>
+  <div class="section-container">
+    <section>
+      <div class="title">
+        <a href="/games/survivor/index.html">survivor</a>
+        <span class="title-suffix">
+          <span class="last-update">2018/06/28</span>
+        </span>
+      </div>
+      <p>tilemap遊戲實作。使用 pixi.js。可與地圖物件互動，投射攻擊。</p>
+    </section>
+		<section>
+      <div class="title">
+  			<a href="/tower-defence">tower defence</a>
+        <span class="title-suffix">
+          <span class="last-update">2018/02/09</span>
+        </span>
+      </div>
+      <p>塔防。7個關卡，交互介面升級塔台。</p>
+		</section>
+		<section>
+      <div class="title">
+        <a href="/games/zombie_shooter/index.html">zombie shooter</a>
+        <span class="title-suffix">
+          <span class="last-update">2018/01/23</span>
+        </span>
+      </div>
+      <p>俯視平面第三人稱射擊遊戲</p>
+    </section>
+		<section>
+      <div class="title">
+        <a href="/games/rect_dancer/index.html">rect dance</a>
+        <span class="title-suffix">
+          <span class="last-update">2018/01/22</span>
+        </span>
+      </div>
+      <p>俯視平面的閃躲遊戲。實作單一貼圖無限捲動地圖</p>
+    </section>
+		<section>
+      <div class="title">
+        <a href="/games/brick_breaker/index.html">brick breaker</a>
+        <span class="title-suffix">
+          <span class="last-update">2018/01/18</span>
+        </span>
+      </div>
+      <p>非常粗糙的打磚塊。剛開始學習 canvas</p>
+    </section>
+  </div>
   <script src="/js/socket.io.js"></script>
   <script src="/js/index.js"></script>
 </body>

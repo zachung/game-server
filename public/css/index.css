@@ -1,27 +1,28 @@
-li a {
-	font-size: 1.5em;
-	text-decoration: none;
+.section-container {
+  padding-left: 1em;
 }
 
-li span {
-	font-size: 1em;
+.last-update {
 	font-style: italic;
-}
-
-.website-list li:after {
-	content: attr(data-label);
-	position: absolute;
-	margin-top: .8em;
-	margin-left: 5px;
-	font-style: italic;
-	font-size: .3em;
 	color: red;
 }
 
-.website-list li.promo:after {
-	font-size: 1em;
-	animation: mymove .3s infinite;
-	animation-direction: alternate;
+.title-suffix {
+  font-size: .3em;
+}
+
+div.title {
+  font-size: 1.5em;
+}
+
+div.title a {
+  text-decoration: none;
+}
+
+section p {
+  border-left: 1px solid gray;
+  margin-left: 1em;
+  padding: 1em;
 }
 
 @keyframes mymove {
