@@ -1,6 +1,8 @@
 import { copyToClipboard } from './lib/utils'
 import Game from './lib/Game'
 import { default as Room, E } from './lib/Room'
+import NotifyHelper from './lib/NotifyHelper'
+import moment from 'moment'
 
 let myName = document.getElementById('my_name')
 let hostButton = document.getElementById('host')
@@ -180,6 +182,8 @@ function addChatMessage (name, msg, isPrivate) {
     msgContainer.style.color = PRIVATE_MESSAGE_COLOR
   }
   addChatChild(msgContainer, nameLabel)
+  // 顯示通知
+  NotifyHelper.notify({title: name, body: msg})
 }
 
 function addChatChild (msgChild, nameChild = null) {
@@ -190,6 +194,13 @@ function addChatChild (msgChild, nameChild = null) {
     li.appendChild(document.createTextNode(']: '))
   }
   li.appendChild(msgChild)
+
+  // 時間
+  let datetimeContainer = document.createElement('span')
+  datetimeContainer.textContent = moment().format('YYYY/MM/DD, hh:mm:ss A')
+  datetimeContainer.classList.add('msg-time')
+  li.appendChild(datetimeContainer)
+
   chatMessages.insertBefore(li, chatMessages.firstChild)
 }
 
