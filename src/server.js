@@ -3,12 +3,7 @@ var express = require('express')
 var app = express()
 var http = require('http').Server(app)
 var fs = require('fs')
-var credentials = {
-  key: fs.readFileSync('sslcert8443/example.key'),
-  cert: fs.readFileSync('sslcert8443/example.crt')
-}
-var https = require('https').createServer(credentials, app)
-var io = require('socket.io')(https)
+var io = require('socket.io')(http)
 const Lobby = require('./library/Lobby')
 const Game = require('./library/Game')
 
@@ -59,7 +54,4 @@ app.use(function (err, req, res, next) {
 
 http.listen(8080, function () {
   console.log('listening on *:8080')
-})
-https.listen(8443, function () {
-  console.log('listening on *:8443')
 })
