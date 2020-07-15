@@ -44,7 +44,7 @@ export function scripts () {
     .pipe(buffer())
     .pipe(gulp.dest(paths.scripts.dest))
 
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
 
     // optional, remove if you dont want sourcemaps

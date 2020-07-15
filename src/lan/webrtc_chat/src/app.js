@@ -2,34 +2,34 @@ import { copyToClipboard } from './lib/utils'
 import Game from './lib/Game'
 import { default as Room, E } from './lib/Room'
 import NotifyHelper from './lib/NotifyHelper'
-import moment from 'moment'
+import MessageInput from './ui/MessageInput'
+import ChatMessages from './ui/ChatMessages'
 
-let myName = document.getElementById('my_name')
-let hostButton = document.getElementById('host')
-let joinButton = document.getElementById('join')
-let copyButton = document.getElementById('copy_button')
-let roomInput = document.getElementById('room_id')
-let peersUl = document.getElementById('peers_ul')
-let sendButton = document.getElementById('send')
-let toNameInput = document.getElementById('to_name')
-let messageInput = document.getElementById('message')
-let chatMessages = document.getElementById('chat_messages')
-let isReadyButton = document.getElementById('is_ready')
-let messageForm = document.getElementById('message_form')
-let startButton = document.getElementById('start')
+const myName = document.getElementById('my_name')
+const hostButton = document.getElementById('host')
+const joinButton = document.getElementById('join')
+const copyButton = document.getElementById('copy_button')
+const roomInput = document.getElementById('room_id')
+const peersUl = document.getElementById('peers_ul')
+const sendButton = document.getElementById('send')
+const toNameInput = document.getElementById('to_name')
+const messageInput = new MessageInput(document.getElementById('message'))
+const chatMessages = new ChatMessages(document.getElementById('chat_messages'))
+const isReadyButton = document.getElementById('is_ready')
+const messageForm = document.getElementById('message_form')
+const startButton = document.getElementById('start')
 
 const CHAT_MESSAGE = 'chat-message'
 const CHAT_PRIVATE_MESSAGE = 'chat-private-message'
 const IS_READY = 'is-ready'
 const GAME_START = 'start'
 
-const PRIVATE_MESSAGE_COLOR = 'fuchsia'
 const ERROR_COLOR = 'red'
 
 // TODO: sort peers
 // TODO: leave room
 
-let room = new Room()
+const room = new Room()
 room.on(E.ROOM_CREATED, onRoomCreated)
 room.on(E.ROOM_CLOSED, onRoomClosed)
 room.on(E.ROOM_ERROR, onRoomError)
@@ -38,6 +38,20 @@ room.peersOn(CHAT_MESSAGE, onChatMessage)
 room.peersOn(CHAT_PRIVATE_MESSAGE, onPrivateMessage)
 room.peersOn(IS_READY, onPeerReady)
 room.peersOn(GAME_START, onStart)
+
+messageInput.on('paste-image', src => {
+  var img = new Image()
+  img.src = src
+  sendMessage(toNameInput.value, {
+    msg: src,
+    type: 'image'
+  })
+  document.body.appendChild(img)
+})
+chatMessages.on('click-name', name => {
+  toNameInput.value = name
+  messageInput.focus()
+})
 
 hostButton.addEventListener('click', () => {
   lockRoom()
@@ -49,54 +63,31 @@ hostButton.addEventListener('click', () => {
   // virtual peer for myself
   onPeerJoined(myName.value, true)
   // Then, waiting for client connect
-  addSystemMessage('Waiting for other clients.')
+  chatMessages.addSystemMessage('Waiting for other clients.')
 })
 joinButton.addEventListener('click', () => {
   lockRoom()
-  let roomId = roomInput.value
+  const roomId = roomInput.value
   room.client(roomId)
   // virtual peer for myself
   room.once(E.ROOM_CREATED, name => {
     onPeerJoined(name, false)
   })
-  addSystemMessage(['Connecting to room(', roomId, ')...'].join(''))
+  chatMessages.addSystemMessage(['Connecting to room(', roomId, ')...'].join(''))
 })
 copyButton.addEventListener('click', () => {
   copyToClipboard(roomInput)
 })
 sendButton.addEventListener('click', () => {
-  let msg = messageInput.value
-  let to = toNameInput.value
-  let spanContainer = document.createElement('span')
-  let msgContainer = document.createElement('span')
-  msgContainer.textContent = msg
-  if (to !== '') {
-    if (to === myName.value) {
-      addSystemMessage('You can\'t talk with yourself')
-      return
-    }
-    // 給單人
-    let isSuccess = room.sendToSinglePeer(CHAT_PRIVATE_MESSAGE, to, msg)
-    if (!isSuccess) {
-      addSystemMessage([to, ' not in this chat.'].join(''))
-      return
-    }
-    spanContainer.appendChild(document.createTextNode('to'))
-    spanContainer.appendChild(getNameLabel(to))
-    spanContainer.style.color = PRIVATE_MESSAGE_COLOR
-    msgContainer.style.color = PRIVATE_MESSAGE_COLOR
-  } else {
-    // 給所有人
-    room.sendToPeers(CHAT_MESSAGE, msg)
-    spanContainer.appendChild(document.createTextNode('me'))
-  }
-  addChatChild(msgContainer, spanContainer)
-
+  sendMessage(toNameInput.value, {
+    msg: messageInput.value,
+    type: 'text'
+  })
   // 清空輸入
   messageInput.value = ''
 })
 isReadyButton.addEventListener('click', () => {
-  let isReady = !isReadyButton.isReady
+  const isReady = !isReadyButton.isReady
   document.getElementById('checkbox-peer-' + myName.value).checked = isReady
   setReady(isReady)
 })
@@ -104,11 +95,32 @@ isReadyButton.addEventListener('click', () => {
 messageForm.addEventListener('submit', e => e.preventDefault())
 startButton.addEventListener('click', start)
 
+function sendMessage (toName, payload) {
+  if (toName === '') {
+    // 給所有人
+    room.sendToPeers(CHAT_MESSAGE, payload)
+
+    chatMessages.addChatMessage({ name: 'me', payload, isPrivate: false, isReceive: false })
+    return
+  }
+  if (toName === myName.value) {
+    chatMessages.addSystemMessage('You can\'t talk with yourself')
+    return
+  }
+  // 給單人
+  const isSuccess = room.sendToSinglePeer(CHAT_PRIVATE_MESSAGE, toName, payload)
+  if (!isSuccess) {
+    chatMessages.addSystemMessage([toName, ' not in this chat.'].join(''))
+    return
+  }
+  chatMessages.addChatMessage({ name: 'to ' + toName, payload, isPrivate: true, isReceive: false })
+}
+
 function onPeerJoined (name, isHost) {
   // 新增一筆至 peer 列表
-  let li = document.createElement('li')
-  let nameLabel = getNameLabel(name)
-  let readyCheckbox = document.createElement('input')
+  const li = document.createElement('li')
+  const nameLabel = getNameLabel(name)
+  const readyCheckbox = document.createElement('input')
 
   readyCheckbox.setAttribute('id', 'checkbox-peer-' + name)
   readyCheckbox.setAttribute('type', 'checkbox')
@@ -121,12 +133,12 @@ function onPeerJoined (name, isHost) {
   peersUl.appendChild(li)
   peersUl[name] = li
 
-  addSystemMessage([name, ' joined'].join(''))
+  chatMessages.addSystemMessage([name, ' joined'].join(''))
   setReady(isReadyButton.isReady)
 }
 
 function getNameLabel (name, color = undefined) {
-  let nameLabel = document.createElement('label')
+  const nameLabel = document.createElement('label')
   nameLabel.innerHTML = name
   // 點擊自動填入發送目標
   nameLabel.addEventListener('click', () => {
@@ -142,79 +154,48 @@ function getNameLabel (name, color = undefined) {
 }
 
 function onPeerLeaved (name) {
-  let li = peersUl[name]
+  const li = peersUl[name]
   peersUl.removeChild(li)
 
-  addSystemMessage([name, ' leaved'].join(''))
+  chatMessages.addSystemMessage([name, ' leaved'].join(''))
   checkAllPeersReady()
 }
 
 function onPeerReady (name, isReady) {
-  let isReadyCheckbox = document.getElementById('checkbox-peer-' + name)
+  const isReadyCheckbox = document.getElementById('checkbox-peer-' + name)
   isReadyCheckbox.checked = isReady
   // check all peers ready
   checkAllPeersReady()
 }
 
 function onRoomCreated (name) {
-  addSystemMessage('Room connected.')
+  chatMessages.addSystemMessage('Room connected.')
   room.on(E.PEER_JOINED, onPeerJoined)
   room.on(E.PEER_LEAVED, onPeerLeaved)
   myName.value = name
 }
 
 function onRoomClosed () {
-  addSystemMessage('Room closed.')
+  chatMessages.addSystemMessage('Room closed.')
 }
 
 function onRoomError (error) {
   // 房間出現錯誤，解鎖
   lockRoom(false)
-  addSystemMessage(error, ERROR_COLOR)
+  chatMessages.addSystemMessage(error, ERROR_COLOR)
 }
 
-function addChatMessage (name, msg, isPrivate) {
-  let msgContainer = document.createElement('span')
-  let nameLabel = getNameLabel(name)
-  msgContainer.textContent = msg
-  if (isPrivate) {
-    nameLabel.style.color = PRIVATE_MESSAGE_COLOR
-    msgContainer.style.color = PRIVATE_MESSAGE_COLOR
-  }
-  addChatChild(msgContainer, nameLabel)
+function addChatMessage ({ name, payload, isPrivate }) {
+  chatMessages.addChatMessage({ name, payload, isPrivate })
   // 顯示通知
-  NotifyHelper.notify({title: name, body: msg})
-}
-
-function addChatChild (msgChild, nameChild = null) {
-  let li = document.createElement('li')
-  if (nameChild) {
-    li.appendChild(document.createTextNode('['))
-    li.appendChild(nameChild)
-    li.appendChild(document.createTextNode(']: '))
-  }
-  li.appendChild(msgChild)
-
-  // 時間
-  let datetimeContainer = document.createElement('span')
-  datetimeContainer.textContent = moment().format('YYYY/MM/DD, hh:mm:ss A')
-  datetimeContainer.classList.add('msg-time')
-  li.appendChild(datetimeContainer)
-
-  chatMessages.insertBefore(li, chatMessages.firstChild)
-}
-
-function addSystemMessage (msg, color = 'yellowgreen') {
-  let span = document.createElement('span')
-  span.style.color = color
-  span.textContent = msg
-  addChatChild(span)
+  const body = payload.type === 'image' ? '圖片' : payload.msg
+  NotifyHelper.notify({ title: name, body })
 }
 
 function lockRoom (isLock = true) {
   hostButton.disabled = isLock
   joinButton.disabled = isLock
-  let name = myName.value
+  const name = myName.value
   if (name === '') {
     // 隨機產生用戶代號
     myName.value = guidGenerator()
@@ -227,10 +208,10 @@ function lockRoom (isLock = true) {
 }
 
 function checkAllPeersReady () {
-  let allChecked = !Array.from(document.querySelectorAll('[id^="checkbox-peer"]'))
+  const allChecked = !Array.from(document.querySelectorAll('[id^="checkbox-peer"]'))
     .some(checkbox => !checkbox.checked)
   if (allChecked) {
-    addSystemMessage('all peers is ready.')
+    chatMessages.addSystemMessage('all peers is ready.')
   }
   // set startButton enable
   startButton.disabled = !allChecked
@@ -245,12 +226,12 @@ function setReady (isReady = false) {
   checkAllPeersReady()
 }
 
-function onChatMessage (name, msg) {
-  addChatMessage(name, msg, false)
+function onChatMessage (name, payload) {
+  addChatMessage({ name, payload, isPrivate: false })
 }
 
-function onPrivateMessage (name, msg) {
-  addChatMessage(name, msg, true)
+function onPrivateMessage (name, payload, type) {
+  addChatMessage({ name, payload, isPrivate: true })
 }
 
 function guidGenerator () {
@@ -269,7 +250,7 @@ function onStart () {
   room.peersOff(IS_READY, onPeerReady)
   room.peersOff(GAME_START, onStart)
   // start the game
-  let game = new Game(room)
+  const game = new Game(room)
   game.start()
   game.initPlayers()
 }

@@ -1,5 +1,5 @@
 import { Engine, Render, World, Bodies, Body } from './Matter'
-// import keyboardJS from 'keyboardjs'
+import keyboardJS from 'keyboardjs'
 import Vector from './Vector'
 import { getRndInteger } from './utils'
 
@@ -104,25 +104,25 @@ class Game {
           type: e.type
         })
       }
-      // keyboardJS.bind(code, preHandler, e => {
-      //   dir[code] = 0
-      //   this.room.sendToPeers(KEY_IN, {
-      //     key: e.key,
-      //     type: e.type
-      //   })
-      // })
+      keyboardJS.bind(code, preHandler, e => {
+        dir[code] = 0
+        this.room.sendToPeers(KEY_IN, {
+          key: e.key,
+          type: e.type
+        })
+      })
       return preHandler
     }
 
-    // keyboardJS.setContext('ingame')
-    // keyboardJS.withContext('ingame', () => {
-    //   player[KEYS] = {
-    //     [LEFT]: bind(LEFT),
-    //     [UP]: bind(UP),
-    //     [RIGHT]: bind(RIGHT),
-    //     [DOWN]: bind(DOWN)
-    //   }
-    // })
+    keyboardJS.setContext('ingame')
+    keyboardJS.withContext('ingame', () => {
+      player[KEYS] = {
+        [LEFT]: bind(LEFT),
+        [UP]: bind(UP),
+        [RIGHT]: bind(RIGHT),
+        [DOWN]: bind(DOWN)
+      }
+    })
 
     this.timer = setInterval(calcDir, 17)
   }
