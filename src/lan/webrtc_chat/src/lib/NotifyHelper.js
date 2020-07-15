@@ -24,8 +24,11 @@ class NotifyHelper {
     })
   }
 
-  static _notify ({title, body}) {
-    new Notification(title, {body})
+  static _notify ({ title, body }) {
+    const n = new Notification(title, { body })
+    n.onshow = () => {
+      setTimeout(n.close, 5000)
+    }
   }
 }
 

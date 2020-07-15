@@ -46,7 +46,6 @@ messageInput.on('paste-image', src => {
     msg: src,
     type: 'image'
   })
-  document.body.appendChild(img)
 })
 chatMessages.on('click-name', name => {
   toNameInput.value = name
