@@ -24,7 +24,6 @@ function fetchFromPaste (clipboardData) {
 
 function fetchFromDrop (event) {
   const dataTransfer = event.dataTransfer
-  console.log(event)
   event.preventDefault()
   if (!dataTransfer) {
     return

@@ -94,23 +94,25 @@ startButton.addEventListener('click', start)
 
 function sendMessage (toName, payload) {
   if (toName === '') {
-    // 給所有人
-    room.sendToPeers(CHAT_MESSAGE, payload)
-
     chatMessages.addChatMessage({ name: 'me', payload, isPrivate: false, isReceive: false })
+      .then(() => {
+        // 給所有人
+        room.sendToPeers(CHAT_MESSAGE, payload)
+      })
     return
   }
   if (toName === myName.value) {
     chatMessages.addSystemMessage('You can\'t talk with yourself')
     return
   }
-  // 給單人
-  const isSuccess = room.sendToSinglePeer(CHAT_PRIVATE_MESSAGE, toName, payload)
-  if (!isSuccess) {
-    chatMessages.addSystemMessage([toName, ' not in this chat.'].join(''))
-    return
-  }
   chatMessages.addChatMessage({ name: 'to ' + toName, payload, isPrivate: true, isReceive: false })
+    .then(() => {
+      // 給單人
+      const isSuccess = room.sendToSinglePeer(CHAT_PRIVATE_MESSAGE, toName, payload)
+      if (!isSuccess) {
+        chatMessages.addSystemMessage([toName, ' not in this chat.'].join(''))
+      }
+    })
 }
 
 function onPeerJoined (name, isHost) {

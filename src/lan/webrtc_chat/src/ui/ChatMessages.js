@@ -4,6 +4,42 @@ import moment from 'moment'
 
 const PRIVATE_MESSAGE_COLOR = 'fuchsia'
 
+function imageMessage (msg, isReceive) {
+  const container = document.createElement('div')
+  const image = new Image()
+  image.src = msg
+  container.appendChild(image)
+  // 收到圖片，不需要判斷送出的按鈕
+  if (isReceive) {
+    return [container, li => li]
+  }
+  const ok = document.createElement('button')
+  const cancel = document.createElement('button')
+  ok.innerHTML = 'send'
+  cancel.innerHTML = 'cancel'
+  container.appendChild(ok)
+  container.appendChild(cancel)
+  const cb = li => {
+    return new Promise((resolve, reject) => {
+      cancel.addEventListener('click', e => {
+        li.remove()
+      })
+      ok.addEventListener('click', e => {
+        resolve(li)
+        ok.remove()
+        cancel.remove()
+      })
+    })
+  }
+  return [container, cb]
+}
+
+function textMessage (msg) {
+  const container = document.createElement('span')
+  container.textContent = msg
+  return [container, li => li]
+}
+
 class ChatMessages extends EventEmitter {
   constructor (ele) {
     super()
@@ -30,6 +66,7 @@ class ChatMessages extends EventEmitter {
     li.appendChild(datetimeContainer)
 
     this.ele.insertBefore(li, this.ele.firstChild)
+    return Promise.resolve(li)
   }
 
   addSystemMessage (msg, color = 'yellowgreen') {
@@ -46,19 +83,21 @@ class ChatMessages extends EventEmitter {
     const nameLabel = this.getNameLabel(name, null, isReceive)
     const color = isPrivate ? PRIVATE_MESSAGE_COLOR : null
     const { msg, type } = payload
-    if (type === 'image') {
-      container = new Image()
-      container.src = msg
-    } else {
-      container = document.createElement('span')
-      container.textContent = msg
+    let cb
+    switch (type) {
+      case 'image':
+        [container, cb] = imageMessage(msg, isReceive)
+        break
+      case 'text':
+        [container, cb] = textMessage(msg)
+        break
     }
-    this.addChatChild({
+    return this.addChatChild({
       msgChild: container,
       nameChild: nameLabel,
       msgColor: color,
       nameColor: color
-    })
+    }).then(cb)
   }
 
   getNameLabel (name, color = null, isReceive = true) {
