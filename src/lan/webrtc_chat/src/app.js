@@ -40,8 +40,6 @@ room.peersOn(IS_READY, onPeerReady)
 room.peersOn(GAME_START, onStart)
 
 messageInput.on('paste-image', src => {
-  var img = new Image()
-  img.src = src
   sendMessage(toNameInput.value, {
     msg: src,
     type: 'image'

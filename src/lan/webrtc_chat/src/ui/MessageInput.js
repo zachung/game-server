@@ -24,9 +24,17 @@ function fetchFromPaste (clipboardData) {
 
 function fetchFromDrop (event) {
   const dataTransfer = event.dataTransfer
+  console.log(event)
+  event.preventDefault()
   if (!dataTransfer) {
     return
   }
+  // 如果是本地檔案拖曳，則嘗試從 Files 取出圖片
+  const blob = fetchFromPaste(dataTransfer)
+  if (blob) {
+    return Promise.resolve(blob)
+  }
+  // 嘗試從拖曳內容找到圖片
   const html = dataTransfer.getData('text/html')
   const match = html && /\bsrc="?([^"\s]+)"?\s*/.exec(html)
   const url = match && match[1]
