@@ -97,6 +97,17 @@ eval("// Imports\nvar ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../n
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("// Imports\nvar ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\nexports = ___CSS_LOADER_API_IMPORT___(false);\n// Module\nexports.push([module.i, \"\\n.desktop[data-v-c3f8fb5a] {\\r\\n  border: 1px solid cadetblue;\\r\\n  border-radius: 5px;\\r\\n  padding: 5px;\\r\\n  margin: 5px;\\n}\\r\\n\", \"\"]);\n// Exports\nmodule.exports = exports;\n\n\n//# sourceURL=webpack:///./src/desktop.vue?./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./src/hand.vue?vue&type=style&index=0&id=3cb5f248&scoped=true&lang=css&":
 /*!********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./src/hand.vue?vue&type=style&index=0&id=3cb5f248&scoped=true&lang=css& ***!
@@ -115,7 +126,7 @@ eval("// Imports\nvar ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../n
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("// Imports\nvar ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\nexports = ___CSS_LOADER_API_IMPORT___(false);\n// Module\nexports.push([module.i, \"\\n.unselectable[data-v-2964abc9] {\\n  -moz-user-select: -moz-none;\\n  -khtml-user-select: none;\\n  -webkit-user-select: none;\\n\\n  /*\\n     Introduced in IE 10.\\n     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/\\n   */\\n  -ms-user-select: none;\\n  user-select: none;\\n}\\n\", \"\"]);\n// Exports\nmodule.exports = exports;\n\n\n//# sourceURL=webpack:///./src/index.vue?./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options");
+eval("// Imports\nvar ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\nexports = ___CSS_LOADER_API_IMPORT___(false);\n// Module\nexports.push([module.i, \"\\n.current-sit[data-v-2964abc9] {\\n  color: red;\\n}\\n.panel[data-v-2964abc9] {\\n  border: 1px solid cadetblue;\\n  border-radius: 5px;\\n  padding: 5px;\\n  margin: 5px;\\n}\\n.message[data-v-2964abc9] {\\n  color: red;\\n}\\n.unselectable[data-v-2964abc9] {\\n  -moz-user-select: -moz-none;\\n  -khtml-user-select: none;\\n  -webkit-user-select: none;\\n\\n  /*\\n           Introduced in IE 10.\\n           See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/\\n         */\\n  -ms-user-select: none;\\n  user-select: none;\\n}\\n\", \"\"]);\n// Exports\nmodule.exports = exports;\n\n\n//# sourceURL=webpack:///./src/index.vue?./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -172,7 +183,7 @@ eval("/* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\r\n  props: {\r\n    card: Number\r\n  },\r\n  computed: {\r\n    suit() {\r\n      return Math.floor(this.card / 13)\r\n    },\r\n    number() {\r\n      const number = this.card % 13\r\n      return this.numbers[number]\r\n    }\r\n  },\r\n  data: function() {\r\n    return {\r\n      suits: ['\\u2663', '\\u2666', '\\u2665', '\\u2660'],\r\n      numbers: ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']\r\n    }\r\n  },\r\n  methods: {\r\n    suitStyle(suit) {\r\n      const styleName = ['club', 'diamond', 'heart', 'spade']\r\n      return 'suit-' + styleName[suit]\r\n    }\r\n  }\r\n});\r\n\n\n//# sourceURL=webpack:///./src/card.vue?./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _js_Constant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./js/Constant */ \"./src/js/Constant.js\");\n//\n//\n//\n//\n//\n//\n//\n\r\n\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\r\n  props: {\r\n    card: Number\r\n  },\r\n  computed: {\r\n    suit() {\r\n      return Math.floor(this.card / 13)\r\n    },\r\n    number() {\r\n      const number = this.card % 13\r\n      return _js_Constant__WEBPACK_IMPORTED_MODULE_0__[\"CardNumbers\"][number]\r\n    }\r\n  },\r\n  data: function() {\r\n    return {\r\n      Suits: _js_Constant__WEBPACK_IMPORTED_MODULE_0__[\"Suits\"]\r\n    }\r\n  },\r\n  methods: {\r\n    suitStyle(suit) {\r\n      const styleName = ['club', 'diamond', 'heart', 'spade']\r\n      return 'suit-' + styleName[suit]\r\n    }\r\n  }\r\n});\r\n\n\n//# sourceURL=webpack:///./src/card.vue?./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -184,7 +195,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n\
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _card_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./card.vue */ \"./src/card.vue\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\r\n\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\r\n  components: {\r\n    Card: _card_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]\r\n  },\r\n  props: {\r\n    table: Object\r\n  }\r\n});\r\n\n\n//# sourceURL=webpack:///./src/desktop.vue?./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _card_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./card.vue */ \"./src/card.vue\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\r\n\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\r\n  components: {\r\n    Card: _card_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]\r\n  },\r\n  props: {\r\n    table: Object\r\n  }\r\n});\r\n\n\n//# sourceURL=webpack:///./src/desktop.vue?./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -196,7 +207,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _car
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _card_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./card.vue */ \"./src/card.vue\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\r\n\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\r\n  components: {\r\n    Card: _card_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]\r\n  },\r\n  props: {\r\n    name: String,\r\n    sit: Number,\r\n    game: Object\r\n  },\r\n  computed: {\r\n    hand() {\r\n      return this.game.hand(this.sit)\r\n    }\r\n  },\r\n  methods: {\r\n    draw(card) {\r\n      this.game.table\r\n        .put(this.sit, card)\r\n        .then(() => {\r\n          this.hand.draw(card)\r\n        })\r\n        .catch(err => {\r\n          console.log(err.message)\r\n        })\r\n    }\r\n  }\r\n});\r\n\n\n//# sourceURL=webpack:///./src/hand.vue?./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _card_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./card.vue */ \"./src/card.vue\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\r\n\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\r\n  components: {\r\n    Card: _card_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]\r\n  },\r\n  props: {\r\n    name: String,\r\n    sit: Number,\r\n    game: Object\r\n  },\r\n  computed: {\r\n    hand() {\r\n      return this.game.hand(this.sit)\r\n    }\r\n  },\r\n  methods: {\r\n    draw(card) {\r\n      this.$emit('draw', this.sit, card)\r\n    }\r\n  }\r\n});\r\n\n\n//# sourceURL=webpack:///./src/hand.vue?./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -208,7 +219,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _car
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _hand_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hand.vue */ \"./src/hand.vue\");\n/* harmony import */ var _desktop_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./desktop.vue */ \"./src/desktop.vue\");\n/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game */ \"./src/game.js\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\n\n\n\nconst game = new _game__WEBPACK_IMPORTED_MODULE_2__[\"default\"]()\ngame.table.setTurn(0)\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    Hand: _hand_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"],\n    Desktop: _desktop_vue__WEBPACK_IMPORTED_MODULE_1__[\"default\"]\n  },\n  data: function() {\n    return {\n      game\n    }\n  },\n  mounted() {\n    game.distribute()\n  }\n});\n\n\n//# sourceURL=webpack:///./src/index.vue?./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _hand_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hand.vue */ \"./src/hand.vue\");\n/* harmony import */ var _desktop_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./desktop.vue */ \"./src/desktop.vue\");\n/* harmony import */ var _js_Game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/Game */ \"./src/js/Game.js\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\n\n\n\nconst game = new _js_Game__WEBPACK_IMPORTED_MODULE_2__[\"default\"]()\ngame.table.waitingSit(0)\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    Hand: _hand_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"],\n    Desktop: _desktop_vue__WEBPACK_IMPORTED_MODULE_1__[\"default\"]\n  },\n  data: function() {\n    return {\n      game,\n      message: \"let's start\"\n    }\n  },\n  methods: {\n    restart() {\n      game.distribute()\n    },\n    draw(sit, card) {\n      this.game.table\n        .put(sit, card)\n        .then(() => {\n          this.game.hand(sit).draw(card)\n        })\n        .catch(err => {\n          this.message = err.message\n        })\n    },\n    currentSit(sit) {\n      return sit === game.table.waitingSit()\n    }\n  },\n  mounted() {\n    game.distribute()\n  }\n});\n\n\n//# sourceURL=webpack:///./src/index.vue?./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -220,7 +231,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _han
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"span\",\n    { staticClass: \"card-in-hand\", class: _vm.suitStyle(_vm.suit) },\n    [\n      _c(\"span\", [_vm._v(_vm._s(this.suits[_vm.suit]))]),\n      _vm._v(\"\\n  \" + _vm._s(_vm.number) + \"\\n\")\n    ]\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/card.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"span\",\n    { staticClass: \"card-in-hand\", class: _vm.suitStyle(_vm.suit) },\n    [\n      _c(\"span\", [_vm._v(_vm._s(_vm.Suits[_vm.suit]))]),\n      _vm._v(\"\\n  \" + _vm._s(_vm.number) + \"\\n\")\n    ]\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/card.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -232,7 +243,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", [\n    _c(\n      \"div\",\n      [\n        _c(\"label\", [_vm._v(\"Table\")]),\n        _vm._v(\" \"),\n        _vm._l(_vm.table.cards(), function(card) {\n          return _c(\"card\", { attrs: { card: card } })\n        }),\n        _vm._v(\" \"),\n        _c(\"div\", [_vm._v(\"waiting for \" + _vm._s(_vm.table.waitingSit()))])\n      ],\n      2\n    )\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/desktop.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"desktop\" }, [\n    _c(\n      \"div\",\n      [\n        _c(\"label\", [_vm._v(\"Table\")]),\n        _vm._v(\" \"),\n        _vm._l(_vm.table.cards(), function(card) {\n          return _c(\"card\", { key: card, attrs: { card: card } })\n        })\n      ],\n      2\n    ),\n    _vm._v(\" \"),\n    _c(\n      \"ol\",\n      _vm._l(_vm.table.history, function(trick) {\n        return _c(\n          \"li\",\n          [\n            _c(\"span\", [_vm._v(\"start: \" + _vm._s(trick.start))]),\n            _vm._v(\" \"),\n            _vm._l(trick.cards(), function(card) {\n              return _c(\"card\", { key: card, attrs: { card: card } })\n            }),\n            _vm._v(\" \"),\n            _c(\"span\", [\n              _vm._v(\"winner: \" + _vm._s(_vm.table.checkWinner(trick)))\n            ])\n          ],\n          2\n        )\n      }),\n      0\n    )\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/desktop.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -244,7 +255,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    { staticClass: \"hand-container\" },\n    [\n      _c(\"label\", [_vm._v(_vm._s(_vm.name))]),\n      _vm._v(\" \"),\n      _vm._l(_vm.hand.cards(), function(card) {\n        return _c(\"card\", {\n          attrs: { card: card },\n          nativeOn: {\n            click: function($event) {\n              return _vm.draw(card)\n            }\n          }\n        })\n      })\n    ],\n    2\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/hand.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    { staticClass: \"hand-container\" },\n    [\n      _c(\"label\", [_vm._v(_vm._s(_vm.name))]),\n      _vm._v(\" \"),\n      _vm._l(_vm.hand.cards(), function(card) {\n        return _c(\"card\", {\n          key: card,\n          attrs: { card: card },\n          nativeOn: {\n            click: function($event) {\n              return _vm.draw(card)\n            }\n          }\n        })\n      })\n    ],\n    2\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/hand.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -256,7 +267,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    { staticClass: \"container unselectable\" },\n    [\n      _c(\"hand\", { attrs: { sit: 0, game: _vm.game, name: \"North Hand\" } }),\n      _vm._v(\" \"),\n      _c(\"hand\", { attrs: { sit: 1, game: _vm.game, name: \"West Hand\" } }),\n      _vm._v(\" \"),\n      _c(\"hand\", { attrs: { sit: 2, game: _vm.game, name: \"East Hand\" } }),\n      _vm._v(\" \"),\n      _c(\"hand\", { attrs: { sit: 3, game: _vm.game, name: \"South Hand\" } }),\n      _vm._v(\" \"),\n      _c(\"desktop\", { attrs: { table: _vm.game.table } })\n    ],\n    1\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/index.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    { staticClass: \"container unselectable\" },\n    [\n      _c(\"hand\", {\n        class: _vm.currentSit(0) ? \"current-sit\" : \"\",\n        attrs: { sit: 0, game: _vm.game, name: \"North Hand\" },\n        on: { draw: _vm.draw }\n      }),\n      _vm._v(\" \"),\n      _c(\"hand\", {\n        class: _vm.currentSit(1) ? \"current-sit\" : \"\",\n        attrs: { sit: 1, game: _vm.game, name: \"West Hand\" },\n        on: { draw: _vm.draw }\n      }),\n      _vm._v(\" \"),\n      _c(\"hand\", {\n        class: _vm.currentSit(2) ? \"current-sit\" : \"\",\n        attrs: { sit: 2, game: _vm.game, name: \"East Hand\" },\n        on: { draw: _vm.draw }\n      }),\n      _vm._v(\" \"),\n      _c(\"hand\", {\n        class: _vm.currentSit(3) ? \"current-sit\" : \"\",\n        attrs: { sit: 3, game: _vm.game, name: \"South Hand\" },\n        on: { draw: _vm.draw }\n      }),\n      _vm._v(\" \"),\n      _c(\"desktop\", { attrs: { table: _vm.game.table } }),\n      _vm._v(\" \"),\n      _c(\"div\", { staticClass: \"panel\" }, [\n        _c(\"div\", { staticClass: \"message\" }, [_vm._v(_vm._s(_vm.message))]),\n        _vm._v(\" \"),\n        _c(\"button\", { on: { click: _vm.restart } }, [_vm._v(\"Restart\")])\n      ])\n    ],\n    1\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/index.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -280,6 +291,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// load the styles\nvar content = __webpack_require__(/*! !../node_modules/css-loader/dist/cjs.js!../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../node_modules/vue-loader/lib??vue-loader-options!./card.vue?vue&type=style&index=0&id=3c237469&scoped=true&lang=css& */ \"./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./src/card.vue?vue&type=style&index=0&id=3c237469&scoped=true&lang=css&\");\nif(typeof content === 'string') content = [[module.i, content, '']];\nif(content.locals) module.exports = content.locals;\n// add the styles to the DOM\nvar add = __webpack_require__(/*! ../node_modules/vue-style-loader/lib/addStylesClient.js */ \"./node_modules/vue-style-loader/lib/addStylesClient.js\").default\nvar update = add(\"286033df\", content, false, {});\n// Hot Module Replacement\nif(false) {}\n\n//# sourceURL=webpack:///./src/card.vue?./node_modules/vue-style-loader!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-style-loader!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// load the styles\nvar content = __webpack_require__(/*! !../node_modules/css-loader/dist/cjs.js!../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../node_modules/vue-loader/lib??vue-loader-options!./desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css& */ \"./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css&\");\nif(typeof content === 'string') content = [[module.i, content, '']];\nif(content.locals) module.exports = content.locals;\n// add the styles to the DOM\nvar add = __webpack_require__(/*! ../node_modules/vue-style-loader/lib/addStylesClient.js */ \"./node_modules/vue-style-loader/lib/addStylesClient.js\").default\nvar update = add(\"7b8284bc\", content, false, {});\n// Hot Module Replacement\nif(false) {}\n\n//# sourceURL=webpack:///./src/desktop.vue?./node_modules/vue-style-loader!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -408,7 +430,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true& */ \"./src/desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true&\");\n/* harmony import */ var _desktop_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./desktop.vue?vue&type=script&lang=js& */ \"./src/desktop.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _desktop_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  \"c3f8fb5a\",\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"src/desktop.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./src/desktop.vue?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true& */ \"./src/desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true&\");\n/* harmony import */ var _desktop_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./desktop.vue?vue&type=script&lang=js& */ \"./src/desktop.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _desktop_vue_vue_type_style_index_0_id_c3f8fb5a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css& */ \"./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css&\");\n/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n  _desktop_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  \"c3f8fb5a\",\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"src/desktop.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./src/desktop.vue?");
 
 /***/ }),
 
@@ -424,6 +446,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 /***/ }),
 
+/***/ "./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css&":
+/*!**********************************************************************************!*\
+  !*** ./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css& ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_style_index_0_id_c3f8fb5a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/vue-style-loader!../node_modules/css-loader/dist/cjs.js!../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../node_modules/vue-loader/lib??vue-loader-options!./desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css& */ \"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./src/desktop.vue?vue&type=style&index=0&id=c3f8fb5a&scoped=true&lang=css&\");\n/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_style_index_0_id_c3f8fb5a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_style_index_0_id_c3f8fb5a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);\n/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_style_index_0_id_c3f8fb5a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_style_index_0_id_c3f8fb5a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));\n /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_style_index_0_id_c3f8fb5a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); \n\n//# sourceURL=webpack:///./src/desktop.vue?");
+
+/***/ }),
+
 /***/ "./src/desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true&":
 /*!********************************************************************!*\
   !*** ./src/desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true& ***!
@@ -433,30 +467,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../node_modules/vue-loader/lib??vue-loader-options!./desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/desktop.vue?vue&type=template&id=c3f8fb5a&scoped=true&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_desktop_vue_vue_type_template_id_c3f8fb5a_scoped_true___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack:///./src/desktop.vue?");
-
-/***/ }),
-
-/***/ "./src/game.js":
-/*!*********************!*\
-  !*** ./src/game.js ***!
-  \*********************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _hand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hand */ \"./src/hand.js\");\n/* harmony import */ var _table__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./table */ \"./src/table.js\");\n\r\n\r\n\r\n// 洗牌\r\nconst shuffle = (a, b) => Math.random() - 0.5\r\n\r\nclass Game {\r\n  constructor () {\r\n    const N = 52\r\n    this.deck = [...Array(N).keys()]\r\n    this.hands = [new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](), new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](), new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](), new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"]()]\r\n    this.table = new _table__WEBPACK_IMPORTED_MODULE_1__[\"default\"]()\r\n  }\r\n\r\n  /* 發牌 */\r\n  distribute () {\r\n    const deck = this.deck\r\n    // 洗牌\r\n    this.deck.sort(shuffle)\r\n\r\n    this.hands = [\r\n      new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](deck.slice(0, 13)),\r\n      new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](deck.slice(13, 26)),\r\n      new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](deck.slice(26, 39)),\r\n      new _hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](deck.slice(39, 52))\r\n    ]\r\n\r\n    this.table.reset()\r\n  }\r\n\r\n  hand (sit) {\r\n    return this.hands[sit]\r\n  }\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Game);\r\n\n\n//# sourceURL=webpack:///./src/game.js?");
-
-/***/ }),
-
-/***/ "./src/hand.js":
-/*!*********************!*\
-  !*** ./src/hand.js ***!
-  \*********************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n// 排序:大到小\r\nconst handOrder = (a, b) => b - a\r\n\r\nclass Hand {\r\n  constructor (cards = []) {\r\n    this._cards = cards.sort(handOrder)\r\n  }\r\n\r\n  cards () {\r\n    return this._cards\r\n  }\r\n\r\n  draw (card) {\r\n    const indexOf = this._cards.indexOf(card)\r\n    if (indexOf !== false) {\r\n      return this._cards.splice(indexOf, 1)\r\n    }\r\n  }\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Hand);\r\n\n\n//# sourceURL=webpack:///./src/hand.js?");
 
 /***/ }),
 
@@ -568,15 +578,51 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 /***/ }),
 
-/***/ "./src/table.js":
-/*!**********************!*\
-  !*** ./src/table.js ***!
-  \**********************/
+/***/ "./src/js/Constant.js":
+/*!****************************!*\
+  !*** ./src/js/Constant.js ***!
+  \****************************/
+/*! exports provided: CardNumbers, Suits, Sits */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"CardNumbers\", function() { return CardNumbers; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Suits\", function() { return Suits; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Sits\", function() { return Sits; });\nconst CardNumbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']\r\nconst Suits = ['\\u2663', '\\u2666', '\\u2665', '\\u2660']\r\nconst Sits = ['North', 'West', 'East', 'South']\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/js/Constant.js?");
+
+/***/ }),
+
+/***/ "./src/js/Game.js":
+/*!************************!*\
+  !*** ./src/js/Game.js ***!
+  \************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nclass Table {\r\n  constructor () {\r\n    this._cards = {}\r\n    this._history = []\r\n    this._turn = undefined\r\n  }\r\n\r\n  cards () {\r\n    return this._cards\r\n  }\r\n\r\n  reset () {\r\n    this._cards = {}\r\n    this._history = []\r\n  }\r\n\r\n  put (sit, card) {\r\n    return new Promise((resolve, reject) => {\r\n      if (this._turn !== sit) {\r\n        reject(Error('Not your turn'))\r\n        return\r\n      }\r\n      // put card on table\r\n      this._cards[sit] = card\r\n      // TODO: check table cards who is winner and set next turn\r\n      // wait for next player\r\n      this.setTurn(++this._turn % 4)\r\n    })\r\n  }\r\n\r\n  setTurn (turn) {\r\n    this._turn = turn\r\n  }\r\n\r\n  waitingSit() {\r\n    return this._turn\r\n  }\r\n\r\n  next () {\r\n    this._history.push(this._cards)\r\n    this._cards = {}\r\n  }\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Table);\n\n//# sourceURL=webpack:///./src/table.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Hand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Hand */ \"./src/js/Hand.js\");\n/* harmony import */ var _Table__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Table */ \"./src/js/Table.js\");\n\r\n\r\n\r\n// 洗牌\r\nconst shuffle = () => Math.random() - 0.5\r\n\r\nclass Game {\r\n  constructor () {\r\n    const N = 52\r\n    this.deck = [...Array(N).keys()]\r\n    this.hands = [new _Hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](), new _Hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](), new _Hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"](), new _Hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"]()]\r\n    this.tableSetup()\r\n  }\r\n\r\n  tableSetup () {\r\n    // default sit: 0, without auction\r\n    this.table = new _Table__WEBPACK_IMPORTED_MODULE_1__[\"default\"](0)\r\n  }\r\n\r\n  /* 發牌 */\r\n  distribute () {\r\n    const deck = this.deck\r\n    // 洗牌\r\n    deck.sort(shuffle)\r\n\r\n    let card = 0\r\n    this.hands.forEach(hand => {\r\n      // 一人13張\r\n      hand.cards(deck.slice(card, card = card + 13))\r\n      hand.sort()\r\n    })\r\n\r\n    this.tableSetup()\r\n  }\r\n\r\n  hand (sit) {\r\n    return this.hands[sit]\r\n  }\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Game);\r\n\n\n//# sourceURL=webpack:///./src/js/Game.js?");
+
+/***/ }),
+
+/***/ "./src/js/Hand.js":
+/*!************************!*\
+  !*** ./src/js/Hand.js ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n// 排序:大到小\r\nconst handOrder = (a, b) => b - a\r\n\r\nclass Hand {\r\n  constructor (cards = []) {\r\n    this._cards = cards\r\n  }\r\n\r\n  cards (cards) {\r\n    if (cards !== undefined) {\r\n      this._cards = cards\r\n    }\r\n    return this._cards\r\n  }\r\n\r\n  sort () {\r\n    this._cards.sort(handOrder)\r\n  }\r\n\r\n  /* 出一張 */\r\n  draw (card) {\r\n    const indexOf = this._cards.indexOf(card)\r\n    if (indexOf !== false) {\r\n      return this._cards.splice(indexOf, 1)\r\n    }\r\n  }\r\n\r\n  /* 收一張 */\r\n  put (card) {\r\n    this._cards.push(card)\r\n  }\r\n\r\n  /* 丟棄所有卡 */\r\n  dropAll () {\r\n    const cards = this._cards\r\n    this._cards = []\r\n    return cards\r\n  }\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Hand);\r\n\n\n//# sourceURL=webpack:///./src/js/Hand.js?");
+
+/***/ }),
+
+/***/ "./src/js/Table.js":
+/*!*************************!*\
+  !*** ./src/js/Table.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Hand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Hand */ \"./src/js/Hand.js\");\n\r\n\r\nconst round = sit => sit % 4\r\n\r\nclass Trick extends _Hand__WEBPACK_IMPORTED_MODULE_0__[\"default\"] {\r\n  /**\r\n   * @param {number} start 開始的輪次\r\n   */\r\n  constructor (start) {\r\n    super()\r\n    this.start = start\r\n    this._sit = start\r\n  }\r\n\r\n  put (sit, card) {\r\n    return new Promise((resolve, reject) => {\r\n      if (this._sit !== sit) {\r\n        reject(Error('Not your turn'))\r\n        return\r\n      }\r\n      // put card in trick\r\n      this._cards.push(card)\r\n      // wait for next player\r\n      this.waitingSit(round(++this._sit))\r\n      resolve(this)\r\n    })\r\n  }\r\n\r\n  waitingSit (sit) {\r\n    if (sit !== undefined) {\r\n      this._sit = sit\r\n    }\r\n    return this._sit\r\n  }\r\n}\r\n\r\nclass Table {\r\n  constructor (sit) {\r\n    this.history = []\r\n    this._trick = new Trick(sit)\r\n  }\r\n\r\n  cards () {\r\n    return this._trick.cards()\r\n  }\r\n\r\n  put (sit, card) {\r\n    return this._trick.put(sit, card)\r\n      .then(trick => {\r\n        if (trick.cards().length < 4) {\r\n          // this trick not finish\r\n          return\r\n        }\r\n        const winnerSit = this.checkWinner(trick)\r\n        // set next turn\r\n        this._nextTrick(winnerSit)\r\n      })\r\n  }\r\n\r\n  /**\r\n   * check cards who is winner\r\n   * @param {Trick} trick\r\n   */\r\n  checkWinner (trick) {\r\n    const cards = trick.cards()\r\n    const led = cards[0]\r\n    const suit = Math.floor(led / 13)\r\n    const number = led % 13\r\n    const start = trick.start\r\n    let winnerSit = start\r\n    cards.forEach((card, sitOffset) => {\r\n      const curSuit = Math.floor(card / 13)\r\n      if (suit !== curSuit) {\r\n        // suit not equals\r\n        return\r\n      }\r\n      if (card % 13 > number) {\r\n        // number is larger\r\n        winnerSit = round(start + sitOffset)\r\n      }\r\n    })\r\n    return winnerSit\r\n  }\r\n\r\n  /**\r\n   * wait for next sit\r\n   * @param sit\r\n   * @returns {*}\r\n   */\r\n  waitingSit (sit) {\r\n    return this._trick.waitingSit(sit)\r\n  }\r\n\r\n  /**\r\n   * next trick\r\n   * @param sit\r\n   */\r\n  _nextTrick (sit) {\r\n    this.history.push(this._trick)\r\n    this._trick = new Trick(sit)\r\n  }\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Table);\r\n\n\n//# sourceURL=webpack:///./src/js/Table.js?");
 
 /***/ })
 

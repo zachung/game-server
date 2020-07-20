@@ -1,11 +1,13 @@
 <template>
   <span class="card-in-hand" :class="suitStyle(suit)">
-    <span>{{ this.suits[suit] }}</span>
+    <span>{{ Suits[suit] }}</span>
     {{ number }}
   </span>
 </template>
 
 <script>
+import { CardNumbers, Suits } from './js/Constant'
+
 export default {
   props: {
     card: Number
@@ -16,13 +18,12 @@ export default {
     },
     number() {
       const number = this.card % 13
-      return this.numbers[number]
+      return CardNumbers[number]
     }
   },
   data: function() {
     return {
-      suits: ['\u2663', '\u2666', '\u2665', '\u2660'],
-      numbers: ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+      Suits
     }
   },
   methods: {

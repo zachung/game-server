@@ -3,6 +3,7 @@
     <label>{{ name }}</label>
     <card
       v-for="card in hand.cards()"
+      :key="card"
       :card="card"
       @click.native="draw(card)"
     ></card>
@@ -28,14 +29,7 @@ export default {
   },
   methods: {
     draw(card) {
-      this.game.table
-        .put(this.sit, card)
-        .then(() => {
-          this.hand.draw(card)
-        })
-        .catch(err => {
-          console.log(err.message)
-        })
+      this.$emit('draw', this.sit, card)
     }
   }
 }
