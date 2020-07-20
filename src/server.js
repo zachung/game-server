@@ -12,6 +12,17 @@ var lobby = new Lobby(io)
 app.use('/', (function () {
   var router = express.Router()
 
+  // static games
+  const single = './src/single/'
+  fs.readdir(single, (err, files) => {
+    if (err) {
+      return
+    }
+    files.forEach(gameName => {
+      router.use('/' + gameName, express.static(path.join(single, gameName, '/public')))
+    })
+  })
+
   // 靜態檔案
   router.use('/', express.static(path.join(__dirname, '/../public')))
 
@@ -42,8 +53,8 @@ app.use('/', (function () {
   index: 'webrtc_chat/index'
 }
 ].forEach(game => {
-  let name = '/' + game.name
-  let index = './lan/' + game.index
+  const name = '/' + game.name
+  const index = './lan/' + game.index
   app.use(name, require(index)(lobby))
 })
 
