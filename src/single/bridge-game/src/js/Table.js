@@ -12,18 +12,16 @@ class Trick extends Hand {
     this._sit = start
   }
 
+  get leadSuit () {
+    const lead = this._cards[0]
+    return lead ? lead.suit : undefined
+  }
+
   put (sit, card) {
-    return new Promise((resolve, reject) => {
-      if (this._sit !== sit) {
-        reject(Error('Not your turn'))
-        return
-      }
-      // put card in trick
-      this._cards.push(card)
-      // wait for next player
-      this.waitingSit(round(++this._sit))
-      resolve(this)
-    })
+    // put card in trick
+    this._cards.push(card)
+    // wait for next player
+    this.waitingSit(round(++this._sit))
   }
 
   waitingSit (sit) {
@@ -40,21 +38,27 @@ class Table {
     this._trick = new Trick(sit)
   }
 
+  get curPlayer () {
+    return this._trick._sit
+  }
+
+  get curSuit () {
+    return this._trick.leadSuit
+  }
+
   cards () {
     return this._trick.cards()
   }
 
   put (sit, card) {
-    return this._trick.put(sit, card)
-      .then(trick => {
-        if (trick.cards().length < 4) {
-          // this trick not finish
-          return
-        }
-        const winnerSit = this.checkWinner(trick)
-        // set next turn
-        this._nextTrick(winnerSit)
-      })
+    this._trick.put(sit, card)
+    if (this._trick.cards().length < 4) {
+      // this trick not finish
+      return
+    }
+    const winnerSit = this.checkWinner(this._trick)
+    // set next turn
+    this._nextTrick(winnerSit)
   }
 
   /**
@@ -64,17 +68,14 @@ class Table {
   checkWinner (trick) {
     const cards = trick.cards()
     const led = cards[0]
-    const suit = Math.floor(led / 13)
-    const number = led % 13
     const start = trick.start
     let winnerSit = start
     cards.forEach((card, sitOffset) => {
-      const curSuit = Math.floor(card / 13)
-      if (suit !== curSuit) {
+      if (led.suit !== card.suit) {
         // suit not equals
         return
       }
-      if (card % 13 > number) {
+      if (card.number > led.number) {
         // number is larger
         winnerSit = round(start + sitOffset)
       }

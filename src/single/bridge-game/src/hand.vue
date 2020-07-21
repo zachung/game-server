@@ -1,12 +1,20 @@
 <template>
   <div class="hand-container">
-    <label>{{ name }}</label>
-    <card
-      v-for="card in hand.cards()"
-      :key="card"
-      :card="card"
-      @click.native="draw(card)"
-    ></card>
+    <div>
+      <label>{{ name }}</label>
+    </div>
+    <div>
+      <card v-for="card in spades" :key="card.code" :card="card" @click.native="draw(card)"></card>
+    </div>
+    <div>
+      <card v-for="card in hearts" :key="card.code" :card="card" @click.native="draw(card)"></card>
+    </div>
+    <div>
+      <card v-for="card in diamonds" :key="card.code" :card="card" @click.native="draw(card)"></card>
+    </div>
+    <div>
+      <card v-for="card in clubs" :key="card.code" :card="card" @click.native="draw(card)"></card>
+    </div>
   </div>
 </template>
 
@@ -23,8 +31,20 @@ export default {
     game: Object
   },
   computed: {
-    hand() {
-      return this.game.hand(this.sit)
+    cards() {
+      return this.game.hand(this.sit).cards()
+    },
+    spades() {
+      return this.cards.filter(card => card.suit === 3)
+    },
+    hearts() {
+      return this.cards.filter(card => card.suit === 2)
+    },
+    diamonds() {
+      return this.cards.filter(card => card.suit === 1)
+    },
+    clubs() {
+      return this.cards.filter(card => card.suit === 0)
     }
   },
   methods: {

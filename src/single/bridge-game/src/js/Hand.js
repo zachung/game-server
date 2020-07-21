@@ -1,5 +1,5 @@
 // 排序:大到小
-const handOrder = (a, b) => b - a
+const handOrder = (a, b) => b.code - a.code
 
 class Hand {
   constructor (cards = []) {
@@ -15,6 +15,10 @@ class Hand {
 
   sort () {
     this._cards.sort(handOrder)
+  }
+
+  hasSuit (suit) {
+    return this._cards.find(card => card.suit === suit) !== undefined
   }
 
   /* 出一張 */
