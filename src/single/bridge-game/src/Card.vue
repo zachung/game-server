@@ -1,5 +1,5 @@
 <template>
-  <span class="card-in-hand" :class="suitStyle(card.suit)">
+  <span class="card" :class="suitStyle(card.suit)">
     <span>{{ Suits[card.suit] }}</span>
     {{ CardNumbers[card.number] }}
   </span>
@@ -40,7 +40,7 @@ export default {
 .suit-club {
   color: gray;
 }
-.card-in-hand {
+.card {
   display: inline-block;
   border: 1px solid green;
   border-radius: 5px;

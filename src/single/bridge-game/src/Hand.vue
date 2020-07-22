@@ -4,22 +4,42 @@
       <label>{{ name }}</label>
     </div>
     <div>
-      <card v-for="card in spades" :key="card.code" :card="card" @click.native="draw(card)"></card>
+      <card
+        v-for="card in spades"
+        :key="card.code"
+        :card="card"
+        @click.native="draw(card)"
+      ></card>
     </div>
     <div>
-      <card v-for="card in hearts" :key="card.code" :card="card" @click.native="draw(card)"></card>
+      <card
+        v-for="card in hearts"
+        :key="card.code"
+        :card="card"
+        @click.native="draw(card)"
+      ></card>
     </div>
     <div>
-      <card v-for="card in diamonds" :key="card.code" :card="card" @click.native="draw(card)"></card>
+      <card
+        v-for="card in diamonds"
+        :key="card.code"
+        :card="card"
+        @click.native="draw(card)"
+      ></card>
     </div>
     <div>
-      <card v-for="card in clubs" :key="card.code" :card="card" @click.native="draw(card)"></card>
+      <card
+        v-for="card in clubs"
+        :key="card.code"
+        :card="card"
+        @click.native="draw(card)"
+      ></card>
     </div>
   </div>
 </template>
 
 <script>
-import Card from './card.vue'
+import Card from './Card.vue'
 
 export default {
   components: {

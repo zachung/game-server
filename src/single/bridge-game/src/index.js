@@ -1,11 +1,8 @@
 import Vue from 'vue'
-import index from './index.vue'
+import Index from './Index.vue'
 
 new Vue({
   el: '#app',
-  mounted: function () {
-    console.log('Hello Webpack and Vue !')
-  },
-  components: { index },
+  components: { Index },
   template: '<index/>'
 })

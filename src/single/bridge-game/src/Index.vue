@@ -39,10 +39,10 @@
   </div>
 </template>
 <script>
-import Hand from './hand.vue'
-import Desktop from './desktop.vue'
+import Hand from './Hand.vue'
+import Desktop from './Desktop.vue'
 import Game from './js/Game'
-import Dashboard from './dashboard.vue'
+import Dashboard from './Dashboard.vue'
 
 const game = new Game()
 game.table.waitingSit(0)

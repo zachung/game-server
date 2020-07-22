@@ -3,14 +3,8 @@
     <div class="message">{{ message }}</div>
     <button @click="restart">Restart</button>
     <ol>
-      <li v-for="trick in game.table.history">
-        <span>lead: {{ Sits[trick.start] }}</span>
-        <card
-          v-for="card in trick.cards()"
-          :key="card.code"
-          :card="card"
-        ></card>
-        <span>winner: {{ Sits[trick.checkWinner()] }}</span>
+      <li v-for="trick in game.table.history" class="history-trick">
+        <mini-desktop :trick="trick"></mini-desktop>
       </li>
     </ol>
   </div>
@@ -18,11 +12,11 @@
 
 <script>
 import { Sits } from './js/Constant'
-import Card from './card.vue'
+import MiniDesktop from './MiniDesktop.vue'
 
 export default {
   components: {
-    Card
+    MiniDesktop
   },
   props: {
     game: Object,
@@ -44,5 +38,9 @@ export default {
 <style scoped>
 .message {
   color: red;
+}
+.history-trick {
+  padding-bottom: 5px;
+  border-bottom: 1px solid gray;
 }
 </style>
