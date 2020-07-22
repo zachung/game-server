@@ -1,7 +1,7 @@
 <template>
   <div class="table">
-    <label>Table</label>
     <div class="desktop">
+      <label>Table</label>
       <div class="north-table">
         <card :card="north" v-if="north"></card>
         <span v-else>&nbsp;</span>
@@ -18,6 +18,8 @@
         <card :card="south" v-if="south"></card>
         <span v-else>&nbsp;</span>
       </div>
+      <div class="ns-tricks">N-S Wins: {{ table.nsTricks }}</div>
+      <div class="we-tricks">W-E Wins: {{ table.weTricks }}</div>
     </div>
   </div>
 </template>
@@ -34,7 +36,7 @@ export default {
   },
   computed: {
     cards() {
-      return this.table.cards()
+      return this.table.cards
     },
     south() {
       return this.cards[0]
@@ -62,6 +64,7 @@ export default {
 .desktop {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  height: 100%;
 }
 .north-table {
   grid-column-start: 2;
@@ -84,5 +87,19 @@ export default {
   grid-column-end: 3;
   grid-row-start: 3;
   grid-row-end: 4;
+}
+.ns-tricks {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  align-self: end;
+}
+.we-tricks {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  align-self: end;
 }
 </style>

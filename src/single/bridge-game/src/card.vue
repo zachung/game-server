@@ -45,7 +45,9 @@ export default {
   border: 1px solid green;
   border-radius: 5px;
   margin-right: 5px;
-  padding: 0 5px;
+  margin-bottom: 2px;
+  padding-left: 5px;
   cursor: pointer;
+  width: 2em;
 }
 </style>

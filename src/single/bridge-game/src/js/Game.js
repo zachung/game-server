@@ -49,14 +49,14 @@ class Game {
     const hand = this.hand(sit)
     const curSuit = this.table.curSuit
     return new Promise((resolve, reject) => {
-      if (this.table.curPlayer !== sit) {
+      if (this.table.curSit !== sit) {
         // 不是當前出牌者
         reject(Error('Not your turn'))
         return
       }
       if (curSuit !== undefined && card.suit !== curSuit && hand.hasSuit(curSuit)) {
         // 必須跟出花色
-        reject(Error('must follow suit'))
+        reject(Error('Must follow suit'))
         return
       }
       // 移除手牌

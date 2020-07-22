@@ -1,39 +1,41 @@
 <template>
-  <div class="wrapper unselectable">
-    <hand
-      :sit="2"
-      :game="game"
-      name="North Hand"
-      @draw="draw"
-      class="north-hand"
-      :class="currentSit(2) ? 'current-sit' : ''"
-    ></hand>
-    <hand
-      :sit="1"
-      :game="game"
-      name="West Hand"
-      @draw="draw"
-      class="west-hand"
-      :class="currentSit(1) ? 'current-sit' : ''"
-    ></hand>
-    <desktop :table="game.table"></desktop>
-    <hand
-      :sit="3"
-      :game="game"
-      name="East Hand"
-      @draw="draw"
-      class="east-hand"
-      :class="currentSit(3) ? 'current-sit' : ''"
-    ></hand>
-    <hand
-      :sit="0"
-      :game="game"
-      name="South Hand"
-      @draw="draw"
-      class="south-hand"
-      :class="currentSit(0) ? 'current-sit' : ''"
-    ></hand>
-    <dashboard :game="game" :message="message"></dashboard>
+  <div class="container unselectable">
+    <div class="wrapper">
+      <hand
+        :sit="2"
+        :game="game"
+        name="North Hand"
+        @draw="draw"
+        class="north-hand"
+        :class="currentSit(2) ? 'current-sit' : ''"
+      ></hand>
+      <hand
+        :sit="1"
+        :game="game"
+        name="West Hand"
+        @draw="draw"
+        class="west-hand"
+        :class="currentSit(1) ? 'current-sit' : ''"
+      ></hand>
+      <desktop :table="game.table"></desktop>
+      <hand
+        :sit="3"
+        :game="game"
+        name="East Hand"
+        @draw="draw"
+        class="east-hand"
+        :class="currentSit(3) ? 'current-sit' : ''"
+      ></hand>
+      <hand
+        :sit="0"
+        :game="game"
+        name="South Hand"
+        @draw="draw"
+        class="south-hand"
+        :class="currentSit(0) ? 'current-sit' : ''"
+      ></hand>
+      <dashboard :game="game" :message="message"></dashboard>
+    </div>
   </div>
 </template>
 <script>
@@ -73,9 +75,24 @@ export default {
 }
 </script>
 <style scoped>
+.container {
+  font-family: monospace;
+}
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  width: 75%;
+}
+.panel {
+  width: 25%;
+  position: absolute;
+  box-sizing: border-box;
+  top: 0;
+  right: 0;
+  border: 1px solid cadetblue;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
 }
 .north-hand {
   grid-column-start: 2;
@@ -106,18 +123,8 @@ export default {
   grid-row-end: 3;
 }
 .current-sit {
-  color: red;
+  border: 1px solid red;
 }
-.panel {
-  border: 1px solid cadetblue;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 5px;
-}
-.message {
-  color: red;
-}
-
 .unselectable {
   -moz-user-select: -moz-none;
   -khtml-user-select: none;

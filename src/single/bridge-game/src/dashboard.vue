@@ -4,13 +4,13 @@
     <button @click="restart">Restart</button>
     <ol>
       <li v-for="trick in game.table.history">
-        <span>start: {{ Sits[trick.start] }}</span>
+        <span>lead: {{ Sits[trick.start] }}</span>
         <card
           v-for="card in trick.cards()"
           :key="card.code"
           :card="card"
         ></card>
-        <span>winner: {{ Sits[game.table.checkWinner(trick)] }}</span>
+        <span>winner: {{ Sits[trick.checkWinner()] }}</span>
       </li>
     </ol>
   </div>
@@ -35,10 +35,14 @@ export default {
   },
   methods: {
     restart() {
-      game.distribute()
+      this.game.distribute()
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.message {
+  color: red;
+}
+</style>
