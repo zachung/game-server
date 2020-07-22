@@ -49,14 +49,13 @@ class Trick extends Hand {
     const led = cards[0]
     const start = this.start
     let winnerSit = start
+    let winCard = led
     cards.forEach((card, sitOffset) => {
-      if (led.suit !== card.suit) {
-        // suit not equals
-        return
-      }
-      if (card.number > led.number) {
-        // number is larger
+      // no-trump
+      if (card.suit === led.suit && card.number > winCard.number) {
+        // suit equals & number is larger
         winnerSit = round(start + sitOffset)
+        winCard = card
       }
     })
     return winnerSit
