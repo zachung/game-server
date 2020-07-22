@@ -386,7 +386,7 @@ var Event = function Event(options) {
 ($traceurRuntime.createClass)(Event, {}, {});
 module.exports = Ball;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/ball.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/ball.js
 },{"../collision":12}],3:[function(require,module,exports){
 "use strict";
 var Floor = require('./floor');
@@ -422,7 +422,7 @@ var $Block = Block;
 }, {}, Floor);
 module.exports = Block;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/block.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/block.js
 },{"./floor":7,"./item":9}],4:[function(require,module,exports){
 "use strict";
 var Floor = require('./floor');
@@ -508,7 +508,7 @@ var $Bomb = Bomb;
 }, {}, Floor);
 module.exports = Bomb;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/bomb.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/bomb.js
 },{"./fire":6,"./floor":7}],5:[function(require,module,exports){
 "use strict";
 var Ball = require('./ball');
@@ -699,7 +699,7 @@ var $Cell = Cell;
 }, {}, Ball);
 module.exports = Cell;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/cell.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/cell.js
 },{"./ball":2,"./block":3,"./bomb":4,"./fire":6,"./floor":7,"./item":9,"./thomas":10,"./wall":11}],6:[function(require,module,exports){
 "use strict";
 var Floor = require('./floor');
@@ -749,7 +749,7 @@ var $Fire = Fire;
 }, {}, Floor);
 module.exports = Fire;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/fire.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/fire.js
 },{"./floor":7}],7:[function(require,module,exports){
 "use strict";
 var Ball = require('./ball');
@@ -778,7 +778,7 @@ var $Floor = Floor;
 }, {}, Ball);
 module.exports = Floor;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/floor.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/floor.js
 },{"./ball":2}],8:[function(require,module,exports){
 "use strict";
 var Ball = require('./ball');
@@ -1028,7 +1028,7 @@ var $GameMap = GameMap;
 }, {}, Ball);
 module.exports = GameMap;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/gamemap.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/gamemap.js
 },{"./ball":2,"./block":3,"./bomb":4,"./cell":5,"./floor":7,"./wall":11}],9:[function(require,module,exports){
 "use strict";
 var Floor = require('./floor');
@@ -1085,7 +1085,7 @@ var $Item = Item;
 }, {}, Floor);
 module.exports = Item;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/item.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/item.js
 },{"./floor":7}],10:[function(require,module,exports){
 "use strict";
 var Floor = require('./floor');
@@ -1138,7 +1138,7 @@ var $Thomas = Thomas;
 }, {}, Floor);
 module.exports = Thomas;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/thomas.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/thomas.js
 },{"./floor":7}],11:[function(require,module,exports){
 "use strict";
 var Floor = require('./floor');
@@ -1158,7 +1158,7 @@ var $Wall = Wall;
 ($traceurRuntime.createClass)(Wall, {}, {}, Floor);
 module.exports = Wall;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/class/wall.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/class/wall.js
 },{"./floor":7}],12:[function(require,module,exports){
 "use strict";
 var CollisionDetection = function() {
@@ -1261,7 +1261,7 @@ var CollisionDetection = function() {
 };
 module.exports = CollisionDetection;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/collision.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/collision.js
 },{}],13:[function(require,module,exports){
 "use strict";
 var co = require('co');
@@ -1550,7 +1550,7 @@ var Queue = function Queue() {
 }, {});
 module.exports = ENGINE;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/engine.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/engine.js
 },{"./class/gamemap":8,"./class/thomas":10,"co":1}],14:[function(require,module,exports){
 "use strict";
 var ENGINE = require('./engine');
@@ -1574,7 +1574,7 @@ var app = new PLAYGROUND.Application({
   scale: 0.5
 });
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb_man/src/main.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/bomb-man/src/main.js
 },{"./engine":13}],15:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.

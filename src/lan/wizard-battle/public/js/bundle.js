@@ -1711,7 +1711,7 @@ var Ball = function Ball(options) {
 }, {});
 module.exports = Ball;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard_battle/src/class/ball.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard-battle/src/class/ball.js
 },{"../../../../library/CollisionDetection":10,"../../../../library/EasingFunctions":11,"../../../../library/Vector":14}],4:[function(require,module,exports){
 "use strict";
 var Ball = require('./ball');
@@ -1750,7 +1750,7 @@ var $Fire = Fire;
 }, {}, Ball);
 module.exports = Fire;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard_battle/src/class/fire.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard-battle/src/class/fire.js
 },{"./ball":3}],5:[function(require,module,exports){
 "use strict";
 var Ball = require('./ball');
@@ -1950,7 +1950,7 @@ var $GameMap = GameMap;
 }, {}, Ball);
 module.exports = GameMap;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard_battle/src/class/gamemap.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard-battle/src/class/gamemap.js
 },{"../../../../library/Guid":12,"../../../../library/Vector":14,"./ball":3,"./fire":4,"./thomas":6,"./wall":7}],6:[function(require,module,exports){
 "use strict";
 var Ball = require('./ball');
@@ -2044,7 +2044,7 @@ var $Thomas = Thomas;
 }, {}, Ball);
 module.exports = Thomas;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard_battle/src/class/thomas.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard-battle/src/class/thomas.js
 },{"../../../../library/EasingFunctions":11,"../../../../library/Vector":14,"./ball":3}],7:[function(require,module,exports){
 "use strict";
 var Ball = require('./ball');
@@ -2068,7 +2068,7 @@ var $Wall = Wall;
   }}, {}, Ball);
 module.exports = Wall;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard_battle/src/class/wall.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard-battle/src/class/wall.js
 },{"./ball":3}],8:[function(require,module,exports){
 "use strict";
 var co = require('co');
@@ -2275,7 +2275,7 @@ var Queue = function Queue() {
 }, {});
 module.exports = ENGINE;
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard_battle/src/engine.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard-battle/src/engine.js
 },{"../../../library/SocketCommand":13,"./class/gamemap":5,"./class/thomas":6,"co":1}],9:[function(require,module,exports){
 "use strict";
 var ENGINE = require('./engine');
@@ -2297,7 +2297,7 @@ var app = new PLAYGROUND.Application({
   scale: 0.5
 });
 
-//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard_battle/src/main.js
+//# sourceURL=/home/zach/www/MultiPlay/lan_game/src/lan/wizard-battle/src/main.js
 },{"./engine":8}],10:[function(require,module,exports){
 "use strict";
 var CollisionDetection = function CollisionDetection() {};

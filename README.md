@@ -2,9 +2,11 @@
 Just a practice project, dirty code everywhere A_A.
 
 ## Install
-`npm install`
-
-`npm start`
+```shell script
+npm i
+npm run build
+npm run start
+```
 
 ## Games
 ### Lan

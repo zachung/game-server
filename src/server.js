@@ -1,27 +1,16 @@
-var path = require('path')
-var express = require('express')
-var app = express()
-var http = require('http').Server(app)
-var fs = require('fs')
-var io = require('socket.io')(http)
+const path = require('path')
+const express = require('express')
+const app = express()
+const http = require('http').Server(app)
+const fs = require('fs')
+const io = require('socket.io')(http)
 const Lobby = require('./library/Lobby')
 const Game = require('./library/Game')
 
-var lobby = new Lobby(io)
+const lobby = new Lobby(io)
 
 app.use('/', (function () {
-  var router = express.Router()
-
-  // static games
-  const single = './src/single/'
-  fs.readdir(single, (err, files) => {
-    if (err) {
-      return
-    }
-    files.forEach(gameName => {
-      router.use('/' + gameName, express.static(path.join(single, gameName, '/public')))
-    })
-  })
+  const router = express.Router()
 
   // 靜態檔案
   router.use('/', express.static(path.join(__dirname, '/../public')))
@@ -29,33 +18,29 @@ app.use('/', (function () {
   lobby.on(Game)
 
   return router
-}()));
+}()))
+
+// single
+const single = './src/single/'
+fs.readdir(single, (err, files) => {
+  if (err) {
+    return
+  }
+  files.forEach(gameName => {
+    app.use('/' + gameName, express.static(path.join(single, gameName, 'public')))
+  })
+})
 
 // multi
-[{
-  name: 'zombie-shooter',
-  index: 'zombie_shooter/index'
-},
-{
-  name: 'bomb-man',
-  index: 'bomb_man/index'
-},
-{
-  name: 'wizard-battle',
-  index: 'wizard_battle/index'
-},
-{
-  name: 'tower-defence',
-  index: 'tower_defence/index'
-},
-{
-  name: 'webrtc-chat',
-  index: 'webrtc_chat/index'
-}
-].forEach(game => {
-  const name = '/' + game.name
-  const index = './lan/' + game.index
-  app.use(name, require(index)(lobby))
+const lan = './src/lan/'
+fs.readdir(lan, (err, files) => {
+  if (err) {
+    return
+  }
+  files.forEach(gameName => {
+    const index = './lan/' + gameName + '/index'
+    app.use('/' + gameName, require(index)(lobby))
+  })
 })
 
 app.use(function (err, req, res, next) {
