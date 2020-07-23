@@ -3,17 +3,14 @@ const ENGINE = require('./engine')
 var app = new PLAYGROUND.Application({
 
   paths: {
-    images: 'tower-defence/images/',
-    atlases: 'tower-defence/atlases/',
+    images: './images/',
+    atlases: './atlases/',
     rewriteURL: {
       background: '/images/background.png'
     }
   },
 
-  // preferedAudioFormat: "mp3",
-
   create: function () {
-    this.loadSounds('music')
     this.loadImage([
       '<background>',
       'fire_bolt',
@@ -41,6 +38,5 @@ var app = new PLAYGROUND.Application({
   },
 
   scale: 0.5
-  // container: exampleContainer
 
 })

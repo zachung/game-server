@@ -4,7 +4,7 @@ class LevelData {
   setLevel (level) {
     this.level = level
     this.round = 0
-    this.data = require('../levels/level1')
+    this.data = require('../levels/level1.json')
   }
   get enemy_path () {
     return this.data.enemy_path
