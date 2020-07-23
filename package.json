@@ -13,6 +13,7 @@
   "devDependencies": {
     "css-loader": "^3.6.0",
     "socket.io-client": "^2.3.0",
+    "style-loader": "^1.2.1",
     "vue-loader": "^15.9.3",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0",
