@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Lobby</h3>
+    <h3>Engine</h3>
     <div>
       <span>{{ playerCounts['/lobby'] || 0 }} 人在大廳閒晃</span>
     </div>

@@ -1,4 +1,4 @@
-const Game = require('../../library/Game')
+const Game = require('../../library/Lobby')
 
 class WebrtcChat extends Game {
   static get nsp () {

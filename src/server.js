@@ -2,12 +2,11 @@ const path = require('path')
 const express = require('express')
 const app = express()
 const http = require('http').Server(app)
-const fs = require('fs')
 const io = require('socket.io')(http)
+const Engine = require('./library/Engine')
 const Lobby = require('./library/Lobby')
-const Game = require('./library/Game')
 
-const lobby = new Lobby(io)
+const engine = new Engine(io)
 
 app.use('/', (function () {
   const router = express.Router()
@@ -15,33 +14,12 @@ app.use('/', (function () {
   // 靜態檔案
   router.use('/', express.static(path.join(__dirname, '/../public')))
 
-  lobby.on(Game)
+  engine.on(Lobby)
 
   return router
 }()))
 
-// single
-const single = './src/single/'
-fs.readdir(single, (err, files) => {
-  if (err) {
-    return
-  }
-  files.forEach(gameName => {
-    app.use('/' + gameName, express.static(path.join(single, gameName, 'public')))
-  })
-})
-
-// multi
-const lan = './src/lan/'
-fs.readdir(lan, (err, files) => {
-  if (err) {
-    return
-  }
-  files.forEach(gameName => {
-    const index = './lan/' + gameName + '/index'
-    app.use('/' + gameName, require(index)(lobby))
-  })
-})
+app.use('/', require('./routes')(engine))
 
 app.use(function (err, req, res, next) {
   console.error(err.stack)

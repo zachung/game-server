@@ -1,4 +1,4 @@
-# Bridge Game
+# Bridge Lobby
 ## 已完成
 * 發牌給四位玩家
 * 點擊出牌

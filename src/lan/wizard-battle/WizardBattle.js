@@ -1,4 +1,4 @@
-const Game = require('../../library/Game')
+const Game = require('../../library/Lobby')
 const Thomas = require('./src/class/thomas')
 const GameMap = require('./src/class/gamemap')
 

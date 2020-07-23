@@ -10,7 +10,7 @@ var babelify = require('babelify')
 var assign = require('lodash.assign')
 
 var jsDir = 'public/js'
-var pubDir = '../../../public/games/rect_dancer'
+var pubDir = '../../../public/games/brick-breaker'
 
 // https://segmentfault.com/a/1190000003770541
 

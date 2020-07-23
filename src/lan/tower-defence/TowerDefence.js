@@ -1,4 +1,4 @@
-const Game = require('../../library/Game')
+const Game = require('../../library/Lobby')
 
 class TowerDefence extends Game {
   static get nsp () {

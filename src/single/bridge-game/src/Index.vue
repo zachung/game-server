@@ -41,10 +41,10 @@
 <script>
 import Hand from './Hand.vue'
 import Desktop from './Desktop.vue'
-import Game from './js/Game'
+import Lobby from './js/Lobby'
 import Dashboard from './Dashboard.vue'
 
-const game = new Game()
+const game = new Lobby()
 game.table.waitingSit(0)
 
 export default {

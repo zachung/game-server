@@ -1,6 +1,6 @@
 const Thomas = require('./src/class/thomas')
 const GameMap = require('./src/class/gamemap')
-const Game = require('../../library/Game')
+const Game = require('../../library/Lobby')
 
 const SocketEvent = {
   disconnect (socket, user) {

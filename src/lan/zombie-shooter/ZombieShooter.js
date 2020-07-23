@@ -1,4 +1,4 @@
-const Game = require('../../library/Game')
+const Game = require('../../library/Lobby')
 const Zombie = require('./public/js/ball.js').Zombie
 const Thomas = require('./public/js/ball.js').Thomas
 const Item = require('./public/js/ball.js').Item
