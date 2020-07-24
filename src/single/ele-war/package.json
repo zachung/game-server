@@ -16,6 +16,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "hotkeys-js": "^3.8.1",
     "vue": "^2.6.11"
   }
 }
