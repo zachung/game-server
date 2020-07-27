@@ -11,6 +11,7 @@ class Item {
   }
 
   move (x, y) {
+    // FIXME: 不能藉由 layer 移動，必須實現跨 chunk
     if (this.lay) {
       this.lay.move(this, x, y)
         .then(() => {

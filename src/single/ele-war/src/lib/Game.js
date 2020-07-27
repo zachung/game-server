@@ -1,48 +1,47 @@
-import Stage from './Stage'
+import World from './World'
 import Item from './Item'
-import Layer from './Layer'
-
-const N = 20
-
-const newItem = (symbol, x, y) => {
-  const item = new Item(symbol)
-  item.location = { x, y }
-  return item
-}
 
 class Game {
   constructor () {
-    const stage = new Stage(N)
-    const empty = new Item('')
-    const ground = new Layer(N)
-    stage.addLayer(ground)
-    for (let r = 0; r < N; r++) {
-      for (let c = 0; c < N; c++) {
-        ground.put(empty, r, c)
-      }
-    }
-
-    const objects = new Layer(N)
-    stage.addLayer(objects)
-
-    this.N = N
-    this.stage = stage
-    this.objects = objects
+    this.world = new World()
   }
 
-  loadWorld (world) {
-    world.items.forEach(loc => {
-      const item = newItem(...loc)
-      this.objects.addChild(item)
-    })
+  start () {
+    const initX = 16
+    const initY = 16
+    return Promise.resolve()
+      .then(() => {
+        return this.addPlayer({ x: initX, y: initY })
+      })
+      .then(player => {
+        this.startRender()
+        return player
+      })
   }
 
   addPlayer ({ x, y }) {
     const player = new Item('\u25C9')
     player.location = { x, y }
-    this.objects.addChild(player)
+    return this.world.stage.cameraGoTo(x, y)
+      .then(() => {
+        this.world.stage.chunk.addItem(player)
+        this.player = player
+        return player
+      })
+  }
 
-    return player
+  startRender () {
+    // timer for render
+    setInterval(() => {
+      this.world.stage.cameraGoTo(this.player.location.x, this.player.location.y)
+        .catch(status => {
+          if (status === 404) {
+            console.log('Map limited')
+            return
+          }
+          console.log(status)
+        })
+    }, 100)
   }
 }
 

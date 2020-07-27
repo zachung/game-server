@@ -38,21 +38,11 @@ class Layer {
       throw Error('stuck by ' + preItem.symbol)
     }
     this.map.splice(inx, 1, item)
-    this.onChange(x, y)
   }
 
   remove (item, x, y) {
     const inx = y * this.n + x
     this.map.splice(inx, 1, undefined)
-    this.onChange(x, y)
-  }
-
-  onChange (x, y) {
-    this.stage.update(this, x, y)
-  }
-
-  registerObserver (stage) {
-    this.stage = stage
   }
 }
 
