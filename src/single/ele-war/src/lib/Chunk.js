@@ -4,9 +4,11 @@ import ChunkReader from './ChunkReader'
 
 const empty = new Item('')
 const N = 32
+const round = p => ((p % N) + N) % N
 
 /**
  * 32*32 blocks
+ * @property {Stage} stage
  */
 class Chunk {
   constructor (offsetX, offsetY) {
@@ -24,16 +26,24 @@ class Chunk {
     this.offsetY = offsetY
   }
 
+  setStage (stage) {
+    this.stage = stage
+  }
+
   loadWorld () {
     this.chunkName = Chunk.getChunkName(this.offsetX, this.offsetY)
     const worldReader = new ChunkReader()
-    return worldReader.load(this.chunkName, item => this.itemLayer.addChild(item))
+    return worldReader.load(this.chunkName, item => this.addItem(item))
   }
 
-  getItem (x, y) {
+  getItemByGlobalLoc (x, y) {
+    return this.getItem(round(x), round(y))
+  }
+
+  getItem (offsetX, offsetY) {
     let item = undefined
     ;[this.itemLayer, this.groundLayer].some(layer => {
-      item = layer.getItem(x, y)
+      item = layer.getItem(offsetX, offsetY)
       if (item) {
         return true
       }
@@ -41,10 +51,19 @@ class Chunk {
     return item
   }
 
-  addItem(item) {
-    const { x, y } = item.location
-    item.lay = this
-    this.itemLayer.addChild(item)
+  addItem (item, x, y) {
+    x = x !== undefined ? x : item.location.x
+    y = y !== undefined ? y : item.location.y
+    item.chunk = this
+    this.itemLayer.put(item, round(x), round(y))
+  }
+
+  removeItem (item, x, y) {
+    this.itemLayer.remove(item, round(x), round(y))
+  }
+
+  move (item, x, y) {
+    return this.stage.move(this, item, x, y)
   }
 
   static getChunkName (offsetX, offsetY) {

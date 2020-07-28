@@ -13,24 +13,7 @@ class Layer {
     return this.map[y * this.n + x]
   }
 
-  move (item, x, y) {
-    const { x: preX, y: preY } = item.location
-    return Promise.resolve().then(() => {
-      this.put(item, x, y)
-      this.remove(item, preX, preY)
-    })
-  }
-
-  addChild (item) {
-    const { x, y } = item.location
-    item.lay = this
-    this.put(item, x, y)
-  }
-
   put (item, x, y) {
-    if (x < 0 || x >= this.n || y < 0 || y >= this.n) {
-      throw Error('invalid location')
-    }
     const inx = y * this.n + x
     const preItem = this.map[inx]
     if (preItem) {

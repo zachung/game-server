@@ -29,6 +29,7 @@ class Stage {
 
   addChunk (chunk) {
     this.chunks[chunkLoc(chunk.offsetX, chunk.offsetY)] = chunk
+    chunk.setStage(this)
   }
 
   cameraGoTo (x, y) {
@@ -38,9 +39,7 @@ class Stage {
     return this.changeChunk(x, y).then(() => {
       for (let mapX = 0; mapX < 32; mapX++) {
         for (let mapY = 0; mapY < 32; mapY++) {
-          const cx = mapX + x
-          const cy = mapY + y
-          const item = this.getChunkItem(cx, cy)
+          const item = this.getChunkItem(mapX + x, mapY + y)
           if (item) {
             this.map[mapY].splice(mapX, 1, item)
           }
@@ -75,11 +74,22 @@ class Stage {
   }
 
   getChunkItem (x, y) {
+    return this.getChunkByLoc(x, y).getItemByGlobalLoc(x, y)
+  }
+
+  getChunkByLoc (x, y) {
     const chunkInx = chunkLoc(Math.floor(x / 32), Math.floor(y / 32))
-    const offsetX = ((x % 32) + 32) % 32
-    const offsetY = ((y % 32) + 32) % 32
-    const chunk = this.chunks[chunkInx]
-    return chunk.getItem(offsetX, offsetY)
+    return this.chunks[chunkInx]
+  }
+
+  move (chunk, item, x, y) {
+    const { x: preX, y: preY } = item.location
+
+    return Promise.resolve()
+      .then(() => {
+        this.getChunkByLoc(x, y).addItem(item, x, y)
+        chunk.removeItem(item, preX, preY)
+      })
   }
 }
 
