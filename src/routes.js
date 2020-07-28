@@ -20,5 +20,12 @@ module.exports = engine => {
       router.use('/' + gameName, require(index)(engine))
     })
 
+  // external
+  const external = './src/external/'
+  fs.readdirSync(external)
+    .forEach(gameName =>
+      router.use('/external/' + gameName, express.static(path.join(external, gameName, 'public')))
+    )
+
   return router
 }

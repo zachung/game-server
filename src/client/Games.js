@@ -27,6 +27,12 @@ const LanGames = [
 ]
 const SingleGames = [
   {
+    href: '/external/awoo',
+    title: 'awoo',
+    lastUpdate: '2020/07/28',
+    desc: '俯視、地圖分區載入<br /><a href="https://github.com/zachung/awoo.git">Repo</a>'
+  },
+  {
     href: '/single/bridge-game',
     title: 'bridge',
     lastUpdate: '2020/07/20',

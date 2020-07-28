@@ -36,9 +36,7 @@
             {{ game.title }}
           </div>
           <div class="card-body">
-            <p class="card-text">
-              {{ game.desc }}
-            </p>
+            <p class="card-text" v-html="game.desc"></p>
             <a :href="game.href" class="card-link">Start</a>
           </div>
           <div class="card-footer">
