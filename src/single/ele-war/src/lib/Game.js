@@ -1,9 +1,16 @@
-import World from './World'
 import Item from './Item'
+import Stage from './Stage'
 
+/**
+ * @property {Stage} stage
+ */
 class Game {
-  constructor () {
-    this.world = new World()
+  constructor (props) {
+    const { viewSize, cameraDelta } = props
+    this.stage = new Stage({
+      viewSize,
+      cameraDelta
+    })
   }
 
   start () {
@@ -22,9 +29,9 @@ class Game {
   addPlayer ({ x, y }) {
     const player = new Item('\u25C9')
     player.location = { x, y }
-    return this.world.stage.cameraGoTo(x, y)
+    return this.stage.cameraGoTo(x, y)
       .then(() => {
-        this.world.stage.chunk.addItem(player)
+        this.stage.chunk.addItem(player)
         this.player = player
         return player
       })
@@ -33,7 +40,7 @@ class Game {
   startRender () {
     // timer for render
     setInterval(() => {
-      this.world.stage.cameraGoTo(this.player.location.x, this.player.location.y)
+      this.stage.cameraGoTo(this.player.location.x, this.player.location.y)
         .catch(status => {
           if (status === 404) {
             console.log('Map limited')

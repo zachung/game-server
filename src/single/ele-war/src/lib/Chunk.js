@@ -54,8 +54,8 @@ class Chunk {
   addItem (item, x, y) {
     x = x !== undefined ? x : item.location.x
     y = y !== undefined ? y : item.location.y
-    item.chunk = this
     this.itemLayer.put(item, round(x), round(y))
+    item.chunk = this
   }
 
   removeItem (item, x, y) {

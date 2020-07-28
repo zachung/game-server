@@ -4,23 +4,27 @@ const chunkLoc = (x, y) => {
   return x.toString() + '_' + y.toString()
 }
 
-// 鏡頭偏移(距離左上角距離)
-const CameraDelta = { x: 6, y: 6 }
+const ChunkSize = 32
 
+/**
+ * @property {Number} viewSize
+ * @property {Object} cameraDelta 鏡頭偏移(距離左上角距離)
+ */
 class Stage {
-  constructor (n) {
+  constructor ({ viewSize, cameraDelta }) {
     this.loading = false
     this.chunks = {}
 
     this.map = []
     // init fallback
-    for (let x = 0; x < n; x++) {
+    for (let x = 0; x < viewSize; x++) {
       this.map[x] = []
-      for (let y = 0; y < n; y++) {
+      for (let y = 0; y < viewSize; y++) {
         this.map[x][y] = { symbol: '' }
       }
     }
-    this.n = n
+    this.viewSize = viewSize
+    this.cameraDelta = cameraDelta
   }
 
   get chunk () {
@@ -34,11 +38,11 @@ class Stage {
 
   cameraGoTo (x, y) {
     this.cameraAt = { x, y }
-    x -= CameraDelta.x
-    y -= CameraDelta.y
+    x -= this.cameraDelta.x
+    y -= this.cameraDelta.y
     return this.changeChunk(x, y).then(() => {
-      for (let mapX = 0; mapX < 32; mapX++) {
-        for (let mapY = 0; mapY < 32; mapY++) {
+      for (let mapX = 0; mapX < this.viewSize; mapX++) {
+        for (let mapY = 0; mapY < this.viewSize; mapY++) {
           const item = this.getChunkItem(mapX + x, mapY + y)
           if (item) {
             this.map[mapY].splice(mapX, 1, item)
@@ -49,8 +53,8 @@ class Stage {
   }
 
   changeChunk (x, y) {
-    const chunkX = Math.floor(x / 32)
-    const chunkY = Math.floor(y / 32)
+    const chunkX = Math.floor(x / ChunkSize)
+    const chunkY = Math.floor(y / ChunkSize)
     const curChunkInx = chunkLoc(chunkX, chunkY)
     if (this.curChunkInx !== curChunkInx) {
       this.curChunkInx = curChunkInx
@@ -74,11 +78,15 @@ class Stage {
   }
 
   getChunkItem (x, y) {
-    return this.getChunkByLoc(x, y).getItemByGlobalLoc(x, y)
+    const chunkByLoc = this.getChunkByLoc(x, y)
+    if (!chunkByLoc) {
+      return
+    }
+    return chunkByLoc.getItemByGlobalLoc(x, y)
   }
 
   getChunkByLoc (x, y) {
-    const chunkInx = chunkLoc(Math.floor(x / 32), Math.floor(y / 32))
+    const chunkInx = chunkLoc(Math.floor(x / ChunkSize), Math.floor(y / ChunkSize))
     return this.chunks[chunkInx]
   }
 
@@ -87,7 +95,10 @@ class Stage {
 
     return Promise.resolve()
       .then(() => {
-        this.getChunkByLoc(x, y).addItem(item, x, y)
+        const chunkByLoc = this.getChunkByLoc(x, y)
+        console.log(chunkByLoc.chunkName)
+        chunkByLoc.addItem(item, x, y)
+        console.log(chunk.chunkName)
         chunk.removeItem(item, preX, preY)
       })
   }

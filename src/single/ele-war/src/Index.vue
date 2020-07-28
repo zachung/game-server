@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div id="world" :style="worldStyle">
-      <template v-for="(row, x) in game.world.stage.map" class="tile">
+      <template v-for="(row, x) in game.stage.map" class="tile">
         <div
           v-for="(item, y) in row"
           class="tile"
@@ -14,10 +14,12 @@
       </template>
     </div>
     <div class="dashboard">
-      <div v-if="game.world.stage.chunk">
-        {{ game.world.stage.chunk.chunkName }}
+      <div v-if="game.player && game.player.chunk">
+        {{ game.player.chunk.chunkName }}
       </div>
-      <div v-if="game.player">{{ game.player.location.x }}, {{ game.player.location.y }}</div>
+      <div v-if="game.player">
+        {{ game.player.location.x }}, {{ game.player.location.y }}
+      </div>
     </div>
   </div>
 </template>
@@ -28,17 +30,22 @@ import Game from './lib/Game'
 
 export default {
   data() {
-    const game = new Game()
+    const viewSize = 50
+    const game = new Game({
+      viewSize,
+      cameraDelta: { x: 16, y: 16 }
+    })
     return {
-      game: game
+      game: game,
+      viewSize
     }
   },
   computed: {
     worldStyle() {
       return {
         display: 'inline-grid',
-        'grid-template-rows': 'repeat(32, 1em)',
-        'grid-template-columns': 'repeat(32, 1em)'
+        'grid-template-rows': 'repeat(' + this.viewSize + ', 1em)',
+        'grid-template-columns': 'repeat(' + this.viewSize + ', 1em)'
       }
     }
   },
@@ -47,22 +54,6 @@ export default {
       player.color = '#226cff'
       new Controller(player, { up: 'w', down: 's', left: 'a', right: 'd' })
     })
-    // const up = 'up',
-    //   down = 'down',
-    //   right = 'right',
-    //   left = 'left'
-    // hotkeys(left, () => {
-    //   this.game.loc.x -= 1
-    // })
-    // hotkeys(up, () => {
-    //   this.game.loc.y -= 1
-    // })
-    // hotkeys(right, () => {
-    //   this.game.loc.x += 1
-    // })
-    // hotkeys(down, () => {
-    //   this.game.loc.y += 1
-    // })
   }
 }
 </script>
@@ -75,7 +66,7 @@ export default {
 #world {
   width: 50em;
   height: 50em;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .tile {
@@ -86,5 +77,7 @@ export default {
 }
 .dashboard {
   display: inline-block;
+  padding: .5em;
+  border: 5px ridge gray;
 }
 </style>
