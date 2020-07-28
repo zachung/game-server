@@ -6,9 +6,13 @@ const Blocks = [
   '\u251A', // ┚ 3
   '\u2501', // ━ 4
   '\u2503', // ┃ 5
-  '\u25A2', // ▢ 6
+  '\u2751', // ❑ 6
+]
+const Items = [
+  '\u25CE', // ◎ 0
 ]
 
 export {
-  Blocks
+  Blocks,
+  Items
 }

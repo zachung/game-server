@@ -1,5 +1,6 @@
 import Item from './Item'
 import Stage from './Stage'
+import { Items } from '../data/Symbols'
 
 /**
  * @property {Stage} stage
@@ -27,7 +28,7 @@ class Game {
   }
 
   addPlayer ({ x, y }) {
-    const player = new Item('\u25C9')
+    const player = new Item(Items[0])
     player.location = { x, y }
     return this.stage.cameraGoTo(x, y)
       .then(() => {

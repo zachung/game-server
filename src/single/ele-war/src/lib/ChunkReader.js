@@ -1,4 +1,4 @@
-import { Blocks } from '../data/Items'
+import { Blocks } from '../data/Symbols'
 import Item from './Item'
 
 const newItem = (symbol, x, y) => {

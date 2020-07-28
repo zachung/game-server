@@ -95,10 +95,7 @@ class Stage {
 
     return Promise.resolve()
       .then(() => {
-        const chunkByLoc = this.getChunkByLoc(x, y)
-        console.log(chunkByLoc.chunkName)
-        chunkByLoc.addItem(item, x, y)
-        console.log(chunk.chunkName)
+        this.getChunkByLoc(x, y).addItem(item, x, y)
         chunk.removeItem(item, preX, preY)
       })
   }
